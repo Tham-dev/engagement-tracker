@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Account Engagement Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F7F6F2;
+    --surface: #FFFFFF;
+    --surface2: #F0EEE9;
+    --border: #E2DDD6;
+    --border2: #CCC8C0;
+    --text: #1A1916;
+    --text2: #6B6760;
+    --text3: #9B9892;
+    --accent: #2D5BE3;
+    --accent-light: #EEF2FD;
+    --accent-text: #1A3BA8;
+    --green: #1D7A4A;
+    --green-light: #E6F5EC;
+    --red: #C4310F;
+    --red-light: #FDF0EC;
+    --amber: #A05D00;
+    --amber-light: #FEF5E7;
+    --purple: #5B3FBF;
+    --purple-light: #F0ECFD;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text);
+  }
+  .brand-icon {
+    width: 28px; height: 28px;
+    background: var(--accent);
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .brand-icon svg { width: 16px; height: 16px; }
+
+  /* NAV TABS */
+  .nav-tabs {
+    display: flex;
+    gap: 2px;
+    background: var(--surface2);
+    padding: 3px;
+    border-radius: var(--radius-sm);
+  }
+  .tab-btn {
+    padding: 5px 14px;
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .tab-btn.active {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow);
+  }
+
+  .header-actions { display: flex; gap: 8px; align-items: center; }
+
+  /* MAIN */
+  .main { padding: 24px; max-width: 1400px; margin: 0 auto; }
+
+  /* PAGES */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* STATS GRID */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    box-shadow: var(--shadow);
+  }
+  .stat-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .stat-value { font-size: 28px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
+  .stat-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .stat-card.accent { border-color: #C5D4F9; background: var(--accent-light); }
+  .stat-card.accent .stat-value { color: var(--accent-text); }
+  .stat-card.danger { border-color: #F5CABD; background: var(--red-light); }
+  .stat-card.danger .stat-value { color: var(--red); }
+  .stat-card.success { border-color: #B8DFC8; background: var(--green-light); }
+  .stat-card.success .stat-value { color: var(--green); }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .section-title { font-size: 15px; font-weight: 600; }
+
+  /* TABLE */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .table-toolbar {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .search-input {
+    flex: 1;
+    min-width: 180px;
+    padding: 7px 12px 7px 32px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-family: inherit;
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+    position: relative;
+  }
+  .search-wrap { position: relative; flex: 1; min-width: 180px; }
+  .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--text3); pointer-events: none; }
+  .search-input:focus { border-color: var(--accent); }
+
+  select.filter-select {
+    padding: 7px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-family: inherit;
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+    cursor: pointer;
+  }
+  select.filter-select:focus { border-color: var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead { background: var(--surface2); }
+  th {
+    padding: 9px 14px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg); }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .badge-tier1 { background: var(--purple-light); color: var(--purple); }
+  .badge-tier2 { background: var(--accent-light); color: var(--accent-text); }
+  .badge-tier3 { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+  .badge-yes { background: var(--red-light); color: var(--red); }
+  .badge-no { background: var(--green-light); color: var(--green); }
+  .badge-opened { background: var(--green-light); color: var(--green); }
+  .badge-clicked { background: var(--accent-light); color: var(--accent-text); }
+  .badge-replied { background: var(--green-light); color: var(--green); }
+  .badge-meeting { background: #EEF7F0; color: #166534; }
+  .badge-none { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+  .badge-channel-email { background: var(--accent-light); color: var(--accent-text); }
+  .badge-channel-linkedin { background: #E7F0FF; color: #1355C1; }
+  .badge-channel-webinar { background: var(--purple-light); color: var(--purple); }
+  .badge-channel-event { background: var(--amber-light); color: var(--amber); }
+  .badge-channel-direct { background: var(--green-light); color: var(--green); }
+  .badge-channel-paid { background: #FEF9EE; color: #92400E; }
+
+  .account-name { font-weight: 500; }
+  .date-cell { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text2); }
+  .notes-cell { color: var(--text2); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.12s;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .btn:hover { background: var(--surface2); border-color: var(--border2); }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .btn-primary:hover { background: var(--accent-text); border-color: var(--accent-text); }
+  .btn-danger { color: var(--red); border-color: #F5CABD; }
+  .btn-danger:hover { background: var(--red-light); }
+  .btn-sm { padding: 4px 10px; font-size: 12px; }
+  .btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border-radius: 14px;
+    padding: 28px;
+    width: 100%;
+    max-width: 520px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal-title { font-size: 17px; font-weight: 600; margin-bottom: 20px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label.form-label { font-size: 12px; font-weight: 500; color: var(--text2); }
+  input.form-input, select.form-input, textarea.form-input {
+    padding: 8px 11px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--text);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.12s;
+  }
+  input.form-input:focus, select.form-input:focus, textarea.form-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(45,91,227,0.1);
+  }
+  textarea.form-input { resize: vertical; min-height: 72px; }
+  .form-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+
+  /* ACCOUNT TABLE SUMMARY */
+  .accounts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+  }
+  .account-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.15s;
+  }
+  .account-card:hover { box-shadow: var(--shadow-md); }
+  .account-card.cooling { border-left: 3px solid var(--red); }
+  .account-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .account-card-name { font-weight: 600; font-size: 14px; }
+  .account-card-stats { display: flex; gap: 16px; margin-top: 10px; }
+  .account-stat { display: flex; flex-direction: column; gap: 1px; }
+  .account-stat-val { font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .account-stat-lbl { font-size: 11px; color: var(--text3); }
+  .progress-bar-wrap { margin-top: 10px; }
+  .progress-bar-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+  .progress-bar { height: 4px; background: var(--surface2); border-radius: 100px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; border-radius: 100px; background: var(--accent); transition: width 0.4s; }
+  .progress-bar-fill.warning { background: var(--red); }
+
+  /* RULES PAGE */
+  .rules-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+  }
+  .rules-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .rules-table { width: 100%; border-collapse: collapse; }
+  .rules-table td { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .rules-table tr:last-child td { border: none; }
+  .rules-table td:first-child { color: var(--text2); width: 160px; font-weight: 500; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+  .dot-red { background: var(--red); }
+  .dot-amber { background: #D97706; }
+  .dot-green { background: var(--green); }
+
+  /* EMPTY STATE */
+  .empty-state {
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--text2);
+  }
+  .empty-state svg { width: 40px; height: 40px; margin: 0 auto 12px; opacity: 0.3; }
+  .empty-state p { font-size: 14px; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    background: var(--text);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.2s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  .cooling-alert {
+    background: var(--red-light);
+    border: 1px solid #F5CABD;
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+  }
+  .cooling-alert svg { width: 16px; height: 16px; color: var(--red); flex-shrink: 0; }
+
+  .page-sub { font-size: 13px; color: var(--text2); margin-bottom: 20px; }
+
+  @media (max-width: 600px) {
+    .main { padding: 16px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="5" height="5" rx="1.5" fill="white"/>
+        <rect x="9" y="2" width="5" height="5" rx="1.5" fill="white" opacity="0.7"/>
+        <rect x="2" y="9" width="5" height="5" rx="1.5" fill="white" opacity="0.7"/>
+        <rect x="9" y="9" width="5" height="5" rx="1.5" fill="white" opacity="0.4"/>
+      </svg>
+    </div>
+    Account Engagement Tracker
+  </div>
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="tab-btn" onclick="showPage('tracker')">Touchpoints</button>
+    <button class="tab-btn" onclick="showPage('accounts')">Accounts</button>
+    <button class="tab-btn" onclick="showPage('rules')">Rules</button>
+  </div>
+  <div class="header-actions">
+    <button class="btn" onclick="downloadTemplate()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 13h10"/></svg>
+      CSV Template
+    </button>
+    <label class="btn" style="cursor:pointer;" title="Upload CSV">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 10V2M5 5l3-3 3 3"/><path d="M3 13h10"/></svg>
+      Bulk Upload
+      <input type="file" accept=".csv" id="csv-upload-input" style="display:none" onchange="handleCSVUpload(event)">
+    </label>
+    <button class="btn btn-primary" onclick="openModal()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+      Log Touchpoint
+    </button>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- DASHBOARD -->
+  <div id="page-dashboard" class="page active">
+    <div id="cooling-banner" style="display:none" class="cooling-alert">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><line x1="8" y1="5" x2="8" y2="8"/><circle cx="8" cy="11" r="0.5" fill="currentColor"/></svg>
+      <span id="cooling-text"></span>
+    </div>
+    <div class="stats-grid" id="stats-grid"></div>
+    <div class="section-header">
+      <span class="section-title">Account Status Overview</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Account</th>
+            <th>Tier</th>
+            <th>Total Touches</th>
+            <th>Last Touch</th>
+            <th>Days Since</th>
+            <th>Touches (14d)</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="dashboard-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TRACKER -->
+  <div id="page-tracker" class="page">
+    <div class="section-header">
+      <div>
+        <div class="section-title">All Touchpoints</div>
+        <div class="page-sub">Every outreach logged — one row per touchpoint</div>
+      </div>
+      <button class="btn btn-primary" onclick="openModal()">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+        Log Touchpoint
+      </button>
+    </div>
+    <div class="table-wrap">
+      <div class="table-toolbar">
+        <div class="search-wrap">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="4"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg>
+          <input class="search-input" id="tracker-search" type="text" placeholder="Search accounts, campaigns..." oninput="renderTracker()">
+        </div>
+        <select class="filter-select" id="tracker-channel" onchange="renderTracker()">
+          <option value="">All channels</option>
+          <option>Email</option>
+          <option>LinkedIn</option>
+          <option>Webinar</option>
+          <option>Event</option>
+          <option>Direct Mail</option>
+          <option>Paid Ad</option>
+        </select>
+        <select class="filter-select" id="tracker-tier" onchange="renderTracker()">
+          <option value="">All tiers</option>
+          <option>Tier 1</option>
+          <option>Tier 2</option>
+          <option>Tier 3</option>
+        </select>
+        <select class="filter-select" id="tracker-cooling" onchange="renderTracker()">
+          <option value="">All</option>
+          <option value="Yes">Cooling Off</option>
+          <option value="No">Active</option>
+        </select>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Account</th>
+            <th>Date</th>
+            <th>Sent By</th>
+            <th>Tier</th>
+            <th>Channel</th>
+            <th>Campaign / Email</th>
+            <th>Cooling Off?</th>
+            <th>Outcome</th>
+            <th>Notes</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tracker-tbody"></tbody>
+      </table>
+      <div id="tracker-empty" class="empty-state" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="15" x2="12" y2="15"/></svg>
+        <p>No touchpoints match your filters</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACCOUNTS -->
+  <div id="page-accounts" class="page">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Accounts</div>
+        <div class="page-sub">Summary view per account with touchpoint limits</div>
+      </div>
+    </div>
+    <div class="accounts-grid" id="accounts-grid"></div>
+    <div id="accounts-empty" class="empty-state" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <p>No accounts yet — log your first touchpoint to get started</p>
+    </div>
+  </div>
+
+  <!-- RULES -->
+  <div id="page-rules" class="page">
+    <div class="rules-card">
+      <h3>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><line x1="8" y1="5" x2="8" y2="9"/><circle cx="8" cy="11.5" r="0.5" fill="currentColor"/></svg>
+        Over-communication rules
+      </h3>
+      <table class="rules-table">
+        <tr><td>Tier 1 accounts</td><td>Max <strong>2 touches per 14-day window</strong> across ALL channels</td></tr>
+        <tr><td>Tier 2 accounts</td><td>Max <strong>2 touches per 14-day window</strong></td></tr>
+        <tr><td>Tier 3 accounts</td><td>Max <strong>1 touch per 14-day window</strong></td></tr>
+        <tr><td>Cooling Off period</td><td>Set 'Cooling Off = Yes' → account paused for 14 days</td></tr>
+        <tr><td>Who can override</td><td>Team lead only — add note in Notes column</td></tr>
+      </table>
+    </div>
+    <div class="rules-card">
+      <h3>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M3 4h10M3 12h6"/></svg>
+        How to log a touchpoint
+      </h3>
+      <ol style="padding-left: 18px; display: flex; flex-direction: column; gap: 7px; font-size: 13px; color: var(--text);">
+        <li>Click <strong>Log Touchpoint</strong> from any page</li>
+        <li>Fill in Account Name, Date, Sent By, Tier, Channel</li>
+        <li>Enter the Campaign / Email Name</li>
+        <li>If account has hit the touch limit in 14 days → set Cooling Off = Yes</li>
+        <li>Check Dashboard for instant status update</li>
+      </ol>
+    </div>
+    <div class="rules-card">
+      <h3>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M6 8l2 2 4-4"/></svg>
+        Channel definitions
+      </h3>
+      <table class="rules-table">
+        <tr><td>Email</td><td>All email sends via HubSpot, Outreach, or manual</td></tr>
+        <tr><td>LinkedIn</td><td>InMail, connection requests, or post engagement</td></tr>
+        <tr><td>Paid Ad</td><td>LinkedIn Ads, Google Display, retargeting pixels</td></tr>
+        <tr><td>Webinar</td><td>Webinar invites and follow-ups</td></tr>
+        <tr><td>Event</td><td>In-person events, summits, booths</td></tr>
+        <tr><td>Direct Mail</td><td>Physical gift drops or mail</td></tr>
+      </table>
+    </div>
+    <div class="rules-card">
+      <h3>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l4 4 4-4M4 8l4 4 4-4"/></svg>
+        Status indicators
+      </h3>
+      <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
+        <div style="display:flex; align-items:center; gap:8px;"><span class="dot dot-green"></span><strong>Active</strong> — within touch limits, recent engagement</div>
+        <div style="display:flex; align-items:center; gap:8px;"><span class="dot dot-amber"></span><strong>At limit</strong> — approaching max touches for the 14-day window</div>
+        <div style="display:flex; align-items:center; gap:8px;"><span class="dot dot-red"></span><strong>Cooling Off</strong> — do not contact, resume after 14-day pause</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Log Touchpoint</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Account Name *</label>
+        <input id="f-account" class="form-input" type="text" placeholder="e.g. Acme Corp" list="accounts-list">
+        <datalist id="accounts-list"></datalist>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Date *</label>
+        <input id="f-date" class="form-input" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sent By *</label>
+        <input id="f-sentby" class="form-input" type="text" placeholder="e.g. Sarah K.">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tier *</label>
+        <select id="f-tier" class="form-input">
+          <option value="">Select tier</option>
+          <option>Tier 1</option>
+          <option>Tier 2</option>
+          <option>Tier 3</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Channel *</label>
+        <select id="f-channel" class="form-input">
+          <option value="">Select channel</option>
+          <option>Email</option>
+          <option>LinkedIn</option>
+          <option>Webinar</option>
+          <option>Event</option>
+          <option>Direct Mail</option>
+          <option>Paid Ad</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Response / Outcome</label>
+        <select id="f-outcome" class="form-input">
+          <option value="">Select outcome</option>
+          <option>Opened</option>
+          <option>Clicked</option>
+          <option>Replied</option>
+          <option>Meeting Booked</option>
+          <option>No Response</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Campaign / Email Name *</label>
+        <input id="f-campaign" class="form-input" type="text" placeholder="e.g. Q2 ABM Nurture – Wave 1">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cooling Off?</label>
+        <select id="f-cooling" class="form-input">
+          <option value="No">No</option>
+          <option value="Yes">Yes</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Notes</label>
+        <textarea id="f-notes" class="form-input" placeholder="Any additional context..."></textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEntry()" id="save-btn">Save Touchpoint</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOADING OVERLAY -->
+<div id="loading-overlay" style="display:none; position:fixed; inset:0; background:rgba(247,246,242,0.85); z-index:2000; align-items:center; justify-content:center; flex-direction:column; gap:12px;">
+  <div style="width:32px; height:32px; border:3px solid var(--border); border-top-color: var(--accent); border-radius:50%; animation: spin 0.7s linear infinite;"></div>
+  <div style="font-size:13px; color:var(--text2);" id="loading-msg">Loading from Airtable…</div>
+</div>
+<style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+
+<div class="toast" id="toast"></div>
+
+<!-- CSV PREVIEW MODAL -->
+<div class="modal-overlay" id="csv-modal-overlay" onclick="closeCSVModalOutside(event)">
+  <div class="modal" style="max-width: 820px;">
+    <div class="modal-title">Review Bulk Upload</div>
+    <div id="csv-summary" style="font-size:13px; color: var(--text2); margin-bottom: 14px;"></div>
+    <div id="csv-errors" style="display:none; background: var(--red-light); border: 1px solid #F5CABD; border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px; color: var(--red); margin-bottom: 14px;"></div>
+    <div style="overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); max-height: 340px; overflow-y: auto;">
+      <table style="width:100%; border-collapse: collapse; font-size: 12px;">
+        <thead id="csv-thead" style="position: sticky; top: 0; background: var(--surface2);"></thead>
+        <tbody id="csv-tbody"></tbody>
+      </table>
+    </div>
+    <div class="form-actions">
+      <button class="btn" onclick="closeCSVModal()">Cancel</button>
+      <button class="btn btn-primary" id="csv-confirm-btn" onclick="confirmCSVImport()">Import All Rows</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── AIRTABLE CONFIG ───────────────────────────────────────────────────────
+const AT_TOKEN = 'patwo6DIJ3qqQknLU.da7d70212c7103d851a216fd7290ad007d151f23a16d35d324204c7c60074915';
+const AT_BASE  = 'appbkCa4mNhGCzCb7';
+const AT_TABLE = 'Touchpoints';
+const AT_URL   = `https://api.airtable.com/v0/${AT_BASE}/${encodeURIComponent(AT_TABLE)}`;
+const AT_HEADS = { 'Authorization': `Bearer ${AT_TOKEN}`, 'Content-Type': 'application/json' };
+
+// ── LOCAL STATE ───────────────────────────────────────────────────────────
+let data = [];
+let editId = null;
+
+// Convert Airtable record → app object
+function fromAT(rec) {
+  const f = rec.fields;
+  return {
+    id: rec.id,
+    account:    f['Account']     || '',
+    date:       f['Date']        || '',
+    sentBy:     f['Sent By']     || '',
+    tier:       f['Tier']        || '',
+    channel:    f['Channel']     || '',
+    campaign:   f['Campaign']    || '',
+    coolingOff: f['Cooling Off'] || 'No',
+    outcome:    f['Outcome']     || '',
+    notes:      f['Notes']       || '',
+  };
+}
+
+// Convert app object → Airtable fields
+function toAT(obj) {
+  const fields = {
+    'Account':     obj.account,
+    'Date':        obj.date,
+    'Sent By':     obj.sentBy,
+    'Tier':        obj.tier,
+    'Channel':     obj.channel,
+    'Campaign':    obj.campaign,
+    'Cooling Off': obj.coolingOff,
+    'Outcome':     obj.outcome,
+    'Notes':       obj.notes,
+  };
+  // Remove empty strings so Airtable doesn't complain about optional fields
+  Object.keys(fields).forEach(k => { if (fields[k] === '') delete fields[k]; });
+  return fields;
+}
+
+// ── AIRTABLE API CALLS ────────────────────────────────────────────────────
+async function atFetchAll() {
+  let records = [], offset = null;
+  do {
+    const url = AT_URL + '?pageSize=100&sort%5B0%5D%5Bfield%5D=Date&sort%5B0%5D%5Bdirection%5D=desc' + (offset ? `&offset=${offset}` : '');
+    const res = await fetch(url, { headers: AT_HEADS });
+    if (!res.ok) throw new Error(`Airtable fetch failed: ${res.status} ${await res.text()}`);
+    const json = await res.json();
+    records = records.concat(json.records || []);
+    offset = json.offset;
+  } while (offset);
+  return records.map(fromAT);
+}
+
+async function atCreate(obj) {
+  const res = await fetch(AT_URL, {
+    method: 'POST', headers: AT_HEADS,
+    body: JSON.stringify({ fields: toAT(obj) })
+  });
+  if (!res.ok) throw new Error(`Airtable create failed: ${res.status} ${await res.text()}`);
+  return fromAT(await res.json());
+}
+
+async function atUpdate(id, obj) {
+  const res = await fetch(`${AT_URL}/${id}`, {
+    method: 'PATCH', headers: AT_HEADS,
+    body: JSON.stringify({ fields: toAT(obj) })
+  });
+  if (!res.ok) throw new Error(`Airtable update failed: ${res.status} ${await res.text()}`);
+  return fromAT(await res.json());
+}
+
+async function atDelete(id) {
+  const res = await fetch(`${AT_URL}/${id}`, { method: 'DELETE', headers: AT_HEADS });
+  if (!res.ok) throw new Error(`Airtable delete failed: ${res.status} ${await res.text()}`);
+}
+
+async function atCreateBatch(objects) {
+  // Airtable allows max 10 records per batch create
+  for (let i = 0; i < objects.length; i += 10) {
+    const batch = objects.slice(i, i + 10);
+    const res = await fetch(AT_URL, {
+      method: 'POST', headers: AT_HEADS,
+      body: JSON.stringify({ records: batch.map(o => ({ fields: toAT(o) })) })
+    });
+    if (!res.ok) throw new Error(`Airtable batch failed: ${res.status} ${await res.text()}`);
+    const json = await res.json();
+    json.records.forEach(r => data.push(fromAT(r)));
+  }
+}
+
+// ── LOADING STATE ─────────────────────────────────────────────────────────
+function setLoading(on) {
+  document.getElementById('loading-overlay').style.display = on ? 'flex' : 'none';
+}
+
+async function loadData() {
+  setLoading(true);
+  try {
+    data = await atFetchAll();
+  } catch(e) {
+    showToast('Could not load from Airtable — check your connection');
+    console.error(e);
+    data = [];
+  }
+  setLoading(false);
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────
+function daysBetween(d1, d2) {
+  return Math.floor((new Date(d2) - new Date(d1)) / 86400000);
+}
+function today() {
+  return new Date().toISOString().slice(0, 10);
+}
+function touchesIn14Days(entries, accountName) {
+  const t = today();
+  return entries.filter(e => e.account === accountName && daysBetween(e.date, t) <= 14).length;
+}
+function maxTouches(tier) {
+  return tier === 'Tier 3' ? 1 : 2;
+}
+function getAccountSummary() {
+  const map = {};
+  for (const e of data) {
+    if (!map[e.account]) map[e.account] = { account: e.account, tier: e.tier, entries: [] };
+    map[e.account].entries.push(e);
+  }
+  return Object.values(map).map(a => {
+    const sorted = [...a.entries].sort((x,y) => y.date.localeCompare(x.date));
+    const lastEntry = sorted[0];
+    const lastDate = lastEntry?.date;
+    const daysSince = lastDate ? daysBetween(lastDate, today()) : null;
+    const touches14 = touchesIn14Days(a.entries, a.account);
+    const maxT = maxTouches(a.tier);
+    const isCooling = a.entries.some(e => e.coolingOff === 'Yes' && daysBetween(e.date, today()) <= 14);
+    let status = 'Active';
+    if (isCooling) status = 'Cooling Off';
+    else if (touches14 >= maxT) status = 'At limit';
+    return { ...a, lastDate, daysSince, touches14, maxT, isCooling, status, total: a.entries.length };
+  });
+}
+
+function channelClass(ch) {
+  const m = { 'Email': 'email', 'LinkedIn': 'linkedin', 'Webinar': 'webinar', 'Event': 'event', 'Direct Mail': 'direct', 'Paid Ad': 'paid' };
+  return 'badge badge-channel-' + (m[ch] || 'email');
+}
+function outcomeClass(o) {
+  const m = { 'Opened': 'opened', 'Clicked': 'clicked', 'Replied': 'replied', 'Meeting Booked': 'meeting', 'No Response': 'none' };
+  return 'badge badge-' + (m[o] || 'none');
+}
+function tierClass(t) {
+  const m = { 'Tier 1': 'tier1', 'Tier 2': 'tier2', 'Tier 3': 'tier3' };
+  return 'badge badge-' + (m[t] || 'tier3');
+}
+function formatDate(d) {
+  if (!d) return '—';
+  const [y,m,day] = d.split('-');
+  return `${day}/${m}/${y}`;
+}
+
+// ── PAGES ─────────────────────────────────────────────────────────────────
+async function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  const tabs = { dashboard: 0, tracker: 1, accounts: 2, rules: 3 };
+  document.querySelectorAll('.tab-btn')[tabs[name]].classList.add('active');
+  if (name === 'rules') return;
+  await loadData();
+  if (name === 'dashboard') renderDashboard();
+  if (name === 'tracker') renderTracker();
+  if (name === 'accounts') renderAccounts();
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────────────────
+function renderDashboard() {
+  const summaries = getAccountSummary();
+  const totalAccounts = summaries.length;
+  const totalTouchpoints = data.length;
+  const cooling = summaries.filter(a => a.isCooling).length;
+  const avgTouches = totalAccounts ? (data.length / totalAccounts).toFixed(1) : 0;
+  const touches14d = data.filter(e => daysBetween(e.date, today()) <= 14).length;
+
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card accent"><div class="stat-label">Total Accounts</div><div class="stat-value">${totalAccounts}</div></div>
+    <div class="stat-card"><div class="stat-label">Total Touchpoints</div><div class="stat-value">${totalTouchpoints}</div></div>
+    <div class="stat-card danger"><div class="stat-label">Accounts Cooling Off</div><div class="stat-value">${cooling}</div></div>
+    <div class="stat-card"><div class="stat-label">Avg Touches / Account</div><div class="stat-value">${avgTouches}</div></div>
+    <div class="stat-card success"><div class="stat-label">Touchpoints (last 14d)</div><div class="stat-value">${touches14d}</div></div>
+  `;
+
+  const banner = document.getElementById('cooling-banner');
+  if (cooling > 0) {
+    const names = summaries.filter(a => a.isCooling).map(a => a.account).join(', ');
+    document.getElementById('cooling-text').textContent = `${cooling} account${cooling > 1 ? 's' : ''} are cooling off — do not contact: ${names}`;
+    banner.style.display = 'flex';
+  } else {
+    banner.style.display = 'none';
+  }
+
+  const tbody = document.getElementById('dashboard-tbody');
+  if (summaries.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 32px; color: var(--text2);">No data yet — log your first touchpoint</td></tr>';
+    return;
+  }
+  tbody.innerHTML = summaries.sort((a,b) => {
+    if (a.isCooling && !b.isCooling) return -1;
+    if (!a.isCooling && b.isCooling) return 1;
+    return (a.daysSince || 99) - (b.daysSince || 99);
+  }).map(a => {
+    const statusBg = a.status === 'Cooling Off' ? 'badge-yes' : a.status === 'At limit' ? 'badge' + ' style="background: var(--amber-light); color: var(--amber);"' : 'badge-no';
+    const statusHtml = a.status === 'Cooling Off'
+      ? `<span class="badge badge-yes">Cooling Off</span>`
+      : a.status === 'At limit'
+      ? `<span class="badge" style="background: var(--amber-light); color: var(--amber);">At limit</span>`
+      : `<span class="badge badge-no">Active</span>`;
+    return `<tr>
+      <td class="account-name">${a.account}</td>
+      <td><span class="${tierClass(a.tier)}">${a.tier}</span></td>
+      <td>${a.total}</td>
+      <td class="date-cell">${formatDate(a.lastDate)}</td>
+      <td>${a.daysSince !== null ? a.daysSince + 'd ago' : '—'}</td>
+      <td>${a.touches14} / ${a.maxT}</td>
+      <td>${statusHtml}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── TRACKER ───────────────────────────────────────────────────────────────
+function renderTracker() {
+  const q = (document.getElementById('tracker-search')?.value || '').toLowerCase();
+  const ch = document.getElementById('tracker-channel')?.value || '';
+  const tier = document.getElementById('tracker-tier')?.value || '';
+  const cooling = document.getElementById('tracker-cooling')?.value || '';
+
+  let filtered = [...data].sort((a,b) => b.date.localeCompare(a.date));
+  if (q) filtered = filtered.filter(e => e.account.toLowerCase().includes(q) || e.campaign.toLowerCase().includes(q) || e.sentBy.toLowerCase().includes(q));
+  if (ch) filtered = filtered.filter(e => e.channel === ch);
+  if (tier) filtered = filtered.filter(e => e.tier === tier);
+  if (cooling) filtered = filtered.filter(e => e.coolingOff === cooling);
+
+  const tbody = document.getElementById('tracker-tbody');
+  const empty = document.getElementById('tracker-empty');
+  if (filtered.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  tbody.innerHTML = filtered.map((e, i) => `
+    <tr>
+      <td style="color: var(--text3); font-size: 12px;">${i + 1}</td>
+      <td class="account-name">${e.account}</td>
+      <td class="date-cell">${formatDate(e.date)}</td>
+      <td>${e.sentBy}</td>
+      <td><span class="${tierClass(e.tier)}">${e.tier}</span></td>
+      <td><span class="${channelClass(e.channel)}">${e.channel}</span></td>
+      <td style="max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${e.campaign}">${e.campaign}</td>
+      <td><span class="badge ${e.coolingOff === 'Yes' ? 'badge-yes' : 'badge-no'}">${e.coolingOff}</span></td>
+      <td><span class="${outcomeClass(e.outcome)}">${e.outcome || '—'}</span></td>
+      <td class="notes-cell" title="${e.notes}">${e.notes || '—'}</td>
+      <td>
+        <div style="display:flex; gap:4px;">
+          <button class="btn btn-sm" onclick="editEntry(${e.id})">Edit</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteEntry(${e.id})">Delete</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// ── ACCOUNTS ──────────────────────────────────────────────────────────────
+function renderAccounts() {
+  const summaries = getAccountSummary();
+  const grid = document.getElementById('accounts-grid');
+  const empty = document.getElementById('accounts-empty');
+  if (summaries.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  grid.innerHTML = summaries.sort((a,b) => a.account.localeCompare(b.account)).map(a => {
+    const pct = Math.min(100, (a.touches14 / a.maxT) * 100);
+    const warning = pct >= 100;
+    const statusHtml = a.status === 'Cooling Off'
+      ? `<span class="badge badge-yes">Cooling Off</span>`
+      : a.status === 'At limit'
+      ? `<span class="badge" style="background: var(--amber-light); color: var(--amber);">At limit</span>`
+      : `<span class="badge badge-no">Active</span>`;
+    return `<div class="account-card ${a.isCooling ? 'cooling' : ''}">
+      <div class="account-card-header">
+        <span class="account-card-name">${a.account}</span>
+        ${statusHtml}
+      </div>
+      <span class="${tierClass(a.tier)}">${a.tier}</span>
+      <div class="account-card-stats">
+        <div class="account-stat">
+          <span class="account-stat-val">${a.total}</span>
+          <span class="account-stat-lbl">total touches</span>
+        </div>
+        <div class="account-stat">
+          <span class="account-stat-val">${a.daysSince !== null ? a.daysSince + 'd' : '—'}</span>
+          <span class="account-stat-lbl">since last touch</span>
+        </div>
+        <div class="account-stat">
+          <span class="account-stat-val" style="${warning ? 'color: var(--red)' : ''}">${a.touches14}/${a.maxT}</span>
+          <span class="account-stat-lbl">touches (14d)</span>
+        </div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-label"><span>14-day window</span><span>${a.touches14}/${a.maxT}</span></div>
+        <div class="progress-bar"><div class="progress-bar-fill ${warning ? 'warning' : ''}" style="width: ${pct}%"></div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── MODAL / FORM ──────────────────────────────────────────────────────────
+function openModal(prefill) {
+  editId = null;
+  document.getElementById('modal-title').textContent = 'Log Touchpoint';
+  document.getElementById('save-btn').textContent = 'Save Touchpoint';
+  document.getElementById('f-account').value = prefill?.account || '';
+  document.getElementById('f-date').value = today();
+  document.getElementById('f-sentby').value = '';
+  document.getElementById('f-tier').value = prefill?.tier || '';
+  document.getElementById('f-channel').value = '';
+  document.getElementById('f-outcome').value = '';
+  document.getElementById('f-campaign').value = '';
+  document.getElementById('f-cooling').value = 'No';
+  document.getElementById('f-notes').value = '';
+  updateAccountsList();
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function editEntry(id) {
+  const e = data.find(x => x.id === id);
+  if (!e) return;
+  editId = id;
+  document.getElementById('modal-title').textContent = 'Edit Touchpoint';
+  document.getElementById('save-btn').textContent = 'Update Touchpoint';
+  document.getElementById('f-account').value = e.account;
+  document.getElementById('f-date').value = e.date;
+  document.getElementById('f-sentby').value = e.sentBy;
+  document.getElementById('f-tier').value = e.tier;
+  document.getElementById('f-channel').value = e.channel;
+  document.getElementById('f-outcome').value = e.outcome || '';
+  document.getElementById('f-campaign').value = e.campaign;
+  document.getElementById('f-cooling').value = e.coolingOff;
+  document.getElementById('f-notes').value = e.notes;
+  updateAccountsList();
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+function closeModalOutside(e) { if (e.target === document.getElementById('modal-overlay')) closeModal(); }
+
+function updateAccountsList() {
+  const accounts = [...new Set(data.map(e => e.account))].sort();
+  document.getElementById('accounts-list').innerHTML = accounts.map(a => `<option value="${a}">`).join('');
+}
+
+async function saveEntry() {
+  const account = document.getElementById('f-account').value.trim();
+  const date = document.getElementById('f-date').value;
+  const sentBy = document.getElementById('f-sentby').value.trim();
+  const tier = document.getElementById('f-tier').value;
+  const channel = document.getElementById('f-channel').value;
+  const campaign = document.getElementById('f-campaign').value.trim();
+  if (!account || !date || !sentBy || !tier || !channel || !campaign) {
+    showToast('Please fill in all required fields');
+    return;
+  }
+  const obj = {
+    account, date, sentBy, tier, channel, campaign,
+    coolingOff: document.getElementById('f-cooling').value,
+    outcome: document.getElementById('f-outcome').value,
+    notes: document.getElementById('f-notes').value.trim(),
+  };
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+  try {
+    if (editId) {
+      const updated = await atUpdate(editId, obj);
+      data = data.map(e => e.id === editId ? updated : e);
+      showToast('Touchpoint updated');
+    } else {
+      const created = await atCreate(obj);
+      data.unshift(created);
+      showToast('Touchpoint logged');
+    }
+    closeModal();
+    refreshCurrentPage();
+  } catch(e) {
+    showToast('Save failed — check connection');
+    console.error(e);
+  }
+  btn.disabled = false;
+  btn.textContent = editId ? 'Update Touchpoint' : 'Save Touchpoint';
+}
+
+async function deleteEntry(id) {
+  if (!confirm('Delete this touchpoint?')) return;
+  try {
+    await atDelete(id);
+    data = data.filter(e => e.id !== id);
+    renderTracker();
+    showToast('Touchpoint deleted');
+  } catch(e) {
+    showToast('Delete failed — check connection');
+    console.error(e);
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── CSV BULK UPLOAD ───────────────────────────────────────────────────────
+const CSV_HEADERS = ['account','date','sentBy','tier','channel','campaign','coolingOff','outcome','notes'];
+const REQUIRED_COLS = ['account','date','sentBy','tier','channel','campaign'];
+const VALID_TIERS = ['Tier 1','Tier 2','Tier 3'];
+const VALID_CHANNELS = ['Email','LinkedIn','Webinar','Event','Direct Mail','Paid Ad'];
+const VALID_COOLING = ['Yes','No'];
+const VALID_OUTCOMES = ['Opened','Clicked','Replied','Meeting Booked','No Response',''];
+
+let csvPreviewRows = [];
+
+function downloadTemplate() {
+  const header = CSV_HEADERS.join(',');
+  const example = ['Acme Corp','2025-05-14','Sarah K.','Tier 1','Email','Q2 ABM Nurture – Wave 3','No','Opened','Followed up after event'].join(',');
+  const blob = new Blob([header + '\n' + example + '\n'], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'touchpoints_template.csv';
+  a.click();
+}
+
+function handleCSVUpload(event) {
+  const file = event.target.files[0];
+  event.target.value = '';
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => parseAndPreviewCSV(e.target.result);
+  reader.readAsText(file);
+}
+
+function parseAndPreviewCSV(text) {
+  const lines = text.trim().split(/\r?\n/).filter(l => l.trim());
+  if (lines.length < 2) { showToast('CSV must have a header row and at least one data row'); return; }
+
+  const rawHeaders = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+  // Map CSV headers (case-insensitive, flexible)
+  const headerMap = {};
+  const normalise = s => s.toLowerCase().replace(/[\s_\/\-]+/g, '');
+  const canonMap = {
+    'account': 'account', 'accountname': 'account',
+    'date': 'date',
+    'sentby': 'sentBy', 'sender': 'sentBy', 'by': 'sentBy',
+    'tier': 'tier',
+    'channel': 'channel',
+    'campaign': 'campaign', 'campaignemail': 'campaign', 'emailname': 'campaign',
+    'coolingoff': 'coolingOff', 'cooling': 'coolingOff',
+    'outcome': 'outcome', 'response': 'outcome', 'responseoutcome': 'outcome',
+    'notes': 'notes', 'note': 'notes',
+  };
+  rawHeaders.forEach((h, i) => {
+    const canon = canonMap[normalise(h)];
+    if (canon) headerMap[canon] = i;
+  });
+
+  const missing = REQUIRED_COLS.filter(c => headerMap[c] === undefined);
+  if (missing.length) {
+    showToast('CSV missing columns: ' + missing.join(', '));
+    return;
+  }
+
+  const errors = [];
+  const rows = [];
+  lines.slice(1).forEach((line, li) => {
+    if (!line.trim()) return;
+    const cols = parseCSVLine(line);
+    const get = key => (cols[headerMap[key]] || '').trim().replace(/^"|"$/g, '');
+    const rowNum = li + 2;
+    const account = get('account');
+    const date = get('date');
+    const sentBy = get('sentBy');
+    const tier = get('tier');
+    const channel = get('channel');
+    const campaign = get('campaign');
+    const coolingOff = get('coolingOff') || 'No';
+    const outcome = get('outcome') || '';
+    const notes = get('notes') || '';
+
+    const rowErrors = [];
+    if (!account) rowErrors.push('Account missing');
+    if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) rowErrors.push('Date must be YYYY-MM-DD');
+    if (!sentBy) rowErrors.push('Sent By missing');
+    if (!VALID_TIERS.includes(tier)) rowErrors.push(`Tier must be one of: ${VALID_TIERS.join(', ')}`);
+    if (!VALID_CHANNELS.includes(channel)) rowErrors.push(`Channel must be one of: ${VALID_CHANNELS.join(', ')}`);
+    if (!campaign) rowErrors.push('Campaign missing');
+    if (!VALID_COOLING.includes(coolingOff)) rowErrors.push('Cooling Off must be Yes or No');
+
+    if (rowErrors.length) { errors.push(`Row ${rowNum}: ${rowErrors.join('; ')}`); }
+    rows.push({ account, date, sentBy, tier, channel, campaign, coolingOff, outcome, notes, _errors: rowErrors });
+  });
+
+  csvPreviewRows = rows;
+  showCSVPreview(rows, errors);
+}
+
+function parseCSVLine(line) {
+  const result = [];
+  let current = '';
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') { inQuotes = !inQuotes; }
+    else if (ch === ',' && !inQuotes) { result.push(current); current = ''; }
+    else { current += ch; }
+  }
+  result.push(current);
+  return result;
+}
+
+function showCSVPreview(rows, errors) {
+  const validRows = rows.filter(r => r._errors.length === 0);
+  const errorRows = rows.filter(r => r._errors.length > 0);
+
+  document.getElementById('csv-summary').innerHTML =
+    `<strong>${rows.length}</strong> rows found — <span style="color: var(--green)"><strong>${validRows.length}</strong> valid</span>${errorRows.length ? `, <span style="color: var(--red)"><strong>${errorRows.length}</strong> with errors (will be skipped)</span>` : ''}.`;
+
+  const errDiv = document.getElementById('csv-errors');
+  if (errors.length) {
+    errDiv.style.display = 'block';
+    errDiv.innerHTML = '<strong>Errors (these rows will be skipped):</strong><br>' + errors.map(e => `• ${e}`).join('<br>');
+  } else {
+    errDiv.style.display = 'none';
+  }
+
+  document.getElementById('csv-thead').innerHTML = `<tr>${
+    ['Account','Date','Sent By','Tier','Channel','Campaign','Cooling?','Outcome','Notes','Status'].map(h =>
+      `<th style="padding: 8px 12px; font-size:11px; font-weight:600; color: var(--text2); text-transform:uppercase; letter-spacing:0.06em; border-bottom: 1px solid var(--border);">${h}</th>`
+    ).join('')
+  }</tr>`;
+
+  document.getElementById('csv-tbody').innerHTML = rows.map(r => {
+    const ok = r._errors.length === 0;
+    const rowStyle = ok ? '' : 'background: var(--red-light);';
+    return `<tr style="${rowStyle}">
+      <td style="padding:8px 12px; border-bottom: 1px solid var(--border);">${r.account}</td>
+      <td style="padding:8px 12px; border-bottom: 1px solid var(--border); font-family: monospace;">${r.date}</td>
+      <td style="padding:8px 12px; border-bottom: 1px solid var(--border);">${r.sentBy}</td>
+      <td style="padding:8px 12px; border-bottom: 1px solid var(--border);">${r.tier}</td>
+      <td style="padding:8px 12px; border-bottom: 1px solid var(--border);">${r.channel}</td>
+      <td style="padding:8px 12px; border-bottom: 1px solid var(--border); max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${r.campaign}</td>
+      <td style="padding:8px 12px; border-bottom: 1px solid var(--border);">${r.coolingOff}</td>
+      <td style="padding:8px 12px; border-bottom: 1px solid var(--border);">${r.outcome || '—'}</td>
+      <td style="padding:8px 12px; border-bottom: 1px solid var(--border); max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${r.notes || '—'}</td>
+      <td style="padding:8px 12px; border-bottom: 1px solid var(--border);">${ok
+        ? '<span style="color: var(--green); font-weight:500;">✓ OK</span>'
+        : `<span style="color: var(--red); font-size:11px;" title="${r._errors.join('; ')}">⚠ Skip</span>`
+      }</td>
+    </tr>`;
+  }).join('');
+
+  const btn = document.getElementById('csv-confirm-btn');
+  btn.textContent = `Import ${validRows.length} Row${validRows.length !== 1 ? 's' : ''}`;
+  btn.disabled = validRows.length === 0;
+
+  document.getElementById('csv-modal-overlay').classList.add('open');
+}
+
+async function confirmCSVImport() {
+  const valid = csvPreviewRows.filter(r => r._errors.length === 0);
+  const btn = document.getElementById('csv-confirm-btn');
+  btn.disabled = true;
+  btn.textContent = 'Importing…';
+  try {
+    await atCreateBatch(valid);
+    closeCSVModal();
+    showToast(`${valid.length} touchpoints imported`);
+    showPage('tracker');
+  } catch(e) {
+    showToast('Import failed — check connection');
+    console.error(e);
+    btn.disabled = false;
+    btn.textContent = `Import ${valid.length} Rows`;
+  }
+}
+
+function closeCSVModal() {
+  document.getElementById('csv-modal-overlay').classList.remove('open');
+  csvPreviewRows = [];
+}
+function closeCSVModalOutside(e) {
+  if (e.target === document.getElementById('csv-modal-overlay')) closeCSVModal();
+}
+
+// ── REFRESH HELPERS ───────────────────────────────────────────────────────
+function refreshCurrentPage() {
+  const active = document.querySelector('.page.active');
+  if (!active) return;
+  if (active.id === 'page-dashboard') renderDashboard();
+  if (active.id === 'page-tracker') renderTracker();
+  if (active.id === 'page-accounts') renderAccounts();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+(async () => {
+  await loadData();
+  renderDashboard();
+})();
+</script>
+</body>
+</html>
