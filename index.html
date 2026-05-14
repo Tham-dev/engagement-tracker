@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
   :root {
     --bg: #F7F6F2;
     --surface: #FFFFFF;
@@ -34,7 +34,7 @@
     --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
     --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
   }
-
+ 
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--bg);
@@ -43,7 +43,7 @@
     line-height: 1.5;
     min-height: 100vh;
   }
-
+ 
   /* HEADER */
   .header {
     background: var(--surface);
@@ -72,7 +72,7 @@
     display: flex; align-items: center; justify-content: center;
   }
   .brand-icon svg { width: 16px; height: 16px; }
-
+ 
   /* NAV TABS */
   .nav-tabs {
     display: flex;
@@ -98,16 +98,16 @@
     color: var(--text);
     box-shadow: var(--shadow);
   }
-
+ 
   .header-actions { display: flex; gap: 8px; align-items: center; }
-
+ 
   /* MAIN */
   .main { padding: 24px; max-width: 1400px; margin: 0 auto; }
-
+ 
   /* PAGES */
   .page { display: none; }
   .page.active { display: block; }
-
+ 
   /* STATS GRID */
   .stats-grid {
     display: grid;
@@ -131,7 +131,7 @@
   .stat-card.danger .stat-value { color: var(--red); }
   .stat-card.success { border-color: #B8DFC8; background: var(--green-light); }
   .stat-card.success .stat-value { color: var(--green); }
-
+ 
   /* SECTION HEADER */
   .section-header {
     display: flex;
@@ -140,7 +140,7 @@
     margin-bottom: 14px;
   }
   .section-title { font-size: 15px; font-weight: 600; }
-
+ 
   /* TABLE */
   .table-wrap {
     background: var(--surface);
@@ -173,7 +173,7 @@
   .search-wrap { position: relative; flex: 1; min-width: 180px; }
   .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--text3); pointer-events: none; }
   .search-input:focus { border-color: var(--accent); }
-
+ 
   select.filter-select {
     padding: 7px 10px;
     border: 1px solid var(--border);
@@ -186,7 +186,7 @@
     cursor: pointer;
   }
   select.filter-select:focus { border-color: var(--accent); }
-
+ 
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   thead { background: var(--surface2); }
   th {
@@ -208,7 +208,7 @@
   }
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: var(--bg); }
-
+ 
   .badge {
     display: inline-flex; align-items: center; gap: 4px;
     padding: 2px 8px;
@@ -233,11 +233,11 @@
   .badge-channel-event { background: var(--amber-light); color: var(--amber); }
   .badge-channel-direct { background: var(--green-light); color: var(--green); }
   .badge-channel-paid { background: #FEF9EE; color: #92400E; }
-
+ 
   .account-name { font-weight: 500; }
   .date-cell { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text2); }
   .notes-cell { color: var(--text2); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
+ 
   .btn {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 7px 14px;
@@ -264,7 +264,7 @@
   .btn-danger:hover { background: var(--red-light); }
   .btn-sm { padding: 4px 10px; font-size: 12px; }
   .btn svg { width: 14px; height: 14px; flex-shrink: 0; }
-
+ 
   /* MODAL */
   .modal-overlay {
     display: none;
@@ -308,7 +308,7 @@
   }
   textarea.form-input { resize: vertical; min-height: 72px; }
   .form-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
-
+ 
   /* ACCOUNT TABLE SUMMARY */
   .accounts-grid {
     display: grid;
@@ -336,7 +336,7 @@
   .progress-bar { height: 4px; background: var(--surface2); border-radius: 100px; overflow: hidden; }
   .progress-bar-fill { height: 100%; border-radius: 100px; background: var(--accent); transition: width 0.4s; }
   .progress-bar-fill.warning { background: var(--red); }
-
+ 
   /* RULES PAGE */
   .rules-card {
     background: var(--surface);
@@ -355,7 +355,7 @@
   .dot-red { background: var(--red); }
   .dot-amber { background: #D97706; }
   .dot-green { background: var(--green); }
-
+ 
   /* EMPTY STATE */
   .empty-state {
     padding: 48px 24px;
@@ -364,7 +364,7 @@
   }
   .empty-state svg { width: 40px; height: 40px; margin: 0 auto 12px; opacity: 0.3; }
   .empty-state p { font-size: 14px; }
-
+ 
   /* TOAST */
   .toast {
     position: fixed;
@@ -381,7 +381,7 @@
     pointer-events: none;
   }
   .toast.show { opacity: 1; transform: translateY(0); }
-
+ 
   .cooling-alert {
     background: var(--red-light);
     border: 1px solid #F5CABD;
@@ -394,9 +394,9 @@
     font-size: 13px;
   }
   .cooling-alert svg { width: 16px; height: 16px; color: var(--red); flex-shrink: 0; }
-
+ 
   .page-sub { font-size: 13px; color: var(--text2); margin-bottom: 20px; }
-
+ 
   @media (max-width: 600px) {
     .main { padding: 16px; }
     .form-grid { grid-template-columns: 1fr; }
@@ -405,7 +405,7 @@
 </style>
 </head>
 <body>
-
+ 
 <header class="header">
   <div class="header-brand">
     <div class="brand-icon">
@@ -440,9 +440,9 @@
     </button>
   </div>
 </header>
-
+ 
 <main class="main">
-
+ 
   <!-- DASHBOARD -->
   <div id="page-dashboard" class="page active">
     <div id="cooling-banner" style="display:none" class="cooling-alert">
@@ -458,6 +458,8 @@
         <thead>
           <tr>
             <th>Account</th>
+            <th>SF Account ID</th>
+            <th>Country</th>
             <th>Tier</th>
             <th>Total Touches</th>
             <th>Last Touch</th>
@@ -470,7 +472,7 @@
       </table>
     </div>
   </div>
-
+ 
   <!-- TRACKER -->
   <div id="page-tracker" class="page">
     <div class="section-header">
@@ -514,7 +516,10 @@
         <thead>
           <tr>
             <th>#</th>
+            <th>SF Account ID</th>
             <th>Account</th>
+            <th>Domain</th>
+            <th>Country</th>
             <th>Date</th>
             <th>Sent By</th>
             <th>Tier</th>
@@ -534,7 +539,7 @@
       </div>
     </div>
   </div>
-
+ 
   <!-- ACCOUNTS -->
   <div id="page-accounts" class="page">
     <div class="section-header">
@@ -549,7 +554,7 @@
       <p>No accounts yet — log your first touchpoint to get started</p>
     </div>
   </div>
-
+ 
   <!-- RULES -->
   <div id="page-rules" class="page">
     <div class="rules-card">
@@ -604,14 +609,31 @@
       </div>
     </div>
   </div>
-
+ 
 </main>
-
+ 
 <!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
   <div class="modal">
     <div class="modal-title" id="modal-title">Log Touchpoint</div>
     <div class="form-grid">
+      <div class="form-group full" style="background: var(--accent-light); border: 1px solid #C5D4F9; border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 2px;">
+        <div style="font-size: 11px; font-weight: 600; color: var(--accent-text); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;">Account Identifier — use SF ID when available</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+          <div class="form-group" style="margin:0;">
+            <label class="form-label">Salesforce Account ID</label>
+            <input id="f-sfid" class="form-input" type="text" placeholder="e.g. 0015g00000XXXXX">
+          </div>
+          <div class="form-group" style="margin:0;">
+            <label class="form-label">Account Domain</label>
+            <input id="f-domain" class="form-input" type="text" placeholder="e.g. acme.com">
+          </div>
+          <div class="form-group" style="margin:0;">
+            <label class="form-label">Country</label>
+            <input id="f-country" class="form-input" type="text" placeholder="e.g. United Kingdom">
+          </div>
+        </div>
+      </div>
       <div class="form-group">
         <label class="form-label">Account Name *</label>
         <input id="f-account" class="form-input" type="text" placeholder="e.g. Acme Corp" list="accounts-list">
@@ -679,16 +701,16 @@
     </div>
   </div>
 </div>
-
+ 
 <!-- LOADING OVERLAY -->
 <div id="loading-overlay" style="display:none; position:fixed; inset:0; background:rgba(247,246,242,0.85); z-index:2000; align-items:center; justify-content:center; flex-direction:column; gap:12px;">
   <div style="width:32px; height:32px; border:3px solid var(--border); border-top-color: var(--accent); border-radius:50%; animation: spin 0.7s linear infinite;"></div>
   <div style="font-size:13px; color:var(--text2);" id="loading-msg">Loading from Airtable…</div>
 </div>
 <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
-
+ 
 <div class="toast" id="toast"></div>
-
+ 
 <!-- CSV PREVIEW MODAL -->
 <div class="modal-overlay" id="csv-modal-overlay" onclick="closeCSVModalOutside(event)">
   <div class="modal" style="max-width: 820px;">
@@ -707,7 +729,7 @@
     </div>
   </div>
 </div>
-
+ 
 <script>
 // ── AIRTABLE CONFIG ───────────────────────────────────────────────────────
 const AT_TOKEN = 'patwo6DIJ3qqQknLU.da7d70212c7103d851a216fd7290ad007d151f23a16d35d324204c7c60074915';
@@ -715,17 +737,20 @@ const AT_BASE  = 'appbkCa4mNhGCzCb7';
 const AT_TABLE = 'Touchpoints';
 const AT_URL   = `https://api.airtable.com/v0/${AT_BASE}/${encodeURIComponent(AT_TABLE)}`;
 const AT_HEADS = { 'Authorization': `Bearer ${AT_TOKEN}`, 'Content-Type': 'application/json' };
-
+ 
 // ── LOCAL STATE ───────────────────────────────────────────────────────────
 let data = [];
 let editId = null;
-
+ 
 // Convert Airtable record → app object
 function fromAT(rec) {
   const f = rec.fields;
   return {
     id: rec.id,
+    sfId:       f['Salesforce Account ID'] || '',
     account:    f['Account']     || '',
+    domain:     f['Account Domain'] || '',
+    country:    f['Country']     || '',
     date:       f['Date']        || '',
     sentBy:     f['Sent By']     || '',
     tier:       f['Tier']        || '',
@@ -736,25 +761,36 @@ function fromAT(rec) {
     notes:      f['Notes']       || '',
   };
 }
-
+ 
 // Convert app object → Airtable fields
 function toAT(obj) {
   const fields = {
-    'Account':     obj.account,
-    'Date':        obj.date,
-    'Sent By':     obj.sentBy,
-    'Tier':        obj.tier,
-    'Channel':     obj.channel,
-    'Campaign':    obj.campaign,
-    'Cooling Off': obj.coolingOff,
-    'Outcome':     obj.outcome,
-    'Notes':       obj.notes,
+    'Salesforce Account ID': obj.sfId,
+    'Account':               obj.account,
+    'Account Domain':        obj.domain,
+    'Country':               obj.country,
+    'Date':                  obj.date,
+    'Sent By':               obj.sentBy,
+    'Tier':                  obj.tier,
+    'Channel':               obj.channel,
+    'Campaign':              obj.campaign,
+    'Cooling Off':           obj.coolingOff,
+    'Outcome':               obj.outcome,
+    'Notes':                 obj.notes,
   };
-  // Remove empty strings so Airtable doesn't complain about optional fields
   Object.keys(fields).forEach(k => { if (fields[k] === '') delete fields[k]; });
   return fields;
 }
-
+ 
+// Get the best unique key for grouping: SF ID → domain → account name
+function accountKey(e) {
+  return e.sfId || e.domain || e.account;
+}
+// Display label for an account group
+function accountLabel(e) {
+  return e.account || e.domain || e.sfId;
+}
+ 
 // ── AIRTABLE API CALLS ────────────────────────────────────────────────────
 async function atFetchAll() {
   let records = [], offset = null;
@@ -768,7 +804,7 @@ async function atFetchAll() {
   } while (offset);
   return records.map(fromAT);
 }
-
+ 
 async function atCreate(obj) {
   const res = await fetch(AT_URL, {
     method: 'POST', headers: AT_HEADS,
@@ -777,7 +813,7 @@ async function atCreate(obj) {
   if (!res.ok) throw new Error(`Airtable create failed: ${res.status} ${await res.text()}`);
   return fromAT(await res.json());
 }
-
+ 
 async function atUpdate(id, obj) {
   const res = await fetch(`${AT_URL}/${id}`, {
     method: 'PATCH', headers: AT_HEADS,
@@ -786,12 +822,12 @@ async function atUpdate(id, obj) {
   if (!res.ok) throw new Error(`Airtable update failed: ${res.status} ${await res.text()}`);
   return fromAT(await res.json());
 }
-
+ 
 async function atDelete(id) {
   const res = await fetch(`${AT_URL}/${id}`, { method: 'DELETE', headers: AT_HEADS });
   if (!res.ok) throw new Error(`Airtable delete failed: ${res.status} ${await res.text()}`);
 }
-
+ 
 async function atCreateBatch(objects) {
   // Airtable allows max 10 records per batch create
   for (let i = 0; i < objects.length; i += 10) {
@@ -805,12 +841,12 @@ async function atCreateBatch(objects) {
     json.records.forEach(r => data.push(fromAT(r)));
   }
 }
-
+ 
 // ── LOADING STATE ─────────────────────────────────────────────────────────
 function setLoading(on) {
   document.getElementById('loading-overlay').style.display = on ? 'flex' : 'none';
 }
-
+ 
 async function loadData() {
   setLoading(true);
   try {
@@ -822,7 +858,7 @@ async function loadData() {
   }
   setLoading(false);
 }
-
+ 
 // ── HELPERS ───────────────────────────────────────────────────────────────
 function daysBetween(d1, d2) {
   return Math.floor((new Date(d2) - new Date(d1)) / 86400000);
@@ -840,15 +876,21 @@ function maxTouches(tier) {
 function getAccountSummary() {
   const map = {};
   for (const e of data) {
-    if (!map[e.account]) map[e.account] = { account: e.account, tier: e.tier, entries: [] };
-    map[e.account].entries.push(e);
+    const key = accountKey(e);
+    if (!map[key]) map[key] = { key, account: e.account, sfId: e.sfId, domain: e.domain, country: e.country, tier: e.tier, entries: [] };
+    // Keep most complete display name
+    if (e.account && !map[key].account) map[key].account = e.account;
+    if (e.sfId && !map[key].sfId) map[key].sfId = e.sfId;
+    if (e.domain && !map[key].domain) map[key].domain = e.domain;
+    if (e.country && !map[key].country) map[key].country = e.country;
+    map[key].entries.push(e);
   }
   return Object.values(map).map(a => {
     const sorted = [...a.entries].sort((x,y) => y.date.localeCompare(x.date));
     const lastEntry = sorted[0];
     const lastDate = lastEntry?.date;
     const daysSince = lastDate ? daysBetween(lastDate, today()) : null;
-    const touches14 = touchesIn14Days(a.entries, a.account);
+    const touches14 = a.entries.filter(e => daysBetween(e.date, today()) <= 14).length;
     const maxT = maxTouches(a.tier);
     const isCooling = a.entries.some(e => e.coolingOff === 'Yes' && daysBetween(e.date, today()) <= 14);
     let status = 'Active';
@@ -857,7 +899,7 @@ function getAccountSummary() {
     return { ...a, lastDate, daysSince, touches14, maxT, isCooling, status, total: a.entries.length };
   });
 }
-
+ 
 function channelClass(ch) {
   const m = { 'Email': 'email', 'LinkedIn': 'linkedin', 'Webinar': 'webinar', 'Event': 'event', 'Direct Mail': 'direct', 'Paid Ad': 'paid' };
   return 'badge badge-channel-' + (m[ch] || 'email');
@@ -875,7 +917,7 @@ function formatDate(d) {
   const [y,m,day] = d.split('-');
   return `${day}/${m}/${y}`;
 }
-
+ 
 // ── PAGES ─────────────────────────────────────────────────────────────────
 async function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -889,7 +931,7 @@ async function showPage(name) {
   if (name === 'tracker') renderTracker();
   if (name === 'accounts') renderAccounts();
 }
-
+ 
 // ── DASHBOARD ─────────────────────────────────────────────────────────────
 function renderDashboard() {
   const summaries = getAccountSummary();
@@ -898,7 +940,7 @@ function renderDashboard() {
   const cooling = summaries.filter(a => a.isCooling).length;
   const avgTouches = totalAccounts ? (data.length / totalAccounts).toFixed(1) : 0;
   const touches14d = data.filter(e => daysBetween(e.date, today()) <= 14).length;
-
+ 
   document.getElementById('stats-grid').innerHTML = `
     <div class="stat-card accent"><div class="stat-label">Total Accounts</div><div class="stat-value">${totalAccounts}</div></div>
     <div class="stat-card"><div class="stat-label">Total Touchpoints</div><div class="stat-value">${totalTouchpoints}</div></div>
@@ -906,7 +948,7 @@ function renderDashboard() {
     <div class="stat-card"><div class="stat-label">Avg Touches / Account</div><div class="stat-value">${avgTouches}</div></div>
     <div class="stat-card success"><div class="stat-label">Touchpoints (last 14d)</div><div class="stat-value">${touches14d}</div></div>
   `;
-
+ 
   const banner = document.getElementById('cooling-banner');
   if (cooling > 0) {
     const names = summaries.filter(a => a.isCooling).map(a => a.account).join(', ');
@@ -915,7 +957,7 @@ function renderDashboard() {
   } else {
     banner.style.display = 'none';
   }
-
+ 
   const tbody = document.getElementById('dashboard-tbody');
   if (summaries.length === 0) {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 32px; color: var(--text2);">No data yet — log your first touchpoint</td></tr>';
@@ -926,14 +968,15 @@ function renderDashboard() {
     if (!a.isCooling && b.isCooling) return 1;
     return (a.daysSince || 99) - (b.daysSince || 99);
   }).map(a => {
-    const statusBg = a.status === 'Cooling Off' ? 'badge-yes' : a.status === 'At limit' ? 'badge' + ' style="background: var(--amber-light); color: var(--amber);"' : 'badge-no';
     const statusHtml = a.status === 'Cooling Off'
       ? `<span class="badge badge-yes">Cooling Off</span>`
       : a.status === 'At limit'
       ? `<span class="badge" style="background: var(--amber-light); color: var(--amber);">At limit</span>`
       : `<span class="badge badge-no">Active</span>`;
     return `<tr>
-      <td class="account-name">${a.account}</td>
+      <td class="account-name">${a.account || a.domain || a.sfId}</td>
+      <td><span style="font-family:'DM Mono',monospace; font-size:11px; color: var(--text2);">${a.sfId || '—'}</span></td>
+      <td>${a.country || '—'}</td>
       <td><span class="${tierClass(a.tier)}">${a.tier}</span></td>
       <td>${a.total}</td>
       <td class="date-cell">${formatDate(a.lastDate)}</td>
@@ -943,20 +986,20 @@ function renderDashboard() {
     </tr>`;
   }).join('');
 }
-
+ 
 // ── TRACKER ───────────────────────────────────────────────────────────────
 function renderTracker() {
   const q = (document.getElementById('tracker-search')?.value || '').toLowerCase();
   const ch = document.getElementById('tracker-channel')?.value || '';
   const tier = document.getElementById('tracker-tier')?.value || '';
   const cooling = document.getElementById('tracker-cooling')?.value || '';
-
+ 
   let filtered = [...data].sort((a,b) => b.date.localeCompare(a.date));
   if (q) filtered = filtered.filter(e => e.account.toLowerCase().includes(q) || e.campaign.toLowerCase().includes(q) || e.sentBy.toLowerCase().includes(q));
   if (ch) filtered = filtered.filter(e => e.channel === ch);
   if (tier) filtered = filtered.filter(e => e.tier === tier);
   if (cooling) filtered = filtered.filter(e => e.coolingOff === cooling);
-
+ 
   const tbody = document.getElementById('tracker-tbody');
   const empty = document.getElementById('tracker-empty');
   if (filtered.length === 0) {
@@ -968,25 +1011,28 @@ function renderTracker() {
   tbody.innerHTML = filtered.map((e, i) => `
     <tr>
       <td style="color: var(--text3); font-size: 12px;">${i + 1}</td>
-      <td class="account-name">${e.account}</td>
+      <td><span style="font-family:'DM Mono',monospace; font-size:11px; color: var(--accent-text); background: var(--accent-light); padding: 2px 6px; border-radius: 4px;">${e.sfId || '—'}</span></td>
+      <td class="account-name">${e.account || '—'}</td>
+      <td style="font-size:12px; color: var(--text2);">${e.domain || '—'}</td>
+      <td style="font-size:12px; color: var(--text2);">${e.country || '—'}</td>
       <td class="date-cell">${formatDate(e.date)}</td>
       <td>${e.sentBy}</td>
       <td><span class="${tierClass(e.tier)}">${e.tier}</span></td>
       <td><span class="${channelClass(e.channel)}">${e.channel}</span></td>
-      <td style="max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${e.campaign}">${e.campaign}</td>
+      <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${e.campaign}">${e.campaign}</td>
       <td><span class="badge ${e.coolingOff === 'Yes' ? 'badge-yes' : 'badge-no'}">${e.coolingOff}</span></td>
       <td><span class="${outcomeClass(e.outcome)}">${e.outcome || '—'}</span></td>
       <td class="notes-cell" title="${e.notes}">${e.notes || '—'}</td>
       <td>
         <div style="display:flex; gap:4px;">
-          <button class="btn btn-sm" onclick="editEntry(${e.id})">Edit</button>
-          <button class="btn btn-sm btn-danger" onclick="deleteEntry(${e.id})">Delete</button>
+          <button class="btn btn-sm" onclick="editEntry('${e.id}')">Edit</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteEntry('${e.id}')">Delete</button>
         </div>
       </td>
     </tr>
   `).join('');
 }
-
+ 
 // ── ACCOUNTS ──────────────────────────────────────────────────────────────
 function renderAccounts() {
   const summaries = getAccountSummary();
@@ -998,7 +1044,7 @@ function renderAccounts() {
     return;
   }
   empty.style.display = 'none';
-  grid.innerHTML = summaries.sort((a,b) => a.account.localeCompare(b.account)).map(a => {
+  grid.innerHTML = summaries.sort((a,b) => (a.account||a.sfId||'').localeCompare(b.account||b.sfId||'')).map(a => {
     const pct = Math.min(100, (a.touches14 / a.maxT) * 100);
     const warning = pct >= 100;
     const statusHtml = a.status === 'Cooling Off'
@@ -1008,10 +1054,15 @@ function renderAccounts() {
       : `<span class="badge badge-no">Active</span>`;
     return `<div class="account-card ${a.isCooling ? 'cooling' : ''}">
       <div class="account-card-header">
-        <span class="account-card-name">${a.account}</span>
+        <span class="account-card-name">${a.account || a.domain || a.sfId}</span>
         ${statusHtml}
       </div>
-      <span class="${tierClass(a.tier)}">${a.tier}</span>
+      ${a.sfId ? `<div style="font-family:'DM Mono',monospace; font-size:11px; color: var(--accent-text); background: var(--accent-light); display:inline-block; padding: 2px 7px; border-radius:4px; margin-bottom:4px;">${a.sfId}</div>` : ''}
+      <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:6px;">
+        <span class="${tierClass(a.tier)}">${a.tier}</span>
+        ${a.domain ? `<span class="badge badge-tier3">${a.domain}</span>` : ''}
+        ${a.country ? `<span class="badge badge-tier3">${a.country}</span>` : ''}
+      </div>
       <div class="account-card-stats">
         <div class="account-stat">
           <span class="account-stat-val">${a.total}</span>
@@ -1033,13 +1084,16 @@ function renderAccounts() {
     </div>`;
   }).join('');
 }
-
+ 
 // ── MODAL / FORM ──────────────────────────────────────────────────────────
 function openModal(prefill) {
   editId = null;
   document.getElementById('modal-title').textContent = 'Log Touchpoint';
   document.getElementById('save-btn').textContent = 'Save Touchpoint';
+  document.getElementById('f-sfid').value = prefill?.sfId || '';
   document.getElementById('f-account').value = prefill?.account || '';
+  document.getElementById('f-domain').value = prefill?.domain || '';
+  document.getElementById('f-country').value = prefill?.country || '';
   document.getElementById('f-date').value = today();
   document.getElementById('f-sentby').value = '';
   document.getElementById('f-tier').value = prefill?.tier || '';
@@ -1057,7 +1111,10 @@ function editEntry(id) {
   editId = id;
   document.getElementById('modal-title').textContent = 'Edit Touchpoint';
   document.getElementById('save-btn').textContent = 'Update Touchpoint';
+  document.getElementById('f-sfid').value = e.sfId || '';
   document.getElementById('f-account').value = e.account;
+  document.getElementById('f-domain').value = e.domain || '';
+  document.getElementById('f-country').value = e.country || '';
   document.getElementById('f-date').value = e.date;
   document.getElementById('f-sentby').value = e.sentBy;
   document.getElementById('f-tier').value = e.tier;
@@ -1071,12 +1128,12 @@ function editEntry(id) {
 }
 function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
 function closeModalOutside(e) { if (e.target === document.getElementById('modal-overlay')) closeModal(); }
-
+ 
 function updateAccountsList() {
   const accounts = [...new Set(data.map(e => e.account))].sort();
   document.getElementById('accounts-list').innerHTML = accounts.map(a => `<option value="${a}">`).join('');
 }
-
+ 
 async function saveEntry() {
   const account = document.getElementById('f-account').value.trim();
   const date = document.getElementById('f-date').value;
@@ -1089,10 +1146,14 @@ async function saveEntry() {
     return;
   }
   const obj = {
-    account, date, sentBy, tier, channel, campaign,
+    sfId:      document.getElementById('f-sfid').value.trim(),
+    account,
+    domain:    document.getElementById('f-domain').value.trim(),
+    country:   document.getElementById('f-country').value.trim(),
+    date, sentBy, tier, channel, campaign,
     coolingOff: document.getElementById('f-cooling').value,
-    outcome: document.getElementById('f-outcome').value,
-    notes: document.getElementById('f-notes').value.trim(),
+    outcome:    document.getElementById('f-outcome').value,
+    notes:      document.getElementById('f-notes').value.trim(),
   };
   const btn = document.getElementById('save-btn');
   btn.disabled = true;
@@ -1116,7 +1177,7 @@ async function saveEntry() {
   btn.disabled = false;
   btn.textContent = editId ? 'Update Touchpoint' : 'Save Touchpoint';
 }
-
+ 
 async function deleteEntry(id) {
   if (!confirm('Delete this touchpoint?')) return;
   try {
@@ -1129,34 +1190,34 @@ async function deleteEntry(id) {
     console.error(e);
   }
 }
-
+ 
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2500);
 }
-
+ 
 // ── CSV BULK UPLOAD ───────────────────────────────────────────────────────
-const CSV_HEADERS = ['account','date','sentBy','tier','channel','campaign','coolingOff','outcome','notes'];
+const CSV_HEADERS = ['sfId','account','domain','country','date','sentBy','tier','channel','campaign','coolingOff','outcome','notes'];
 const REQUIRED_COLS = ['account','date','sentBy','tier','channel','campaign'];
 const VALID_TIERS = ['Tier 1','Tier 2','Tier 3'];
 const VALID_CHANNELS = ['Email','LinkedIn','Webinar','Event','Direct Mail','Paid Ad'];
 const VALID_COOLING = ['Yes','No'];
 const VALID_OUTCOMES = ['Opened','Clicked','Replied','Meeting Booked','No Response',''];
-
+ 
 let csvPreviewRows = [];
-
+ 
 function downloadTemplate() {
   const header = CSV_HEADERS.join(',');
-  const example = ['Acme Corp','2025-05-14','Sarah K.','Tier 1','Email','Q2 ABM Nurture – Wave 3','No','Opened','Followed up after event'].join(',');
+  const example = ['0015g00000XXXXX','Acme Corp','acme.com','United Kingdom','2025-05-14','Sarah K.','Tier 1','Email','Q2 ABM Nurture – Wave 3','No','Opened','Followed up after event'].join(',');
   const blob = new Blob([header + '\n' + example + '\n'], { type: 'text/csv' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'touchpoints_template.csv';
   a.click();
 }
-
+ 
 function handleCSVUpload(event) {
   const file = event.target.files[0];
   event.target.value = '';
@@ -1165,17 +1226,20 @@ function handleCSVUpload(event) {
   reader.onload = e => parseAndPreviewCSV(e.target.result);
   reader.readAsText(file);
 }
-
+ 
 function parseAndPreviewCSV(text) {
   const lines = text.trim().split(/\r?\n/).filter(l => l.trim());
   if (lines.length < 2) { showToast('CSV must have a header row and at least one data row'); return; }
-
+ 
   const rawHeaders = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
   // Map CSV headers (case-insensitive, flexible)
   const headerMap = {};
   const normalise = s => s.toLowerCase().replace(/[\s_\/\-]+/g, '');
   const canonMap = {
     'account': 'account', 'accountname': 'account',
+    'sfid': 'sfId', 'salesforceaccountid': 'sfId', 'salesforceid': 'sfId', 'sfaccountid': 'sfId',
+    'domain': 'domain', 'accountdomain': 'domain', 'website': 'domain',
+    'country': 'country',
     'date': 'date',
     'sentby': 'sentBy', 'sender': 'sentBy', 'by': 'sentBy',
     'tier': 'tier',
@@ -1189,13 +1253,13 @@ function parseAndPreviewCSV(text) {
     const canon = canonMap[normalise(h)];
     if (canon) headerMap[canon] = i;
   });
-
+ 
   const missing = REQUIRED_COLS.filter(c => headerMap[c] === undefined);
   if (missing.length) {
     showToast('CSV missing columns: ' + missing.join(', '));
     return;
   }
-
+ 
   const errors = [];
   const rows = [];
   lines.slice(1).forEach((line, li) => {
@@ -1203,7 +1267,10 @@ function parseAndPreviewCSV(text) {
     const cols = parseCSVLine(line);
     const get = key => (cols[headerMap[key]] || '').trim().replace(/^"|"$/g, '');
     const rowNum = li + 2;
+    const sfId = get('sfId') || '';
     const account = get('account');
+    const domain = get('domain') || '';
+    const country = get('country') || '';
     const date = get('date');
     const sentBy = get('sentBy');
     const tier = get('tier');
@@ -1212,7 +1279,7 @@ function parseAndPreviewCSV(text) {
     const coolingOff = get('coolingOff') || 'No';
     const outcome = get('outcome') || '';
     const notes = get('notes') || '';
-
+ 
     const rowErrors = [];
     if (!account) rowErrors.push('Account missing');
     if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) rowErrors.push('Date must be YYYY-MM-DD');
@@ -1221,15 +1288,15 @@ function parseAndPreviewCSV(text) {
     if (!VALID_CHANNELS.includes(channel)) rowErrors.push(`Channel must be one of: ${VALID_CHANNELS.join(', ')}`);
     if (!campaign) rowErrors.push('Campaign missing');
     if (!VALID_COOLING.includes(coolingOff)) rowErrors.push('Cooling Off must be Yes or No');
-
+ 
     if (rowErrors.length) { errors.push(`Row ${rowNum}: ${rowErrors.join('; ')}`); }
-    rows.push({ account, date, sentBy, tier, channel, campaign, coolingOff, outcome, notes, _errors: rowErrors });
+    rows.push({ sfId, account, domain, country, date, sentBy, tier, channel, campaign, coolingOff, outcome, notes, _errors: rowErrors });
   });
-
+ 
   csvPreviewRows = rows;
   showCSVPreview(rows, errors);
 }
-
+ 
 function parseCSVLine(line) {
   const result = [];
   let current = '';
@@ -1243,14 +1310,14 @@ function parseCSVLine(line) {
   result.push(current);
   return result;
 }
-
+ 
 function showCSVPreview(rows, errors) {
   const validRows = rows.filter(r => r._errors.length === 0);
   const errorRows = rows.filter(r => r._errors.length > 0);
-
+ 
   document.getElementById('csv-summary').innerHTML =
     `<strong>${rows.length}</strong> rows found — <span style="color: var(--green)"><strong>${validRows.length}</strong> valid</span>${errorRows.length ? `, <span style="color: var(--red)"><strong>${errorRows.length}</strong> with errors (will be skipped)</span>` : ''}.`;
-
+ 
   const errDiv = document.getElementById('csv-errors');
   if (errors.length) {
     errDiv.style.display = 'block';
@@ -1258,40 +1325,42 @@ function showCSVPreview(rows, errors) {
   } else {
     errDiv.style.display = 'none';
   }
-
+ 
   document.getElementById('csv-thead').innerHTML = `<tr>${
-    ['Account','Date','Sent By','Tier','Channel','Campaign','Cooling?','Outcome','Notes','Status'].map(h =>
+    ['SF Account ID','Account','Domain','Country','Date','Sent By','Tier','Channel','Campaign','Cooling?','Outcome','Status'].map(h =>
       `<th style="padding: 8px 12px; font-size:11px; font-weight:600; color: var(--text2); text-transform:uppercase; letter-spacing:0.06em; border-bottom: 1px solid var(--border);">${h}</th>`
     ).join('')
   }</tr>`;
-
+ 
   document.getElementById('csv-tbody').innerHTML = rows.map(r => {
     const ok = r._errors.length === 0;
     const rowStyle = ok ? '' : 'background: var(--red-light);';
     return `<tr style="${rowStyle}">
+      <td style="padding:8px 12px; border-bottom: 1px solid var(--border); font-family:monospace; font-size:11px;">${r.sfId || '—'}</td>
       <td style="padding:8px 12px; border-bottom: 1px solid var(--border);">${r.account}</td>
+      <td style="padding:8px 12px; border-bottom: 1px solid var(--border); font-size:12px;">${r.domain || '—'}</td>
+      <td style="padding:8px 12px; border-bottom: 1px solid var(--border); font-size:12px;">${r.country || '—'}</td>
       <td style="padding:8px 12px; border-bottom: 1px solid var(--border); font-family: monospace;">${r.date}</td>
       <td style="padding:8px 12px; border-bottom: 1px solid var(--border);">${r.sentBy}</td>
       <td style="padding:8px 12px; border-bottom: 1px solid var(--border);">${r.tier}</td>
       <td style="padding:8px 12px; border-bottom: 1px solid var(--border);">${r.channel}</td>
-      <td style="padding:8px 12px; border-bottom: 1px solid var(--border); max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${r.campaign}</td>
+      <td style="padding:8px 12px; border-bottom: 1px solid var(--border); max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${r.campaign}</td>
       <td style="padding:8px 12px; border-bottom: 1px solid var(--border);">${r.coolingOff}</td>
       <td style="padding:8px 12px; border-bottom: 1px solid var(--border);">${r.outcome || '—'}</td>
-      <td style="padding:8px 12px; border-bottom: 1px solid var(--border); max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${r.notes || '—'}</td>
       <td style="padding:8px 12px; border-bottom: 1px solid var(--border);">${ok
         ? '<span style="color: var(--green); font-weight:500;">✓ OK</span>'
         : `<span style="color: var(--red); font-size:11px;" title="${r._errors.join('; ')}">⚠ Skip</span>`
       }</td>
     </tr>`;
   }).join('');
-
+ 
   const btn = document.getElementById('csv-confirm-btn');
   btn.textContent = `Import ${validRows.length} Row${validRows.length !== 1 ? 's' : ''}`;
   btn.disabled = validRows.length === 0;
-
+ 
   document.getElementById('csv-modal-overlay').classList.add('open');
 }
-
+ 
 async function confirmCSVImport() {
   const valid = csvPreviewRows.filter(r => r._errors.length === 0);
   const btn = document.getElementById('csv-confirm-btn');
@@ -1309,7 +1378,7 @@ async function confirmCSVImport() {
     btn.textContent = `Import ${valid.length} Rows`;
   }
 }
-
+ 
 function closeCSVModal() {
   document.getElementById('csv-modal-overlay').classList.remove('open');
   csvPreviewRows = [];
@@ -1317,7 +1386,7 @@ function closeCSVModal() {
 function closeCSVModalOutside(e) {
   if (e.target === document.getElementById('csv-modal-overlay')) closeCSVModal();
 }
-
+ 
 // ── REFRESH HELPERS ───────────────────────────────────────────────────────
 function refreshCurrentPage() {
   const active = document.querySelector('.page.active');
@@ -1326,7 +1395,7 @@ function refreshCurrentPage() {
   if (active.id === 'page-tracker') renderTracker();
   if (active.id === 'page-accounts') renderAccounts();
 }
-
+ 
 // ── INIT ──────────────────────────────────────────────────────────────────
 (async () => {
   await loadData();
