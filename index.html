@@ -443,6 +443,7 @@
     <button class="tab-btn active" onclick="showPage('dashboard')">Dashboard</button>
     <button class="tab-btn" onclick="showPage('tracker')">Touchpoints</button>
     <button class="tab-btn" onclick="showPage('accounts')">Accounts</button>
+    <button class="tab-btn" onclick="showPage('checker')">Campaign Checker</button>
     <button class="tab-btn" onclick="showPage('rules')">Rules</button>
   </div>
   <div class="header-actions">
@@ -616,6 +617,79 @@
         <div style="display:flex; align-items:center; gap:8px;"><span class="dot dot-green"></span><strong>Active</strong> — within touch limits, recent engagement</div>
         <div style="display:flex; align-items:center; gap:8px;"><span class="dot dot-amber"></span><strong>At limit</strong> — approaching max touches for the 14-day window</div>
         <div style="display:flex; align-items:center; gap:8px;"><span class="dot dot-red"></span><strong>Cooling Off</strong> — do not contact, resume after 14-day pause</div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- CAMPAIGN CHECKER -->
+  <div id="page-checker" class="page">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Campaign Checker</div>
+        <div class="page-sub">Upload your outreach list — instantly see who you can contact and who is cooling off</div>
+      </div>
+      <label class="btn btn-primary" style="cursor:pointer;">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M8 10V2M5 5l3-3 3 3"/><path d="M3 13h10"/></svg>
+        Upload List
+        <input type="file" accept=".csv" id="checker-upload-input" style="display:none" onchange="handleCheckerUpload(event)">
+      </label>
+    </div>
+ 
+    <!-- UPLOAD ZONE (shown when no list loaded) -->
+    <div id="checker-dropzone" style="border: 2px dashed var(--border2); border-radius: var(--radius); padding: 48px 24px; text-align: center; color: var(--text2); background: var(--surface);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;margin:0 auto 12px;opacity:0.35;display:block;"><path d="M9 12h6M12 9v6"/><path d="M21 15a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h4l2 3h8a2 2 0 012 2z"/></svg>
+      <div style="font-size:15px; font-weight:500; margin-bottom:6px;">Upload your campaign contact list</div>
+      <div style="font-size:13px; margin-bottom:16px;">CSV with at least one of: <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">sfId</code>, <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">domain</code>, or <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">account</code></div>
+      <label class="btn" style="cursor:pointer; display:inline-flex;">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M8 10V2M5 5l3-3 3 3"/><path d="M3 13h10"/></svg>
+        Choose CSV file
+        <input type="file" accept=".csv" style="display:none" onchange="handleCheckerUpload(event)">
+      </label>
+      <div style="font-size:12px;color:var(--text3);margin-top:12px;">Download a <button onclick="downloadCheckerTemplate()" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:12px;font-family:inherit;text-decoration:underline;">sample template</button></div>
+    </div>
+ 
+    <!-- RESULTS (shown after upload) -->
+    <div id="checker-results" style="display:none;">
+      <!-- Summary pills -->
+      <div id="checker-summary" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;"></div>
+ 
+      <!-- Filter bar -->
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center;">
+        <div class="search-wrap" style="flex:1;min-width:180px;">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="4"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg>
+          <input class="search-input" id="checker-search" type="text" placeholder="Search accounts..." oninput="renderCheckerResults()">
+        </div>
+        <select class="filter-select" id="checker-filter" onchange="renderCheckerResults()">
+          <option value="">All statuses</option>
+          <option value="clear">Clear to contact</option>
+          <option value="limit">At limit</option>
+          <option value="cooling">Cooling Off</option>
+          <option value="unknown">Not in tracker</option>
+        </select>
+        <button class="btn" onclick="downloadCheckerResults()">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 13h10"/></svg>
+          Export results
+        </button>
+        <button class="btn" onclick="resetChecker()">Clear list</button>
+      </div>
+ 
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Account</th>
+              <th>SF Account ID</th>
+              <th>Domain</th>
+              <th>Country</th>
+              <th>Touches (14d)</th>
+              <th>Limit</th>
+              <th>Last Touch</th>
+              <th>Days Until Clear</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="checker-tbody"></tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -943,9 +1017,10 @@ async function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
-  const tabs = { dashboard: 0, tracker: 1, accounts: 2, rules: 3 };
+  const tabs = { dashboard: 0, tracker: 1, accounts: 2, checker: 3, rules: 4 };
   document.querySelectorAll('.tab-btn')[tabs[name]].classList.add('active');
   if (name === 'rules') return;
+  if (name === 'checker') { await loadData(); return; }
   await loadData();
   if (name === 'dashboard') renderDashboard();
   if (name === 'tracker') renderTracker();
@@ -1402,6 +1477,171 @@ function closeCSVModalOutside(e) {
   if (e.target === document.getElementById('csv-modal-overlay')) closeCSVModal();
 }
  
+// ── CAMPAIGN CHECKER ──────────────────────────────────────────────────────
+let checkerRows = [];
+ 
+function downloadCheckerTemplate() {
+  const blob = new Blob(['sfId,account,domain,country\n0015g00000XXXXX,Acme Corp,acme.com,United Kingdom\n,Raddison India,raddison.com,India\n'], { type: 'text/csv' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'campaign_list_template.csv'; a.click();
+}
+ 
+function handleCheckerUpload(event) {
+  const file = event.target.files[0];
+  event.target.value = '';
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => parseCheckerCSV(e.target.result);
+  reader.readAsText(file);
+}
+ 
+function parseCheckerCSV(text) {
+  const lines = text.trim().split(/\r?\n/).filter(l => l.trim());
+  if (lines.length < 2) { showToast('CSV needs a header row and at least one account'); return; }
+ 
+  const rawHeaders = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+  const normalise = s => s.toLowerCase().replace(/[\s_\/\-]+/g, '');
+  const canonMap = {
+    'sfid': 'sfId', 'salesforceaccountid': 'sfId', 'salesforceid': 'sfId',
+    'account': 'account', 'accountname': 'account', 'name': 'account',
+    'domain': 'domain', 'accountdomain': 'domain', 'website': 'domain',
+    'country': 'country',
+  };
+  const headerMap = {};
+  rawHeaders.forEach((h, i) => { const c = canonMap[normalise(h)]; if (c) headerMap[c] = i; });
+ 
+  if (!headerMap.sfId && !headerMap.account && !headerMap.domain) {
+    showToast('CSV needs at least one of: sfId, account, or domain column');
+    return;
+  }
+ 
+  const rows = [];
+  lines.slice(1).forEach(line => {
+    if (!line.trim()) return;
+    const cols = parseCSVLine(line);
+    const get = key => headerMap[key] !== undefined ? (cols[headerMap[key]] || '').trim().replace(/^"|"$/g, '') : '';
+    rows.push({ sfId: get('sfId'), account: get('account'), domain: get('domain'), country: get('country') });
+  });
+ 
+  // Cross-reference against live data
+  const summaries = getAccountSummary();
+  checkerRows = rows.map(r => {
+    // Match by SF ID first, then domain, then account name (case-insensitive)
+    let match = null;
+    if (r.sfId) match = summaries.find(s => s.sfId && s.sfId.toLowerCase() === r.sfId.toLowerCase());
+    if (!match && r.domain) match = summaries.find(s => s.domain && s.domain.toLowerCase() === r.domain.toLowerCase());
+    if (!match && r.account) match = summaries.find(s => s.account && s.account.toLowerCase() === r.account.toLowerCase());
+ 
+    if (!match) return { ...r, status: 'unknown', touches14: 0, maxT: '—', lastDate: null, daysSince: null, daysUntilClear: null };
+ 
+    const touches14 = match.touches14;
+    const maxT = match.maxT;
+    const isCooling = touches14 >= maxT;
+    const isAtLimit = touches14 === maxT - 1;
+ 
+    // Days until clear: find oldest touch within 14-day window, add 14 days
+    let daysUntilClear = null;
+    if (isCooling && match.entries) {
+      const windowEntries = match.entries
+        .filter(e => daysBetween(e.date, today()) <= 14)
+        .sort((a, b) => a.date.localeCompare(b.date));
+      if (windowEntries.length > 0) {
+        const oldest = windowEntries[0].date;
+        daysUntilClear = 14 - daysBetween(oldest, today());
+      }
+    }
+ 
+    return {
+      sfId: r.sfId || match.sfId || '',
+      account: r.account || match.account || '',
+      domain: r.domain || match.domain || '',
+      country: r.country || match.country || '',
+      status: isCooling ? 'cooling' : isAtLimit ? 'limit' : 'clear',
+      touches14, maxT, lastDate: match.lastDate, daysSince: match.daysSince, daysUntilClear,
+    };
+  });
+ 
+  document.getElementById('checker-dropzone').style.display = 'none';
+  document.getElementById('checker-results').style.display = 'block';
+  renderCheckerResults();
+}
+ 
+function renderCheckerResults() {
+  const q = (document.getElementById('checker-search')?.value || '').toLowerCase();
+  const f = document.getElementById('checker-filter')?.value || '';
+ 
+  let filtered = checkerRows;
+  if (q) filtered = filtered.filter(r => (r.account+r.sfId+r.domain).toLowerCase().includes(q));
+  if (f) filtered = filtered.filter(r => r.status === f);
+ 
+  // Summary counts
+  const counts = { clear: 0, limit: 0, cooling: 0, unknown: 0 };
+  checkerRows.forEach(r => counts[r.status]++);
+  document.getElementById('checker-summary').innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;background:var(--green-light);border:1px solid #B8DFC8;border-radius:var(--radius);padding:10px 16px;">
+      <span style="font-size:22px;font-weight:600;color:var(--green);">${counts.clear}</span>
+      <span style="font-size:13px;color:var(--green);font-weight:500;">Clear to contact</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;background:var(--amber-light);border:1px solid #F5D28A;border-radius:var(--radius);padding:10px 16px;">
+      <span style="font-size:22px;font-weight:600;color:var(--amber);">${counts.limit}</span>
+      <span style="font-size:13px;color:var(--amber);font-weight:500;">At limit</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;background:var(--red-light);border:1px solid #F5CABD;border-radius:var(--radius);padding:10px 16px;">
+      <span style="font-size:22px;font-weight:600;color:var(--red);">${counts.cooling}</span>
+      <span style="font-size:13px;color:var(--red);font-weight:500;">Cooling Off</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:10px 16px;">
+      <span style="font-size:22px;font-weight:600;color:var(--text2);">${counts.unknown}</span>
+      <span style="font-size:13px;color:var(--text2);font-weight:500;">Not in tracker</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 16px;">
+      <span style="font-size:22px;font-weight:600;color:var(--text);">${checkerRows.length}</span>
+      <span style="font-size:13px;color:var(--text2);font-weight:500;">Total in list</span>
+    </div>
+  `;
+ 
+  const statusHtml = r => {
+    if (r.status === 'clear')   return `<span class="badge badge-no">✓ Clear</span>`;
+    if (r.status === 'limit')   return `<span class="badge" style="background:var(--amber-light);color:var(--amber);">⚠ At limit</span>`;
+    if (r.status === 'cooling') return `<span class="badge badge-yes">✗ Cooling Off</span>`;
+    return `<span class="badge badge-tier3">Not tracked</span>`;
+  };
+ 
+  document.getElementById('checker-tbody').innerHTML = filtered.length === 0
+    ? `<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--text2);">No accounts match</td></tr>`
+    : filtered.map(r => `<tr>
+        <td class="account-name">${r.account || '—'}</td>
+        <td><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--accent-text);background:var(--accent-light);padding:2px 6px;border-radius:4px;">${r.sfId || '—'}</span></td>
+        <td style="font-size:12px;color:var(--text2);">${r.domain || '—'}</td>
+        <td style="font-size:12px;color:var(--text2);">${r.country || '—'}</td>
+        <td style="font-weight:500;${r.status==='cooling'?'color:var(--red);':r.status==='limit'?'color:var(--amber);':''}">${r.touches14 !== undefined ? r.touches14 : '—'}</td>
+        <td>${r.maxT}</td>
+        <td class="date-cell">${formatDate(r.lastDate)}</td>
+        <td>${r.daysUntilClear !== null ? `<span style="color:var(--red);font-weight:500;">${r.daysUntilClear}d</span>` : r.status === 'unknown' ? '—' : '<span style="color:var(--green);">Ready now</span>'}</td>
+        <td>${statusHtml(r)}</td>
+      </tr>`).join('');
+}
+ 
+function downloadCheckerResults() {
+  const headers = ['account','sfId','domain','country','touches14','limit','lastTouch','daysUntilClear','status'];
+  const rows = checkerRows.map(r => [
+    r.account, r.sfId, r.domain, r.country, r.touches14, r.maxT,
+    r.lastDate || '', r.daysUntilClear !== null ? r.daysUntilClear : '',
+    r.status === 'clear' ? 'Clear' : r.status === 'cooling' ? 'Cooling Off' : r.status === 'limit' ? 'At limit' : 'Not tracked'
+  ].map(v => `"${v}"`).join(','));
+  const blob = new Blob([headers.join(',') + '\n' + rows.join('\n')], { type: 'text/csv' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'campaign_check_results.csv'; a.click();
+}
+ 
+function resetChecker() {
+  checkerRows = [];
+  document.getElementById('checker-dropzone').style.display = 'block';
+  document.getElementById('checker-results').style.display = 'none';
+  document.getElementById('checker-search').value = '';
+  document.getElementById('checker-filter').value = '';
+}
+ 
 // ── REFRESH HELPERS ───────────────────────────────────────────────────────
 function refreshCurrentPage() {
   const active = document.querySelector('.page.active');
@@ -1419,4 +1659,3 @@ function refreshCurrentPage() {
 </script>
 </body>
 </html>
- 
