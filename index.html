@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
   :root {
     --bg: #F7F6F2;
     --surface: #FFFFFF;
@@ -34,7 +34,7 @@
     --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
     --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
   }
-
+ 
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--bg);
@@ -43,7 +43,7 @@
     line-height: 1.5;
     min-height: 100vh;
   }
-
+ 
   /* HEADER */
   .header {
     background: var(--surface);
@@ -72,7 +72,7 @@
     display: flex; align-items: center; justify-content: center;
   }
   .brand-icon svg { width: 16px; height: 16px; }
-
+ 
   /* NAV TABS */
   .nav-tabs {
     display: flex;
@@ -98,16 +98,16 @@
     color: var(--text);
     box-shadow: var(--shadow);
   }
-
+ 
   .header-actions { display: flex; gap: 8px; align-items: center; }
-
+ 
   /* MAIN */
   .main { padding: 24px; max-width: 1400px; margin: 0 auto; }
-
+ 
   /* PAGES */
   .page { display: none; }
   .page.active { display: block; }
-
+ 
   /* STATS GRID */
   .stats-grid {
     display: grid;
@@ -131,7 +131,7 @@
   .stat-card.danger .stat-value { color: var(--red); }
   .stat-card.success { border-color: #B8DFC8; background: var(--green-light); }
   .stat-card.success .stat-value { color: var(--green); }
-
+ 
   /* SECTION HEADER */
   .section-header {
     display: flex;
@@ -140,7 +140,7 @@
     margin-bottom: 14px;
   }
   .section-title { font-size: 15px; font-weight: 600; }
-
+ 
   /* TABLE */
   .table-wrap {
     background: var(--surface);
@@ -173,7 +173,7 @@
   .search-wrap { position: relative; flex: 1; min-width: 180px; }
   .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--text3); pointer-events: none; }
   .search-input:focus { border-color: var(--accent); }
-
+ 
   select.filter-select {
     padding: 7px 10px;
     border: 1px solid var(--border);
@@ -186,7 +186,7 @@
     cursor: pointer;
   }
   select.filter-select:focus { border-color: var(--accent); }
-
+ 
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   thead { background: var(--surface2); }
   th {
@@ -208,7 +208,7 @@
   }
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: var(--bg); }
-
+ 
   /* Scrollable tracker table */
   .tracker-scroll { overflow-x: auto; }
   .tracker-scroll table { min-width: 1100px; table-layout: fixed; }
@@ -229,7 +229,7 @@
   tr:hover .col-acts { background: var(--bg); }
   .tracker-scroll th.col-acts { background: var(--surface2); position: sticky; right: 0; box-shadow: -2px 0 6px rgba(0,0,0,0.06); }
   .cell-truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
-
+ 
   .badge {
     display: inline-flex; align-items: center; gap: 4px;
     padding: 2px 8px;
@@ -254,11 +254,11 @@
   .badge-channel-event { background: var(--amber-light); color: var(--amber); }
   .badge-channel-direct { background: var(--green-light); color: var(--green); }
   .badge-channel-paid { background: #FEF9EE; color: #92400E; }
-
+ 
   .account-name { font-weight: 500; }
   .date-cell { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text2); }
   .notes-cell { color: var(--text2); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
+ 
   .btn {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 7px 14px;
@@ -285,7 +285,7 @@
   .btn-danger:hover { background: var(--red-light); }
   .btn-sm { padding: 4px 10px; font-size: 12px; }
   .btn svg { width: 14px; height: 14px; flex-shrink: 0; }
-
+ 
   /* MODAL */
   .modal-overlay {
     display: none;
@@ -329,7 +329,7 @@
   }
   textarea.form-input { resize: vertical; min-height: 72px; }
   .form-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
-
+ 
   /* ACCOUNT TABLE SUMMARY */
   .accounts-grid {
     display: grid;
@@ -357,7 +357,7 @@
   .progress-bar { height: 4px; background: var(--surface2); border-radius: 100px; overflow: hidden; }
   .progress-bar-fill { height: 100%; border-radius: 100px; background: var(--accent); transition: width 0.4s; }
   .progress-bar-fill.warning { background: var(--red); }
-
+ 
   /* RULES PAGE */
   .rules-card {
     background: var(--surface);
@@ -376,7 +376,7 @@
   .dot-red { background: var(--red); }
   .dot-amber { background: #D97706; }
   .dot-green { background: var(--green); }
-
+ 
   /* EMPTY STATE */
   .empty-state {
     padding: 48px 24px;
@@ -385,7 +385,7 @@
   }
   .empty-state svg { width: 40px; height: 40px; margin: 0 auto 12px; opacity: 0.3; }
   .empty-state p { font-size: 14px; }
-
+ 
   /* TOAST */
   .toast {
     position: fixed;
@@ -402,7 +402,7 @@
     pointer-events: none;
   }
   .toast.show { opacity: 1; transform: translateY(0); }
-
+ 
   .cooling-alert {
     background: var(--red-light);
     border: 1px solid #F5CABD;
@@ -415,9 +415,9 @@
     font-size: 13px;
   }
   .cooling-alert svg { width: 16px; height: 16px; color: var(--red); flex-shrink: 0; }
-
+ 
   .page-sub { font-size: 13px; color: var(--text2); margin-bottom: 20px; }
-
+ 
   @media (max-width: 600px) {
     .main { padding: 16px; }
     .form-grid { grid-template-columns: 1fr; }
@@ -426,7 +426,7 @@
 </style>
 </head>
 <body>
-
+ 
 <header class="header">
   <div class="header-brand">
     <div class="brand-icon">
@@ -461,9 +461,9 @@
     </button>
   </div>
 </header>
-
+ 
 <main class="main">
-
+ 
   <!-- DASHBOARD -->
   <div id="page-dashboard" class="page active">
     <div id="cooling-banner" style="display:none" class="cooling-alert">
@@ -493,7 +493,7 @@
       </table>
     </div>
   </div>
-
+ 
   <!-- TRACKER -->
   <div id="page-tracker" class="page">
     <div class="section-header">
@@ -562,7 +562,7 @@
       </div>
     </div>
   </div>
-
+ 
   <!-- ACCOUNTS -->
   <div id="page-accounts" class="page">
     <div class="section-header">
@@ -577,7 +577,7 @@
       <p>No accounts yet — log your first touchpoint to get started</p>
     </div>
   </div>
-
+ 
   <!-- RULES -->
   <div id="page-rules" class="page">
     <div class="rules-card">
@@ -632,9 +632,9 @@
       </div>
     </div>
   </div>
-
+ 
 </main>
-
+ 
 <!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
   <div class="modal">
@@ -706,17 +706,14 @@
         <label class="form-label">Campaign / Email Name *</label>
         <input id="f-campaign" class="form-input" type="text" placeholder="e.g. Q2 ABM Nurture – Wave 1">
       </div>
-      <div class="form-group">
-        <label class="form-label">Cooling Off?</label>
-        <select id="f-cooling" class="form-input">
-          <option value="No">No</option>
-          <option value="Yes">Yes</option>
-        </select>
-      </div>
       <div class="form-group full">
         <label class="form-label">Notes</label>
         <textarea id="f-notes" class="form-input" placeholder="Any additional context..."></textarea>
       </div>
+    </div>
+    <div style="background: var(--surface2); border-radius: var(--radius-sm); padding: 9px 12px; font-size: 12px; color: var(--text2); margin-top: 4px;">
+      <strong style="color: var(--text);">Cooling Off</strong> is calculated automatically — an account is cooling off once it reaches its 14-day touch limit (Tier 1/2: 2 touches, Tier 3: 1 touch).
+    </div>
     </div>
     <div class="form-actions">
       <button class="btn" onclick="closeModal()">Cancel</button>
@@ -724,16 +721,16 @@
     </div>
   </div>
 </div>
-
+ 
 <!-- LOADING OVERLAY -->
 <div id="loading-overlay" style="display:none; position:fixed; inset:0; background:rgba(247,246,242,0.85); z-index:2000; align-items:center; justify-content:center; flex-direction:column; gap:12px;">
   <div style="width:32px; height:32px; border:3px solid var(--border); border-top-color: var(--accent); border-radius:50%; animation: spin 0.7s linear infinite;"></div>
   <div style="font-size:13px; color:var(--text2);" id="loading-msg">Loading from Airtable…</div>
 </div>
 <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
-
+ 
 <div class="toast" id="toast"></div>
-
+ 
 <!-- CSV PREVIEW MODAL -->
 <div class="modal-overlay" id="csv-modal-overlay" onclick="closeCSVModalOutside(event)">
   <div class="modal" style="max-width: 820px;">
@@ -752,7 +749,7 @@
     </div>
   </div>
 </div>
-
+ 
 <script>
 // ── AIRTABLE CONFIG ───────────────────────────────────────────────────────
 const AT_TOKEN = 'patwo6DIJ3qqQknLU.da7d70212c7103d851a216fd7290ad007d151f23a16d35d324204c7c60074915';
@@ -760,11 +757,11 @@ const AT_BASE  = 'appbkCa4mNhGCzCb7';
 const AT_TABLE = 'Touchpoints';
 const AT_URL   = `https://api.airtable.com/v0/${AT_BASE}/${encodeURIComponent(AT_TABLE)}`;
 const AT_HEADS = { 'Authorization': `Bearer ${AT_TOKEN}`, 'Content-Type': 'application/json' };
-
+ 
 // ── LOCAL STATE ───────────────────────────────────────────────────────────
 let data = [];
 let editId = null;
-
+ 
 // Convert Airtable record → app object
 function fromAT(rec) {
   const f = rec.fields;
@@ -779,12 +776,11 @@ function fromAT(rec) {
     tier:       f['Tier']        || '',
     channel:    f['Channel']     || '',
     campaign:   f['Campaign']    || '',
-    coolingOff: f['Cooling Off'] || 'No',
     outcome:    f['Outcome']     || '',
     notes:      f['Notes']       || '',
   };
 }
-
+ 
 // Convert app object → Airtable fields
 function toAT(obj) {
   const fields = {
@@ -797,14 +793,13 @@ function toAT(obj) {
     'Tier':                  obj.tier,
     'Channel':               obj.channel,
     'Campaign':              obj.campaign,
-    'Cooling Off':           obj.coolingOff,
     'Outcome':               obj.outcome,
     'Notes':                 obj.notes,
   };
   Object.keys(fields).forEach(k => { if (fields[k] === '') delete fields[k]; });
   return fields;
 }
-
+ 
 // Get the best unique key for grouping: SF ID → domain → account name
 function accountKey(e) {
   return e.sfId || e.domain || e.account;
@@ -813,7 +808,22 @@ function accountKey(e) {
 function accountLabel(e) {
   return e.account || e.domain || e.sfId;
 }
-
+ 
+// Compute whether an account is cooling off based on 14-day touch count
+function isAccountCooling(entries, tier) {
+  const max = maxTouches(tier);
+  const touches = entries.filter(e => daysBetween(e.date, today()) <= 14).length;
+  return touches >= max;
+}
+ 
+// Compute cooling status for a single touchpoint row (for display in tracker)
+// A row is "cooling" if at the time of rendering, its account is over the limit
+function computeCoolingOff(entry, allData) {
+  const key = accountKey(entry);
+  const accountEntries = allData.filter(e => accountKey(e) === key);
+  return isAccountCooling(accountEntries, entry.tier) ? 'Yes' : 'No';
+}
+ 
 // ── AIRTABLE API CALLS ────────────────────────────────────────────────────
 async function atFetchAll() {
   let records = [], offset = null;
@@ -827,7 +837,7 @@ async function atFetchAll() {
   } while (offset);
   return records.map(fromAT);
 }
-
+ 
 async function atCreate(obj) {
   const res = await fetch(AT_URL, {
     method: 'POST', headers: AT_HEADS,
@@ -836,7 +846,7 @@ async function atCreate(obj) {
   if (!res.ok) throw new Error(`Airtable create failed: ${res.status} ${await res.text()}`);
   return fromAT(await res.json());
 }
-
+ 
 async function atUpdate(id, obj) {
   const res = await fetch(`${AT_URL}/${id}`, {
     method: 'PATCH', headers: AT_HEADS,
@@ -845,12 +855,12 @@ async function atUpdate(id, obj) {
   if (!res.ok) throw new Error(`Airtable update failed: ${res.status} ${await res.text()}`);
   return fromAT(await res.json());
 }
-
+ 
 async function atDelete(id) {
   const res = await fetch(`${AT_URL}/${id}`, { method: 'DELETE', headers: AT_HEADS });
   if (!res.ok) throw new Error(`Airtable delete failed: ${res.status} ${await res.text()}`);
 }
-
+ 
 async function atCreateBatch(objects) {
   // Airtable allows max 10 records per batch create
   for (let i = 0; i < objects.length; i += 10) {
@@ -864,12 +874,12 @@ async function atCreateBatch(objects) {
     json.records.forEach(r => data.push(fromAT(r)));
   }
 }
-
+ 
 // ── LOADING STATE ─────────────────────────────────────────────────────────
 function setLoading(on) {
   document.getElementById('loading-overlay').style.display = on ? 'flex' : 'none';
 }
-
+ 
 async function loadData() {
   setLoading(true);
   try {
@@ -881,7 +891,7 @@ async function loadData() {
   }
   setLoading(false);
 }
-
+ 
 // ── HELPERS ───────────────────────────────────────────────────────────────
 function daysBetween(d1, d2) {
   return Math.floor((new Date(d2) - new Date(d1)) / 86400000);
@@ -915,14 +925,14 @@ function getAccountSummary() {
     const daysSince = lastDate ? daysBetween(lastDate, today()) : null;
     const touches14 = a.entries.filter(e => daysBetween(e.date, today()) <= 14).length;
     const maxT = maxTouches(a.tier);
-    const isCooling = a.entries.some(e => e.coolingOff === 'Yes' && daysBetween(e.date, today()) <= 14);
+    const isCooling = touches14 >= maxT;
     let status = 'Active';
     if (isCooling) status = 'Cooling Off';
-    else if (touches14 >= maxT) status = 'At limit';
+    else if (touches14 === maxT - 1) status = 'At limit';
     return { ...a, lastDate, daysSince, touches14, maxT, isCooling, status, total: a.entries.length };
   });
 }
-
+ 
 function channelClass(ch) {
   const m = { 'Email': 'email', 'LinkedIn': 'linkedin', 'Webinar': 'webinar', 'Event': 'event', 'Direct Mail': 'direct', 'Paid Ad': 'paid' };
   return 'badge badge-channel-' + (m[ch] || 'email');
@@ -940,7 +950,7 @@ function formatDate(d) {
   const [y,m,day] = d.split('-');
   return `${day}/${m}/${y}`;
 }
-
+ 
 // ── PAGES ─────────────────────────────────────────────────────────────────
 async function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -954,7 +964,7 @@ async function showPage(name) {
   if (name === 'tracker') renderTracker();
   if (name === 'accounts') renderAccounts();
 }
-
+ 
 // ── DASHBOARD ─────────────────────────────────────────────────────────────
 function renderDashboard() {
   const summaries = getAccountSummary();
@@ -963,7 +973,7 @@ function renderDashboard() {
   const cooling = summaries.filter(a => a.isCooling).length;
   const avgTouches = totalAccounts ? (data.length / totalAccounts).toFixed(1) : 0;
   const touches14d = data.filter(e => daysBetween(e.date, today()) <= 14).length;
-
+ 
   document.getElementById('stats-grid').innerHTML = `
     <div class="stat-card accent"><div class="stat-label">Total Accounts</div><div class="stat-value">${totalAccounts}</div></div>
     <div class="stat-card"><div class="stat-label">Total Touchpoints</div><div class="stat-value">${totalTouchpoints}</div></div>
@@ -971,7 +981,7 @@ function renderDashboard() {
     <div class="stat-card"><div class="stat-label">Avg Touches / Account</div><div class="stat-value">${avgTouches}</div></div>
     <div class="stat-card success"><div class="stat-label">Touchpoints (last 14d)</div><div class="stat-value">${touches14d}</div></div>
   `;
-
+ 
   const banner = document.getElementById('cooling-banner');
   if (cooling > 0) {
     const names = summaries.filter(a => a.isCooling).map(a => a.account).join(', ');
@@ -980,7 +990,7 @@ function renderDashboard() {
   } else {
     banner.style.display = 'none';
   }
-
+ 
   const tbody = document.getElementById('dashboard-tbody');
   if (summaries.length === 0) {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 32px; color: var(--text2);">No data yet — log your first touchpoint</td></tr>';
@@ -1009,20 +1019,20 @@ function renderDashboard() {
     </tr>`;
   }).join('');
 }
-
+ 
 // ── TRACKER ───────────────────────────────────────────────────────────────
 function renderTracker() {
   const q = (document.getElementById('tracker-search')?.value || '').toLowerCase();
   const ch = document.getElementById('tracker-channel')?.value || '';
   const tier = document.getElementById('tracker-tier')?.value || '';
   const cooling = document.getElementById('tracker-cooling')?.value || '';
-
+ 
   let filtered = [...data].sort((a,b) => b.date.localeCompare(a.date));
   if (q) filtered = filtered.filter(e => e.account.toLowerCase().includes(q) || e.campaign.toLowerCase().includes(q) || e.sentBy.toLowerCase().includes(q));
   if (ch) filtered = filtered.filter(e => e.channel === ch);
   if (tier) filtered = filtered.filter(e => e.tier === tier);
   if (cooling) filtered = filtered.filter(e => e.coolingOff === cooling);
-
+ 
   const tbody = document.getElementById('tracker-tbody');
   const empty = document.getElementById('tracker-empty');
   if (filtered.length === 0) {
@@ -1031,7 +1041,9 @@ function renderTracker() {
     return;
   }
   empty.style.display = 'none';
-  tbody.innerHTML = filtered.map((e, i) => `
+  tbody.innerHTML = filtered.map((e, i) => {
+    const coolingOff = computeCoolingOff(e, data);
+    return `
     <tr>
       <td class="col-num" style="color: var(--text3); font-size: 12px;">${i + 1}</td>
       <td class="col-sfid"><span class="cell-truncate" style="font-family:'DM Mono',monospace; font-size:11px; color: var(--accent-text); background: var(--accent-light); padding: 2px 6px; border-radius: 4px;" title="${e.sfId || ''}">${e.sfId || '—'}</span></td>
@@ -1043,7 +1055,7 @@ function renderTracker() {
       <td class="col-tier"><span class="${tierClass(e.tier)}">${e.tier}</span></td>
       <td class="col-chan"><span class="${channelClass(e.channel)}">${e.channel}</span></td>
       <td class="col-camp"><span class="cell-truncate" title="${e.campaign}">${e.campaign}</span></td>
-      <td class="col-cool"><span class="badge ${e.coolingOff === 'Yes' ? 'badge-yes' : 'badge-no'}">${e.coolingOff}</span></td>
+      <td class="col-cool"><span class="badge ${coolingOff === 'Yes' ? 'badge-yes' : 'badge-no'}">${coolingOff}</span></td>
       <td class="col-out"><span class="${outcomeClass(e.outcome)}">${e.outcome || '—'}</span></td>
       <td class="col-notes"><span class="cell-truncate notes-cell" title="${e.notes}">${e.notes || '—'}</span></td>
       <td class="col-acts">
@@ -1052,10 +1064,10 @@ function renderTracker() {
           <button class="btn btn-sm btn-danger" onclick="deleteEntry('${e.id}')">Del</button>
         </div>
       </td>
-    </tr>
-  `).join('');
+    </tr>`;
+  }).join('');
 }
-
+ 
 // ── ACCOUNTS ──────────────────────────────────────────────────────────────
 function renderAccounts() {
   const summaries = getAccountSummary();
@@ -1107,7 +1119,7 @@ function renderAccounts() {
     </div>`;
   }).join('');
 }
-
+ 
 // ── MODAL / FORM ──────────────────────────────────────────────────────────
 function openModal(prefill) {
   editId = null;
@@ -1123,7 +1135,6 @@ function openModal(prefill) {
   document.getElementById('f-channel').value = '';
   document.getElementById('f-outcome').value = '';
   document.getElementById('f-campaign').value = '';
-  document.getElementById('f-cooling').value = 'No';
   document.getElementById('f-notes').value = '';
   updateAccountsList();
   document.getElementById('modal-overlay').classList.add('open');
@@ -1144,19 +1155,18 @@ function editEntry(id) {
   document.getElementById('f-channel').value = e.channel;
   document.getElementById('f-outcome').value = e.outcome || '';
   document.getElementById('f-campaign').value = e.campaign;
-  document.getElementById('f-cooling').value = e.coolingOff;
   document.getElementById('f-notes').value = e.notes;
   updateAccountsList();
   document.getElementById('modal-overlay').classList.add('open');
 }
 function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
 function closeModalOutside(e) { if (e.target === document.getElementById('modal-overlay')) closeModal(); }
-
+ 
 function updateAccountsList() {
   const accounts = [...new Set(data.map(e => e.account))].sort();
   document.getElementById('accounts-list').innerHTML = accounts.map(a => `<option value="${a}">`).join('');
 }
-
+ 
 async function saveEntry() {
   const account = document.getElementById('f-account').value.trim();
   const date = document.getElementById('f-date').value;
@@ -1174,7 +1184,6 @@ async function saveEntry() {
     domain:    document.getElementById('f-domain').value.trim(),
     country:   document.getElementById('f-country').value.trim(),
     date, sentBy, tier, channel, campaign,
-    coolingOff: document.getElementById('f-cooling').value,
     outcome:    document.getElementById('f-outcome').value,
     notes:      document.getElementById('f-notes').value.trim(),
   };
@@ -1200,7 +1209,7 @@ async function saveEntry() {
   btn.disabled = false;
   btn.textContent = editId ? 'Update Touchpoint' : 'Save Touchpoint';
 }
-
+ 
 async function deleteEntry(id) {
   if (!confirm('Delete this touchpoint?')) return;
   try {
@@ -1213,34 +1222,33 @@ async function deleteEntry(id) {
     console.error(e);
   }
 }
-
+ 
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2500);
 }
-
+ 
 // ── CSV BULK UPLOAD ───────────────────────────────────────────────────────
-const CSV_HEADERS = ['sfId','account','domain','country','date','sentBy','tier','channel','campaign','coolingOff','outcome','notes'];
+const CSV_HEADERS = ['sfId','account','domain','country','date','sentBy','tier','channel','campaign','outcome','notes'];
 const REQUIRED_COLS = ['account','date','sentBy','tier','channel','campaign'];
 const VALID_TIERS = ['Tier 1','Tier 2','Tier 3'];
 const VALID_CHANNELS = ['Email','LinkedIn','Webinar','Event','Direct Mail','Paid Ad'];
-const VALID_COOLING = ['Yes','No'];
 const VALID_OUTCOMES = ['Opened','Clicked','Replied','Meeting Booked','No Response',''];
-
+ 
 let csvPreviewRows = [];
-
+ 
 function downloadTemplate() {
   const header = CSV_HEADERS.join(',');
-  const example = ['0015g00000XXXXX','Acme Corp','acme.com','United Kingdom','2025-05-14','Sarah K.','Tier 1','Email','Q2 ABM Nurture – Wave 3','No','Opened','Followed up after event'].join(',');
+  const example = ['0015g00000XXXXX','Acme Corp','acme.com','United Kingdom','2025-05-14','Sarah K.','Tier 1','Email','Q2 ABM Nurture – Wave 3','Opened','Followed up after event'].join(',');
   const blob = new Blob([header + '\n' + example + '\n'], { type: 'text/csv' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'touchpoints_template.csv';
   a.click();
 }
-
+ 
 function handleCSVUpload(event) {
   const file = event.target.files[0];
   event.target.value = '';
@@ -1249,11 +1257,11 @@ function handleCSVUpload(event) {
   reader.onload = e => parseAndPreviewCSV(e.target.result);
   reader.readAsText(file);
 }
-
+ 
 function parseAndPreviewCSV(text) {
   const lines = text.trim().split(/\r?\n/).filter(l => l.trim());
   if (lines.length < 2) { showToast('CSV must have a header row and at least one data row'); return; }
-
+ 
   const rawHeaders = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
   // Map CSV headers (case-insensitive, flexible)
   const headerMap = {};
@@ -1276,13 +1284,13 @@ function parseAndPreviewCSV(text) {
     const canon = canonMap[normalise(h)];
     if (canon) headerMap[canon] = i;
   });
-
+ 
   const missing = REQUIRED_COLS.filter(c => headerMap[c] === undefined);
   if (missing.length) {
     showToast('CSV missing columns: ' + missing.join(', '));
     return;
   }
-
+ 
   const errors = [];
   const rows = [];
   lines.slice(1).forEach((line, li) => {
@@ -1299,10 +1307,9 @@ function parseAndPreviewCSV(text) {
     const tier = get('tier');
     const channel = get('channel');
     const campaign = get('campaign');
-    const coolingOff = get('coolingOff') || 'No';
     const outcome = get('outcome') || '';
     const notes = get('notes') || '';
-
+ 
     const rowErrors = [];
     if (!account) rowErrors.push('Account missing');
     if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) rowErrors.push('Date must be YYYY-MM-DD');
@@ -1310,16 +1317,15 @@ function parseAndPreviewCSV(text) {
     if (!VALID_TIERS.includes(tier)) rowErrors.push(`Tier must be one of: ${VALID_TIERS.join(', ')}`);
     if (!VALID_CHANNELS.includes(channel)) rowErrors.push(`Channel must be one of: ${VALID_CHANNELS.join(', ')}`);
     if (!campaign) rowErrors.push('Campaign missing');
-    if (!VALID_COOLING.includes(coolingOff)) rowErrors.push('Cooling Off must be Yes or No');
-
+ 
     if (rowErrors.length) { errors.push(`Row ${rowNum}: ${rowErrors.join('; ')}`); }
-    rows.push({ sfId, account, domain, country, date, sentBy, tier, channel, campaign, coolingOff, outcome, notes, _errors: rowErrors });
+    rows.push({ sfId, account, domain, country, date, sentBy, tier, channel, campaign, outcome, notes, _errors: rowErrors });
   });
-
+ 
   csvPreviewRows = rows;
   showCSVPreview(rows, errors);
 }
-
+ 
 function parseCSVLine(line) {
   const result = [];
   let current = '';
@@ -1333,14 +1339,14 @@ function parseCSVLine(line) {
   result.push(current);
   return result;
 }
-
+ 
 function showCSVPreview(rows, errors) {
   const validRows = rows.filter(r => r._errors.length === 0);
   const errorRows = rows.filter(r => r._errors.length > 0);
-
+ 
   document.getElementById('csv-summary').innerHTML =
     `<strong>${rows.length}</strong> rows found — <span style="color: var(--green)"><strong>${validRows.length}</strong> valid</span>${errorRows.length ? `, <span style="color: var(--red)"><strong>${errorRows.length}</strong> with errors (will be skipped)</span>` : ''}.`;
-
+ 
   const errDiv = document.getElementById('csv-errors');
   if (errors.length) {
     errDiv.style.display = 'block';
@@ -1348,13 +1354,13 @@ function showCSVPreview(rows, errors) {
   } else {
     errDiv.style.display = 'none';
   }
-
+ 
   document.getElementById('csv-thead').innerHTML = `<tr>${
-    ['SF Account ID','Account','Domain','Country','Date','Sent By','Tier','Channel','Campaign','Cooling?','Outcome','Status'].map(h =>
+    ['SF Account ID','Account','Domain','Country','Date','Sent By','Tier','Channel','Campaign','Outcome','Status'].map(h =>
       `<th style="padding: 8px 12px; font-size:11px; font-weight:600; color: var(--text2); text-transform:uppercase; letter-spacing:0.06em; border-bottom: 1px solid var(--border);">${h}</th>`
     ).join('')
   }</tr>`;
-
+ 
   document.getElementById('csv-tbody').innerHTML = rows.map(r => {
     const ok = r._errors.length === 0;
     const rowStyle = ok ? '' : 'background: var(--red-light);';
@@ -1368,7 +1374,6 @@ function showCSVPreview(rows, errors) {
       <td style="padding:8px 12px; border-bottom: 1px solid var(--border);">${r.tier}</td>
       <td style="padding:8px 12px; border-bottom: 1px solid var(--border);">${r.channel}</td>
       <td style="padding:8px 12px; border-bottom: 1px solid var(--border); max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${r.campaign}</td>
-      <td style="padding:8px 12px; border-bottom: 1px solid var(--border);">${r.coolingOff}</td>
       <td style="padding:8px 12px; border-bottom: 1px solid var(--border);">${r.outcome || '—'}</td>
       <td style="padding:8px 12px; border-bottom: 1px solid var(--border);">${ok
         ? '<span style="color: var(--green); font-weight:500;">✓ OK</span>'
@@ -1376,14 +1381,14 @@ function showCSVPreview(rows, errors) {
       }</td>
     </tr>`;
   }).join('');
-
+ 
   const btn = document.getElementById('csv-confirm-btn');
   btn.textContent = `Import ${validRows.length} Row${validRows.length !== 1 ? 's' : ''}`;
   btn.disabled = validRows.length === 0;
-
+ 
   document.getElementById('csv-modal-overlay').classList.add('open');
 }
-
+ 
 async function confirmCSVImport() {
   const valid = csvPreviewRows.filter(r => r._errors.length === 0);
   const btn = document.getElementById('csv-confirm-btn');
@@ -1401,7 +1406,7 @@ async function confirmCSVImport() {
     btn.textContent = `Import ${valid.length} Rows`;
   }
 }
-
+ 
 function closeCSVModal() {
   document.getElementById('csv-modal-overlay').classList.remove('open');
   csvPreviewRows = [];
@@ -1409,7 +1414,7 @@ function closeCSVModal() {
 function closeCSVModalOutside(e) {
   if (e.target === document.getElementById('csv-modal-overlay')) closeCSVModal();
 }
-
+ 
 // ── REFRESH HELPERS ───────────────────────────────────────────────────────
 function refreshCurrentPage() {
   const active = document.querySelector('.page.active');
@@ -1418,7 +1423,7 @@ function refreshCurrentPage() {
   if (active.id === 'page-tracker') renderTracker();
   if (active.id === 'page-accounts') renderAccounts();
 }
-
+ 
 // ── INIT ──────────────────────────────────────────────────────────────────
 (async () => {
   await loadData();
