@@ -19,7 +19,7 @@
     --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
   }
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; }
-
+ 
   /* HEADER */
   .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; }
   .header-brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; }
@@ -31,14 +31,17 @@
   .tab-btn.intel-tab { color: var(--purple); }
   .tab-btn.intel-tab.active { color: var(--purple); background: var(--surface); }
   .header-actions { display: flex; gap: 8px; align-items: center; }
-
+  #sync-indicator { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; }
+  #sync-indicator.syncing { color: var(--accent); }
+  #sync-indicator.error { color: var(--red); }
+ 
   /* MAIN / PAGES */
   .main { padding: 24px; max-width: 1400px; margin: 0 auto; }
   .page { display: none; }
   .page.active { display: block; }
   #page-intelligence { display: none; position: fixed; top: 56px; left: 0; right: 0; bottom: 0; grid-template-columns: 1fr 380px; grid-template-rows: auto 1fr; }
   #page-intelligence.active { display: grid; }
-
+ 
   /* STATS */
   .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
   .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow); }
@@ -47,12 +50,12 @@
   .stat-card.accent { border-color: #C5D4F9; background: var(--accent-light); } .stat-card.accent .stat-value { color: var(--accent-text); }
   .stat-card.danger { border-color: #F5CABD; background: var(--red-light); } .stat-card.danger .stat-value { color: var(--red); }
   .stat-card.success { border-color: #B8DFC8; background: var(--green-light); } .stat-card.success .stat-value { color: var(--green); }
-
+ 
   /* SECTION */
   .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
   .section-title { font-size: 15px; font-weight: 600; }
   .page-sub { font-size: 13px; color: var(--text2); margin-bottom: 0; margin-top: 2px; }
-
+ 
   /* TABLE */
   .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
   .table-toolbar { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
@@ -67,7 +70,7 @@
   td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: var(--bg); }
-
+ 
   /* TRACKER FIXED COLS */
   .tracker-scroll { overflow-x: auto; }
   .tracker-scroll table { min-width: 1100px; table-layout: fixed; }
@@ -76,7 +79,7 @@
   tr:hover .col-acts { background: var(--bg); }
   .tracker-scroll th.col-acts { background:var(--surface2); position:sticky; right:0; box-shadow:-2px 0 6px rgba(0,0,0,0.06); }
   .cell-truncate { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block; }
-
+ 
   /* BADGES */
   .badge { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:100px; font-size:11px; font-weight:500; white-space:nowrap; }
   .badge-tier1{background:var(--purple-light);color:var(--purple)} .badge-tier2{background:var(--accent-light);color:var(--accent-text)} .badge-tier3{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
@@ -84,19 +87,17 @@
   .badge-opened{background:var(--green-light);color:var(--green)} .badge-clicked{background:var(--accent-light);color:var(--accent-text)} .badge-replied{background:var(--green-light);color:var(--green)} .badge-meeting{background:#EEF7F0;color:#166534} .badge-none{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
   .badge-channel-email{background:var(--accent-light);color:var(--accent-text)} .badge-channel-linkedin{background:#E7F0FF;color:#1355C1} .badge-channel-webinar{background:var(--purple-light);color:var(--purple)} .badge-channel-event{background:var(--amber-light);color:var(--amber)} .badge-channel-direct{background:var(--green-light);color:var(--green)} .badge-channel-paid{background:#FEF9EE;color:#92400E}
   .account-name{font-weight:500} .date-cell{font-family:'DM Mono',monospace;font-size:12px;color:var(--text2)} .notes-cell{color:var(--text2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
-  /* STATUS BADGES IN DASHBOARD */
   .status-active{background:var(--green-light);color:var(--green);display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500;}
   .status-limit{background:var(--amber-light);color:var(--amber);display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500;}
   .status-cooling{background:var(--red-light);color:var(--red);display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500;}
-
+ 
   /* BUTTONS */
   .btn { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); color:var(--text); font-size:13px; font-weight:500; font-family:inherit; cursor:pointer; transition:all 0.12s; text-decoration:none; white-space:nowrap; }
   .btn:hover{background:var(--surface2);border-color:var(--border2)} .btn svg{width:14px;height:14px;flex-shrink:0}
   .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)} .btn-primary:hover{background:var(--accent-text);border-color:var(--accent-text)}
   .btn-danger{color:var(--red);border-color:#F5CABD} .btn-danger:hover{background:var(--red-light)}
   .btn-sm{padding:4px 10px;font-size:12px}
-
+ 
   /* MODAL */
   .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:1000;align-items:center;justify-content:center;padding:24px}
   .modal-overlay.open{display:flex}
@@ -109,7 +110,7 @@
   input.form-input:focus,select.form-input:focus,textarea.form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(45,91,227,0.1)}
   textarea.form-input{resize:vertical;min-height:72px}
   .form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
-
+ 
   /* ACCOUNTS GRID */
   .accounts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
   .account-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);transition:box-shadow 0.15s}
@@ -125,20 +126,22 @@
   .progress-bar{height:4px;background:var(--surface2);border-radius:100px;overflow:hidden}
   .progress-bar-fill{height:100%;border-radius:100px;background:var(--accent);transition:width 0.4s}
   .progress-bar-fill.warning{background:var(--red)}
-
+ 
   /* RULES */
   .rules-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
   .rules-card h3{font-size:14px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
   .rules-table{width:100%;border-collapse:collapse} .rules-table td{padding:8px 0;border-bottom:1px solid var(--border);font-size:13px} .rules-table tr:last-child td{border:none} .rules-table td:first-child{color:var(--text2);width:160px;font-weight:500}
   .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px} .dot-red{background:var(--red)} .dot-amber{background:#D97706} .dot-green{background:var(--green)}
-
+ 
   /* MISC */
   .empty-state{padding:48px 24px;text-align:center;color:var(--text2)} .empty-state svg{width:40px;height:40px;margin:0 auto 12px;opacity:0.3} .empty-state p{font-size:14px}
+  .loading-row { text-align:center; padding: 40px; color: var(--text3); font-size: 13px; }
   .toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;padding:10px 16px;border-radius:var(--radius-sm);font-size:13px;z-index:9999;opacity:0;transform:translateY(8px);transition:all 0.2s;pointer-events:none} .toast.show{opacity:1;transform:translateY(0)}
   .cooling-alert{background:var(--red-light);border:1px solid #F5CABD;border-radius:var(--radius);padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:13px} .cooling-alert svg{width:16px;height:16px;color:var(--red);flex-shrink:0}
   @keyframes spin{to{transform:rotate(360deg)}}
-
-  /* ════ INTELLIGENCE TAB STYLES ════ */
+  .spinner{width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px}
+ 
+  /* ════ INTELLIGENCE TAB ════ */
   .intel-filters { grid-column:1/-1; display:flex; align-items:center; gap:8px; padding:10px 16px; background:#1a1a2e; border-bottom:1px solid #2d2d45; flex-wrap:wrap; }
   .i-lbl { font-size:11px; color:#6b7280; text-transform:uppercase; letter-spacing:0.06em; font-weight:600; }
   .i-input { background:#252540; border:1px solid #3a3a55; color:#e2e6f0; padding:5px 10px; border-radius:6px; font-size:12px; outline:none; width:170px; font-family:inherit; }
@@ -147,7 +150,6 @@
   .i-rst { background:none; border:1px solid #3a3a55; color:#6b7280; padding:5px 10px; border-radius:6px; font-size:11px; cursor:pointer; font-family:inherit; }
   .i-rst:hover{border-color:#4f7ef7;color:#4f7ef7}
   .i-cnt { margin-left:auto; font-size:12px; color:#6b7280; } .i-cnt span{color:#e2e6f0;font-weight:600;}
-
   .i-tbl-panel { background:#13131f; overflow-y:auto; border-right:1px solid #2d2d45; }
   .i-tbl { width:100%; border-collapse:collapse; }
   .i-tbl thead { position:sticky; top:0; background:#1a1a2e; z-index:5; }
@@ -163,15 +165,15 @@
   .s-Unengaged{background:rgba(245,158,11,.12);color:#f59e0b;border:1px solid rgba(245,158,11,.2)}
   .s-Aware{background:rgba(79,126,247,.12);color:#4f7ef7;border:1px solid rgba(79,126,247,.2)}
   .s-Engaged{background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.2)}
-  .s-Potential{background:rgba(168,85,247,.12);color:#a855f7;border:1px solid rgba(168,85,247,.2)}
-  .s-Active{background:rgba(249,115,22,.12);color:#f97316;border:1px solid rgba(249,115,22,.2)}
+  .s-PotentialOpportunity{background:rgba(168,85,247,.12);color:#a855f7;border:1px solid rgba(168,85,247,.2)}
+  .s-ActiveOpportunity{background:rgba(249,115,22,.12);color:#f97316;border:1px solid rgba(249,115,22,.2)}
   .i-eng{display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;font-family:'DM Mono',monospace;font-weight:600}
   .e-LOW{background:rgba(107,114,128,.15);color:#9ca3af} .e-MEDIUM{background:rgba(245,158,11,.15);color:#f59e0b} .e-HIGH{background:rgba(34,197,94,.15);color:#22c55e} .e-VERYHIGH{background:rgba(249,115,22,.15);color:#f97316}
   .i-dt{font-family:'DM Mono',monospace;font-size:11px;color:#6b7280}
   .i-empty-state{display:flex;align-items:center;justify-content:center;height:200px;color:#4b5563;font-size:13px}
   .i-loading-state{display:flex;align-items:center;justify-content:center;height:200px;gap:10px;color:#6b7280;font-size:13px}
   .i-spin{width:20px;height:20px;border:2px solid #2d2d45;border-top-color:#4f7ef7;border-radius:50%;animation:spin .7s linear infinite}
-
+ 
   /* CHAT */
   .chat-panel{background:#1a1a2e;display:flex;flex-direction:column;overflow:hidden}
   .chat-head{padding:12px 14px;border-bottom:1px solid #2d2d45;display:flex;align-items:center;gap:8px}
@@ -198,12 +200,12 @@
   .i-tbl-panel::-webkit-scrollbar,.chat-msgs::-webkit-scrollbar{width:5px}
   .i-tbl-panel::-webkit-scrollbar-track,.chat-msgs::-webkit-scrollbar-track{background:transparent}
   .i-tbl-panel::-webkit-scrollbar-thumb,.chat-msgs::-webkit-scrollbar-thumb{background:#2d2d45;border-radius:3px}
-
+ 
   @media(max-width:600px){.main{padding:16px}.form-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
-
+ 
 <header class="header">
   <div class="header-brand">
     <div class="brand-icon">
@@ -220,6 +222,7 @@
     <button class="tab-btn" onclick="showPage('rules')">Rules</button>
   </div>
   <div class="header-actions">
+    <span id="sync-indicator">Loading…</span>
     <button class="btn" onclick="downloadTemplate()">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 13h10"/></svg>CSV Template
     </button>
@@ -232,23 +235,28 @@
     </button>
   </div>
 </header>
-
+ 
 <main class="main">
-
+ 
 <!-- DASHBOARD -->
 <div id="page-dashboard" class="page active">
   <div id="cooling-banner" style="display:none" class="cooling-alert">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><line x1="8" y1="5" x2="8" y2="8"/><circle cx="8" cy="11" r="0.5" fill="currentColor"/></svg>
     <span id="cooling-text"></span>
   </div>
-  <div class="stats-grid" id="stats-grid"></div>
+  <div class="stats-grid" id="stats-grid">
+    <div class="stat-card accent"><div class="stat-label">Total Accounts</div><div class="stat-value" id="stat-accounts">—</div></div>
+    <div class="stat-card"><div class="stat-label">Total Touchpoints</div><div class="stat-value" id="stat-total">—</div></div>
+    <div class="stat-card"><div class="stat-label">Active (14d)</div><div class="stat-value" id="stat-active">—</div></div>
+    <div class="stat-card danger"><div class="stat-label">Cooling Off</div><div class="stat-value" id="stat-cooling">—</div></div>
+  </div>
   <div class="section-header"><span class="section-title">Account Status Overview</span></div>
   <div class="table-wrap">
     <table><thead><tr><th>Account</th><th>SF Account ID</th><th>Country</th><th>Tier</th><th>Total Touches</th><th>Last Touch</th><th>Days Since</th><th>Touches (14d)</th><th>Status</th></tr></thead>
-    <tbody id="dashboard-tbody"></tbody></table>
+    <tbody id="dashboard-tbody"><tr><td colspan="9" class="loading-row"><span class="spinner"></span>Loading from Airtable…</td></tr></tbody></table>
   </div>
 </div>
-
+ 
 <!-- TRACKER -->
 <div id="page-tracker" class="page">
   <div class="section-header">
@@ -264,19 +272,19 @@
     </div>
     <div class="tracker-scroll">
       <table><thead><tr><th class="col-num">#</th><th class="col-sfid">SF Account ID</th><th class="col-acct">Account</th><th class="col-domain">Domain</th><th class="col-ctry">Country</th><th class="col-date">Date</th><th class="col-by">Sent By</th><th class="col-tier">Tier</th><th class="col-chan">Channel</th><th class="col-camp">Campaign / Email</th><th class="col-cool">Cooling?</th><th class="col-out">Outcome</th><th class="col-notes">Notes</th><th class="col-acts"></th></tr></thead>
-      <tbody id="tracker-tbody"></tbody></table>
+      <tbody id="tracker-tbody"><tr><td colspan="14" class="loading-row"><span class="spinner"></span>Loading from Airtable…</td></tr></tbody></table>
     </div>
     <div id="tracker-empty" class="empty-state" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="15" x2="12" y2="15"/></svg><p>No touchpoints match your filters</p></div>
   </div>
 </div>
-
+ 
 <!-- ACCOUNTS -->
 <div id="page-accounts" class="page">
   <div class="section-header"><div><div class="section-title">Accounts</div><div class="page-sub">Summary view per account with touchpoint limits</div></div></div>
-  <div class="accounts-grid" id="accounts-grid"></div>
-  <div id="accounts-empty" class="empty-state" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><p>No accounts yet — log your first touchpoint to get started</p></div>
+  <div class="accounts-grid" id="accounts-grid"><div class="loading-row" style="grid-column:1/-1"><span class="spinner"></span>Loading…</div></div>
+  <div id="accounts-empty" class="empty-state" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><p>No accounts yet</p></div>
 </div>
-
+ 
 <!-- CAMPAIGN CHECKER -->
 <div id="page-checker" class="page">
   <div class="section-header">
@@ -301,7 +309,7 @@
     <div class="table-wrap"><table><thead><tr><th>Account</th><th>SF Account ID</th><th>Domain</th><th>Country</th><th>Touches (14d)</th><th>Limit</th><th>Last Touch</th><th>Days Until Clear</th><th>Status</th></tr></thead><tbody id="checker-tbody"></tbody></table></div>
   </div>
 </div>
-
+ 
 <!-- RULES -->
 <div id="page-rules" class="page">
   <div class="rules-card">
@@ -309,18 +317,14 @@
     <table class="rules-table"><tr><td>Tier 1 accounts</td><td>Max <strong>2 touches per 14-day window</strong> across ALL channels</td></tr><tr><td>Tier 2 accounts</td><td>Max <strong>2 touches per 14-day window</strong></td></tr><tr><td>Tier 3 accounts</td><td>Max <strong>1 touch per 14-day window</strong></td></tr><tr><td>Cooling Off period</td><td>Set 'Cooling Off = Yes' → account paused for 14 days</td></tr><tr><td>Who can override</td><td>Team lead only — add note in Notes column</td></tr></table>
   </div>
   <div class="rules-card">
-    <h3><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M3 4h10M3 12h6"/></svg>How to log a touchpoint</h3>
-    <ol style="padding-left:18px;display:flex;flex-direction:column;gap:7px;font-size:13px;"><li>Click <strong>Log Touchpoint</strong> from any page</li><li>Fill in Account Name, Date, Sent By, Tier, Channel</li><li>Enter the Campaign / Email Name</li><li>If account has hit the touch limit in 14 days → set Cooling Off = Yes</li><li>Check Dashboard for instant status update</li></ol>
-  </div>
-  <div class="rules-card">
-    <h3><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l4 4 4-4M4 8l4 4 4-4"/></svg>Status indicators</h3>
-    <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;"><div style="display:flex;align-items:center;gap:8px;"><span class="dot dot-green"></span><strong>Active</strong> — within touch limits</div><div style="display:flex;align-items:center;gap:8px;"><span class="dot dot-amber"></span><strong>At limit</strong> — approaching max touches</div><div style="display:flex;align-items:center;gap:8px;"><span class="dot dot-red"></span><strong>Cooling Off</strong> — do not contact</div></div>
+    <h3><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M3 4h10M3 12h6"/></svg>Status indicators</h3>
+    <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;"><div><span class="dot dot-green"></span><strong>Active</strong> — within touch limits</div><div><span class="dot dot-amber"></span><strong>At limit</strong> — approaching max touches</div><div><span class="dot dot-red"></span><strong>Cooling Off</strong> — do not contact</div></div>
   </div>
 </div>
-
+ 
 </main>
-
-<!-- INTELLIGENCE PAGE (full height, outside main) -->
+ 
+<!-- INTELLIGENCE PAGE -->
 <div id="page-intelligence">
   <div class="intel-filters">
     <span class="i-lbl">Filter</span>
@@ -333,16 +337,18 @@
     <div class="i-cnt">Showing <span id="i-count">0</span> records</div>
   </div>
   <div class="i-tbl-panel">
-    <div id="i-loading" class="i-loading-state"><div class="i-spin"></div><span>Loading account intelligence…</span></div>
+    <div id="i-loading" class="i-loading-state"><div class="i-spin"></div><span>Loading from Supabase…</span></div>
     <table class="i-tbl" id="i-table" style="display:none">
       <thead><tr>
         <th onclick="iSort('account_name')">Account ↕</th>
         <th onclick="iSort('product')">Product ↕</th>
         <th onclick="iSort('stage')">Stage ↕</th>
         <th onclick="iSort('stage_date')">Stage Date ↕</th>
-        <th onclick="iSort('engagement_level')">Engagement ↕</th>
+        <th onclick="iSort('no_of_rooms')">Rooms ↕</th>
+        <th onclick="iSort('no_of_properties')">Properties ↕</th>
         <th onclick="iSort('region')">Region ↕</th>
         <th onclick="iSort('country')">Country ↕</th>
+        <th onclick="iSort('account_owner')">Owner ↕</th>
       </tr></thead>
       <tbody id="i-tbody"></tbody>
     </table>
@@ -355,12 +361,12 @@
     </div>
     <div class="chat-msgs" id="chat-msgs">
       <div class="chat-msg assistant">
-        <div class="chat-bubble">Hi! I have access to your live account intelligence data. Ask me anything about stages, products, regions, or engagement trends.</div>
+        <div class="chat-bubble">Hi! I have access to your live account intelligence data from Supabase. Ask me anything about stages, products, regions, or engagement trends.</div>
         <div class="chat-sugs" id="chat-sugs">
-          <button class="sug-btn" onclick="useSug(this)">Which accounts are in Active Opportunity stage?</button>
-          <button class="sug-btn" onclick="useSug(this)">Show me Engaged accounts by region</button>
-          <button class="sug-btn" onclick="useSug(this)">Which regions have the most Aware accounts?</button>
-          <button class="sug-btn" onclick="useSug(this)">How many accounts have HIGH or VERY HIGH engagement?</button>
+          <button class="sug-btn" onclick="useSug(this)">Which Aware-stage RevAI accounts are clear to touch this week?</button>
+          <button class="sug-btn" onclick="useSug(this)">Show me large hotel chains (500+ rooms) in APAC that are Unengaged</button>
+          <button class="sug-btn" onclick="useSug(this)">Which UNO accounts in EMEA have never been touched?</button>
+          <button class="sug-btn" onclick="useSug(this)">Who are the top account owners with the most cooling off accounts?</button>
         </div>
       </div>
     </div>
@@ -372,8 +378,8 @@
     </div>
   </div>
 </div>
-
-<!-- LOG TOUCHPOINT MODAL -->
+ 
+<!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
   <div class="modal">
     <div class="modal-title" id="modal-title">Log Touchpoint</div>
@@ -386,93 +392,188 @@
           <div class="form-group" style="margin:0;"><label class="form-label">Country</label><input id="f-country" class="form-input" type="text" placeholder="e.g. United Kingdom"></div>
         </div>
       </div>
-      <div class="form-group full">
-        <label class="form-label">Account Name *</label>
-        <input id="f-account" class="form-input" type="text" placeholder="e.g. Acme Corp" list="accounts-list">
-        <datalist id="accounts-list"></datalist>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Date *</label>
-        <input id="f-date" class="form-input" type="date">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Sent By *</label>
-        <input id="f-by" class="form-input" type="text" placeholder="e.g. Sarah Jones">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Tier *</label>
-        <select id="f-tier" class="form-input">
-          <option value="">Select tier…</option>
-          <option>Tier 1</option>
-          <option>Tier 2</option>
-          <option>Tier 3</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Channel *</label>
-        <select id="f-channel" class="form-input">
-          <option value="">Select channel…</option>
-          <option>Email</option>
-          <option>LinkedIn</option>
-          <option>Webinar</option>
-          <option>Event</option>
-          <option>Direct Mail</option>
-          <option>Paid Ad</option>
-        </select>
-      </div>
-      <div class="form-group full">
-        <label class="form-label">Campaign / Email Name *</label>
-        <input id="f-campaign" class="form-input" type="text" placeholder="e.g. Q2 Product Launch Email">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Cooling Off?</label>
-        <select id="f-cooling" class="form-input">
-          <option value="No">No</option>
-          <option value="Yes">Yes</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Outcome</label>
-        <select id="f-outcome" class="form-input">
-          <option value="">None</option>
-          <option>Opened</option>
-          <option>Clicked</option>
-          <option>Replied</option>
-          <option>Meeting Booked</option>
-        </select>
-      </div>
-      <div class="form-group full">
-        <label class="form-label">Notes</label>
-        <textarea id="f-notes" class="form-input" placeholder="Any additional context…"></textarea>
-      </div>
+      <div class="form-group full"><label class="form-label">Account Name *</label><input id="f-account" class="form-input" type="text" placeholder="e.g. Acme Corp" list="accounts-list"><datalist id="accounts-list"></datalist></div>
+      <div class="form-group"><label class="form-label">Date *</label><input id="f-date" class="form-input" type="date"></div>
+      <div class="form-group"><label class="form-label">Sent By *</label><input id="f-by" class="form-input" type="text" placeholder="e.g. Sarah Jones"></div>
+      <div class="form-group"><label class="form-label">Tier *</label><select id="f-tier" class="form-input"><option value="">Select tier…</option><option>Tier 1</option><option>Tier 2</option><option>Tier 3</option></select></div>
+      <div class="form-group"><label class="form-label">Channel *</label><select id="f-channel" class="form-input"><option value="">Select channel…</option><option>Email</option><option>LinkedIn</option><option>Webinar</option><option>Event</option><option>Direct Mail</option><option>Paid Ad</option></select></div>
+      <div class="form-group full"><label class="form-label">Campaign / Email Name *</label><input id="f-campaign" class="form-input" type="text" placeholder="e.g. Q2 Product Launch Email"></div>
+      <div class="form-group"><label class="form-label">Cooling Off?</label><select id="f-cooling" class="form-input"><option value="No">No</option><option value="Yes">Yes</option></select></div>
+      <div class="form-group"><label class="form-label">Outcome</label><select id="f-outcome" class="form-input"><option value="">None</option><option>Opened</option><option>Clicked</option><option>Replied</option><option>Meeting Booked</option></select></div>
+      <div class="form-group full"><label class="form-label">Notes</label><textarea id="f-notes" class="form-input" placeholder="Any additional context…"></textarea></div>
     </div>
     <div class="form-actions">
       <button class="btn" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveTouchpoint()">Save Touchpoint</button>
+      <button class="btn btn-primary" id="save-btn" onclick="saveTouchpoint()">Save Touchpoint</button>
     </div>
   </div>
 </div>
-
-<!-- TOAST -->
+ 
 <div class="toast" id="toast"></div>
-
+ 
 <script>
 // ══════════════════════════════════════════
-//  DATA STORE
+//  CONFIG — Airtable + Supabase
 // ══════════════════════════════════════════
-let touchpoints = JSON.parse(localStorage.getItem('aet_touchpoints') || '[]');
-let editingId = null;
+const AIRTABLE_TOKEN = 'patwo6DIJ3qqQknLU.da7d70212c7103d851a216fd7290ad007d151f23a16d35d324204c7c60074915';
+const AIRTABLE_BASE  = 'appbkCa4mNhGCzCb7';
+const AIRTABLE_TABLE = 'Touchpoints';
+const AIRTABLE_URL   = `https://api.airtable.com/v0/${AIRTABLE_BASE}/${encodeURIComponent(AIRTABLE_TABLE)}`;
+ 
+const SUPABASE_URL   = 'https://mtlujmdpxtveawrhljxg.supabase.co';
+const SUPABASE_KEY   = 'sb_publishable_gxnzx22MGBxG41UE1luKow_r8mHHmHK';
+ 
+// ══════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════
+let touchpoints = [];        // from Airtable
+let airtableLoaded = false;
 let checkerData = [];
 let intelData = [];
 let intelFiltered = [];
 let intelSortCol = 'account_name';
 let intelSortDir = 1;
 let chatHistory = [];
-
-function save() {
-  localStorage.setItem('aet_touchpoints', JSON.stringify(touchpoints));
+let editingId = null;        // Airtable record id
+ 
+// ══════════════════════════════════════════
+//  SYNC INDICATOR
+// ══════════════════════════════════════════
+function setSyncStatus(state, msg) {
+  const el = document.getElementById('sync-indicator');
+  el.className = state;
+  el.textContent = msg;
 }
-
+ 
+// ══════════════════════════════════════════
+//  AIRTABLE — LOAD ALL TOUCHPOINTS
+// ══════════════════════════════════════════
+async function loadAirtable() {
+  setSyncStatus('syncing', '⟳ Loading…');
+  touchpoints = [];
+  let offset = null;
+  try {
+    do {
+      let url = AIRTABLE_URL + '?pageSize=100&sort[0][field]=Date&sort[0][direction]=desc';
+      if (offset) url += '&offset=' + offset;
+      const res = await fetch(url, { headers: { Authorization: 'Bearer ' + AIRTABLE_TOKEN } });
+      if (!res.ok) throw new Error('Airtable HTTP ' + res.status);
+      const data = await res.json();
+      data.records.forEach(r => {
+        touchpoints.push({
+          id: r.id,
+          sfId: r.fields['Salesforce Account ID'] || '',
+          account: r.fields['Account'] || '',
+          domain: r.fields['Account Domain'] || '',
+          country: r.fields['Country'] || '',
+          date: r.fields['Date'] || '',
+          by: r.fields['Sent By'] || '',
+          tier: r.fields['Tier'] || '',
+          channel: r.fields['Channel'] || '',
+          campaign: r.fields['Campaign'] || '',
+          cooling: r.fields['Cooling Off'] || 'No',
+          outcome: r.fields['Outcome'] || '',
+          notes: r.fields['Notes'] || ''
+        });
+      });
+      offset = data.offset || null;
+    } while (offset);
+ 
+    airtableLoaded = true;
+    setSyncStatus('', `✓ ${touchpoints.length} touchpoints`);
+    renderDashboard();
+    renderTracker();
+    renderAccounts();
+  } catch (err) {
+    setSyncStatus('error', '✗ Airtable error');
+    console.error('Airtable load error:', err);
+    showToast('Could not load from Airtable: ' + err.message);
+    // Show empty state
+    document.getElementById('dashboard-tbody').innerHTML = '<tr><td colspan="9" class="loading-row" style="color:var(--red);">Could not load Airtable data. Check console for details.</td></tr>';
+  }
+}
+ 
+// ══════════════════════════════════════════
+//  AIRTABLE — SAVE TOUCHPOINT
+// ══════════════════════════════════════════
+async function saveTouchpoint() {
+  const account  = document.getElementById('f-account').value.trim();
+  const date     = document.getElementById('f-date').value;
+  const by       = document.getElementById('f-by').value.trim();
+  const tier     = document.getElementById('f-tier').value;
+  const channel  = document.getElementById('f-channel').value;
+  const campaign = document.getElementById('f-campaign').value.trim();
+  if (!account || !date || !by || !tier || !channel || !campaign) {
+    showToast('Please fill in all required fields (*)'); return;
+  }
+ 
+  const fields = {
+    'Salesforce Account ID': document.getElementById('f-sfid').value.trim(),
+    'Account Domain':        document.getElementById('f-domain').value.trim(),
+    'Country':               document.getElementById('f-country').value.trim(),
+    'Account':               account,
+    'Date':                  date,
+    'Sent By':               by,
+    'Tier':                  tier,
+    'Channel':               channel,
+    'Campaign':              campaign,
+    'Cooling Off':           document.getElementById('f-cooling').value,
+    'Outcome':               document.getElementById('f-outcome').value,
+    'Notes':                 document.getElementById('f-notes').value.trim()
+  };
+  // Remove empty strings
+  Object.keys(fields).forEach(k => { if (fields[k] === '') delete fields[k]; });
+ 
+  const saveBtn = document.getElementById('save-btn');
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Saving…';
+ 
+  try {
+    let res;
+    if (editingId) {
+      res = await fetch(AIRTABLE_URL + '/' + editingId, {
+        method: 'PATCH',
+        headers: { Authorization: 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fields })
+      });
+    } else {
+      res = await fetch(AIRTABLE_URL, {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fields })
+      });
+    }
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error?.message || 'HTTP ' + res.status);
+    }
+    showToast(editingId ? 'Touchpoint updated in Airtable' : 'Touchpoint saved to Airtable');
+    closeModal();
+    await loadAirtable();
+  } catch (err) {
+    showToast('Save failed: ' + err.message);
+    console.error('Save error:', err);
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.textContent = 'Save Touchpoint';
+  }
+}
+ 
+async function deleteTouchpoint(id) {
+  if (!confirm('Delete this touchpoint from Airtable?')) return;
+  try {
+    const res = await fetch(AIRTABLE_URL + '/' + id, {
+      method: 'DELETE',
+      headers: { Authorization: 'Bearer ' + AIRTABLE_TOKEN }
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    showToast('Deleted from Airtable');
+    await loadAirtable();
+  } catch (err) {
+    showToast('Delete failed: ' + err.message);
+  }
+}
+ 
 // ══════════════════════════════════════════
 //  NAVIGATION
 // ══════════════════════════════════════════
@@ -481,173 +582,82 @@ function showPage(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   const pg = document.getElementById('page-' + name);
   if (pg) pg.classList.add('active');
-  const btns = document.querySelectorAll('.tab-btn');
-  btns.forEach(b => { if (b.textContent.toLowerCase().includes(name === 'intelligence' ? 'intelligence' : name)) b.classList.add('active'); });
-  if (name === 'dashboard') renderDashboard();
-  if (name === 'tracker') renderTracker();
-  if (name === 'accounts') renderAccounts();
-  if (name === 'checker') {} // checker renders on upload
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    if (b.textContent.toLowerCase().includes(name === 'intelligence' ? 'intelligence' : name)) b.classList.add('active');
+  });
   if (name === 'intelligence') initIntelligence();
 }
-
+ 
 // ══════════════════════════════════════════
 //  HELPERS
 // ══════════════════════════════════════════
-function today() {
-  return new Date().toISOString().split('T')[0];
-}
-
+function today() { return new Date().toISOString().split('T')[0]; }
+ 
 function daysBetween(dateStr) {
   if (!dateStr) return null;
-  const d = new Date(dateStr);
-  const now = new Date();
-  now.setHours(0,0,0,0);
-  return Math.floor((now - d) / 86400000);
+  const now = new Date(); now.setHours(0,0,0,0);
+  return Math.floor((now - new Date(dateStr)) / 86400000);
 }
-
-function touchesIn14Days(accountKey) {
-  const cutoff = new Date();
-  cutoff.setDate(cutoff.getDate() - 14);
-  return touchpoints.filter(t => {
-    const match = t.account.toLowerCase() === accountKey.toLowerCase() ||
-                  (t.sfId && t.sfId === accountKey) ||
-                  (t.domain && t.domain === accountKey);
-    return match && new Date(t.date) >= cutoff;
-  }).length;
+ 
+function getLimit(tier) { return tier === 'Tier 3' ? 1 : 2; }
+ 
+function tierBadge(t) {
+  if (t==='Tier 1') return `<span class="badge badge-tier1">Tier 1</span>`;
+  if (t==='Tier 2') return `<span class="badge badge-tier2">Tier 2</span>`;
+  return `<span class="badge badge-tier3">${t||'—'}</span>`;
 }
-
-function getLimit(tier) {
-  if (tier === 'Tier 3') return 1;
-  return 2;
-}
-
-function tierBadge(tier) {
-  if (tier === 'Tier 1') return `<span class="badge badge-tier1">Tier 1</span>`;
-  if (tier === 'Tier 2') return `<span class="badge badge-tier2">Tier 2</span>`;
-  return `<span class="badge badge-tier3">Tier 3</span>`;
-}
-
 function channelBadge(ch) {
-  const map = { 'Email':'email','LinkedIn':'linkedin','Webinar':'webinar','Event':'event','Direct Mail':'direct','Paid Ad':'paid' };
-  const cls = map[ch] || 'email';
-  return `<span class="badge badge-channel-${cls}">${ch||'—'}</span>`;
+  const m={Email:'email',LinkedIn:'linkedin',Webinar:'webinar',Event:'event','Direct Mail':'direct','Paid Ad':'paid'};
+  return `<span class="badge badge-channel-${m[ch]||'email'}">${ch||'—'}</span>`;
 }
-
 function outcomeBadge(o) {
   if (!o) return `<span class="badge badge-none">—</span>`;
-  const map = { 'Opened':'opened','Clicked':'clicked','Replied':'replied','Meeting Booked':'meeting' };
-  return `<span class="badge badge-${map[o]||'none'}">${o}</span>`;
+  const m={Opened:'opened',Clicked:'clicked',Replied:'replied','Meeting Booked':'meeting'};
+  return `<span class="badge badge-${m[o]||'none'}">${o}</span>`;
 }
-
 function coolingBadge(v) {
-  return v === 'Yes' ? `<span class="badge badge-yes">Yes</span>` : `<span class="badge badge-no">No</span>`;
+  return v==='Yes'?`<span class="badge badge-yes">Yes</span>`:`<span class="badge badge-no">No</span>`;
 }
-
 function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
 }
-
+ 
 // ══════════════════════════════════════════
 //  MODAL
 // ══════════════════════════════════════════
 function openModal(id) {
   editingId = id || null;
   document.getElementById('modal-title').textContent = editingId ? 'Edit Touchpoint' : 'Log Touchpoint';
-  const fields = ['sfid','domain','country','account','date','by','tier','channel','campaign','cooling','outcome','notes'];
-  fields.forEach(f => {
-    const el = document.getElementById('f-' + f);
-    if (el) el.value = '';
+  ['sfid','domain','country','account','date','by','tier','channel','campaign','cooling','outcome','notes'].forEach(f => {
+    const el = document.getElementById('f-'+f); if (el) el.value='';
   });
   document.getElementById('f-date').value = today();
   document.getElementById('f-cooling').value = 'No';
-
   if (editingId) {
-    const t = touchpoints.find(x => x.id === editingId);
+    const t = touchpoints.find(x=>x.id===editingId);
     if (t) {
-      document.getElementById('f-sfid').value = t.sfId || '';
-      document.getElementById('f-domain').value = t.domain || '';
-      document.getElementById('f-country').value = t.country || '';
-      document.getElementById('f-account').value = t.account || '';
-      document.getElementById('f-date').value = t.date || '';
-      document.getElementById('f-by').value = t.by || '';
-      document.getElementById('f-tier').value = t.tier || '';
-      document.getElementById('f-channel').value = t.channel || '';
-      document.getElementById('f-campaign').value = t.campaign || '';
-      document.getElementById('f-cooling').value = t.cooling || 'No';
-      document.getElementById('f-outcome').value = t.outcome || '';
-      document.getElementById('f-notes').value = t.notes || '';
+      document.getElementById('f-sfid').value    = t.sfId||'';
+      document.getElementById('f-domain').value  = t.domain||'';
+      document.getElementById('f-country').value = t.country||'';
+      document.getElementById('f-account').value = t.account||'';
+      document.getElementById('f-date').value    = t.date||'';
+      document.getElementById('f-by').value      = t.by||'';
+      document.getElementById('f-tier').value    = t.tier||'';
+      document.getElementById('f-channel').value = t.channel||'';
+      document.getElementById('f-campaign').value= t.campaign||'';
+      document.getElementById('f-cooling').value = t.cooling||'No';
+      document.getElementById('f-outcome').value = t.outcome||'';
+      document.getElementById('f-notes').value   = t.notes||'';
     }
   }
-
-  // Populate datalist
   const dl = document.getElementById('accounts-list');
-  const names = [...new Set(touchpoints.map(t => t.account).filter(Boolean))];
-  dl.innerHTML = names.map(n => `<option value="${n}">`).join('');
-
+  dl.innerHTML = [...new Set(touchpoints.map(t=>t.account).filter(Boolean))].map(n=>`<option value="${n}">`).join('');
   document.getElementById('modal-overlay').classList.add('open');
 }
-
-function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('open');
-  editingId = null;
-}
-
-function closeModalOutside(e) {
-  if (e.target === document.getElementById('modal-overlay')) closeModal();
-}
-
-function saveTouchpoint() {
-  const account = document.getElementById('f-account').value.trim();
-  const date = document.getElementById('f-date').value;
-  const by = document.getElementById('f-by').value.trim();
-  const tier = document.getElementById('f-tier').value;
-  const channel = document.getElementById('f-channel').value;
-  const campaign = document.getElementById('f-campaign').value.trim();
-
-  if (!account || !date || !by || !tier || !channel || !campaign) {
-    showToast('Please fill in all required fields (*)');
-    return;
-  }
-
-  const record = {
-    id: editingId || Date.now().toString(),
-    sfId: document.getElementById('f-sfid').value.trim(),
-    domain: document.getElementById('f-domain').value.trim(),
-    country: document.getElementById('f-country').value.trim(),
-    account, date, by, tier, channel, campaign,
-    cooling: document.getElementById('f-cooling').value,
-    outcome: document.getElementById('f-outcome').value,
-    notes: document.getElementById('f-notes').value.trim()
-  };
-
-  if (editingId) {
-    const idx = touchpoints.findIndex(x => x.id === editingId);
-    if (idx > -1) touchpoints[idx] = record;
-  } else {
-    touchpoints.unshift(record);
-  }
-
-  save();
-  closeModal();
-  showToast(editingId ? 'Touchpoint updated' : 'Touchpoint logged');
-  renderDashboard();
-  renderTracker();
-  renderAccounts();
-}
-
-function deleteTouchpoint(id) {
-  if (!confirm('Delete this touchpoint?')) return;
-  touchpoints = touchpoints.filter(t => t.id !== id);
-  save();
-  showToast('Deleted');
-  renderDashboard();
-  renderTracker();
-  renderAccounts();
-}
-
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); editingId=null; }
+function closeModalOutside(e) { if (e.target===document.getElementById('modal-overlay')) closeModal(); }
+ 
 // ══════════════════════════════════════════
 //  DASHBOARD
 // ══════════════════════════════════════════
@@ -655,63 +665,48 @@ function getAccountSummaries() {
   const map = {};
   touchpoints.forEach(t => {
     const key = t.sfId || t.account;
-    if (!map[key]) map[key] = { name: t.account, sfId: t.sfId||'', country: t.country||'', tier: t.tier, touches: [], cooling: false };
+    if (!map[key]) map[key] = { name:t.account, sfId:t.sfId||'', country:t.country||'', tier:t.tier, touches:[], cooling:false };
     map[key].touches.push(t.date);
-    if (t.cooling === 'Yes') map[key].cooling = true;
-    map[key].tier = t.tier; // latest tier
+    if (t.cooling==='Yes') map[key].cooling=true;
+    map[key].tier    = t.tier || map[key].tier;
     map[key].country = t.country || map[key].country;
-    map[key].sfId = t.sfId || map[key].sfId;
+    map[key].sfId    = t.sfId    || map[key].sfId;
   });
   return Object.values(map);
 }
-
+ 
 function renderDashboard() {
   const summaries = getAccountSummaries();
-  const coolingAccounts = summaries.filter(s => s.cooling);
+  const coolingAccounts = summaries.filter(s=>s.cooling);
   const banner = document.getElementById('cooling-banner');
-  const coolingText = document.getElementById('cooling-text');
-  if (coolingAccounts.length > 0) {
-    banner.style.display = 'flex';
-    coolingText.textContent = `${coolingAccounts.length} account${coolingAccounts.length > 1 ? 's' : ''} currently cooling off: ${coolingAccounts.map(a => a.name).join(', ')}`;
-  } else {
-    banner.style.display = 'none';
-  }
-
-  const statsGrid = document.getElementById('stats-grid');
-  const totalAccounts = summaries.length;
-  const totalTouchpoints = touchpoints.length;
-  const cooling = coolingAccounts.length;
-  const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 14);
-  const active14 = touchpoints.filter(t => new Date(t.date) >= cutoff).length;
-
-  statsGrid.innerHTML = `
-    <div class="stat-card accent"><div class="stat-label">Total Accounts</div><div class="stat-value">${totalAccounts}</div></div>
-    <div class="stat-card"><div class="stat-label">Total Touchpoints</div><div class="stat-value">${totalTouchpoints}</div></div>
-    <div class="stat-card"><div class="stat-label">Active (14d)</div><div class="stat-value">${active14}</div></div>
-    <div class="stat-card danger"><div class="stat-label">Cooling Off</div><div class="stat-value">${cooling}</div></div>
-  `;
-
-  const tbody = document.getElementById('dashboard-tbody');
-  if (summaries.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text3);">No touchpoints yet — click Log Touchpoint to get started</td></tr>';
+  if (coolingAccounts.length>0) {
+    banner.style.display='flex';
+    document.getElementById('cooling-text').textContent = `${coolingAccounts.length} account${coolingAccounts.length>1?'s':''} currently cooling off: ${coolingAccounts.map(a=>a.name).join(', ')}`;
+  } else banner.style.display='none';
+ 
+  const cutoff=new Date(); cutoff.setDate(cutoff.getDate()-14);
+  const active14=touchpoints.filter(t=>new Date(t.date)>=cutoff).length;
+  document.getElementById('stat-accounts').textContent = summaries.length;
+  document.getElementById('stat-total').textContent    = touchpoints.length;
+  document.getElementById('stat-active').textContent   = active14;
+  document.getElementById('stat-cooling').textContent  = coolingAccounts.length;
+ 
+  const tbody=document.getElementById('dashboard-tbody');
+  if (summaries.length===0) {
+    tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text3);">No touchpoints yet — click Log Touchpoint to get started</td></tr>';
     return;
   }
-
   tbody.innerHTML = summaries.map(s => {
-    const sorted = [...s.touches].sort((a,b) => new Date(b)-new Date(a));
-    const lastTouch = sorted[0] || '';
-    const daysSince = lastTouch ? daysBetween(lastTouch) : null;
-    const cutoff14 = new Date(); cutoff14.setDate(cutoff14.getDate()-14);
-    const touches14 = s.touches.filter(d => new Date(d) >= cutoff14).length;
-    const limit = getLimit(s.tier);
+    const sorted=[...s.touches].sort((a,b)=>new Date(b)-new Date(a));
+    const lastTouch=sorted[0]||'';
+    const daysSince=lastTouch?daysBetween(lastTouch):null;
+    const c14=new Date(); c14.setDate(c14.getDate()-14);
+    const touches14=s.touches.filter(d=>new Date(d)>=c14).length;
+    const limit=getLimit(s.tier);
     let statusHtml;
-    if (s.cooling) {
-      statusHtml = `<span class="status-cooling">⬤ Cooling Off</span>`;
-    } else if (touches14 >= limit) {
-      statusHtml = `<span class="status-limit">⬤ At Limit</span>`;
-    } else {
-      statusHtml = `<span class="status-active">⬤ Active</span>`;
-    }
+    if (s.cooling) statusHtml=`<span class="status-cooling">⬤ Cooling Off</span>`;
+    else if (touches14>=limit) statusHtml=`<span class="status-limit">⬤ At Limit</span>`;
+    else statusHtml=`<span class="status-active">⬤ Active</span>`;
     return `<tr>
       <td class="account-name">${s.name}</td>
       <td><span class="date-cell">${s.sfId||'—'}</span></td>
@@ -719,41 +714,32 @@ function renderDashboard() {
       <td>${tierBadge(s.tier)}</td>
       <td>${s.touches.length}</td>
       <td><span class="date-cell">${lastTouch||'—'}</span></td>
-      <td>${daysSince !== null ? daysSince + 'd' : '—'}</td>
-      <td>${touches14} / ${limit}</td>
+      <td>${daysSince!==null?daysSince+'d':'—'}</td>
+      <td>${touches14}/${limit}</td>
       <td>${statusHtml}</td>
     </tr>`;
   }).join('');
 }
-
+ 
 // ══════════════════════════════════════════
 //  TRACKER
 // ══════════════════════════════════════════
 function renderTracker() {
-  const search = document.getElementById('tracker-search').value.toLowerCase();
-  const channel = document.getElementById('tracker-channel').value;
-  const tier = document.getElementById('tracker-tier').value;
-  const cooling = document.getElementById('tracker-cooling').value;
-
-  let filtered = touchpoints.filter(t => {
-    const matchSearch = !search || t.account.toLowerCase().includes(search) || (t.campaign||'').toLowerCase().includes(search) || (t.sfId||'').toLowerCase().includes(search);
-    const matchChannel = !channel || t.channel === channel;
-    const matchTier = !tier || t.tier === tier;
-    const matchCooling = !cooling || t.cooling === cooling;
-    return matchSearch && matchChannel && matchTier && matchCooling;
+  const search =(document.getElementById('tracker-search').value||'').toLowerCase();
+  const channel= document.getElementById('tracker-channel').value;
+  const tier   = document.getElementById('tracker-tier').value;
+  const cooling= document.getElementById('tracker-cooling').value;
+ 
+  let filtered=touchpoints.filter(t=>{
+    const ms=!search||t.account.toLowerCase().includes(search)||(t.campaign||'').toLowerCase().includes(search)||(t.sfId||'').toLowerCase().includes(search);
+    return ms&&(!channel||t.channel===channel)&&(!tier||t.tier===tier)&&(!cooling||t.cooling===cooling);
   });
-
-  const tbody = document.getElementById('tracker-tbody');
-  const empty = document.getElementById('tracker-empty');
-
-  if (filtered.length === 0) {
-    tbody.innerHTML = '';
-    empty.style.display = 'block';
-    return;
-  }
-  empty.style.display = 'none';
-
-  tbody.innerHTML = filtered.map((t, i) => `<tr>
+ 
+  const tbody=document.getElementById('tracker-tbody');
+  const empty=document.getElementById('tracker-empty');
+  if (filtered.length===0) { tbody.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  tbody.innerHTML=filtered.map((t,i)=>`<tr>
     <td class="col-num" style="color:var(--text3);font-size:12px;">${i+1}</td>
     <td class="col-sfid"><span class="cell-truncate date-cell" title="${t.sfId||''}">${t.sfId||'—'}</span></td>
     <td class="col-acct"><span class="cell-truncate account-name" title="${t.account}">${t.account}</span></td>
@@ -767,211 +753,156 @@ function renderTracker() {
     <td class="col-cool">${coolingBadge(t.cooling)}</td>
     <td class="col-out">${outcomeBadge(t.outcome)}</td>
     <td class="col-notes"><span class="cell-truncate notes-cell" title="${t.notes||''}">${t.notes||'—'}</span></td>
-    <td class="col-acts">
-      <div style="display:flex;gap:4px;">
-        <button class="btn btn-sm" onclick="openModal('${t.id}')">Edit</button>
-        <button class="btn btn-sm btn-danger" onclick="deleteTouchpoint('${t.id}')">Del</button>
-      </div>
-    </td>
+    <td class="col-acts"><div style="display:flex;gap:4px;">
+      <button class="btn btn-sm" onclick="openModal('${t.id}')">Edit</button>
+      <button class="btn btn-sm btn-danger" onclick="deleteTouchpoint('${t.id}')">Del</button>
+    </div></td>
   </tr>`).join('');
 }
-
+ 
 // ══════════════════════════════════════════
 //  ACCOUNTS
 // ══════════════════════════════════════════
 function renderAccounts() {
-  const summaries = getAccountSummaries();
-  const grid = document.getElementById('accounts-grid');
-  const empty = document.getElementById('accounts-empty');
-
-  if (summaries.length === 0) {
-    grid.innerHTML = '';
-    empty.style.display = 'block';
-    return;
-  }
-  empty.style.display = 'none';
-
-  grid.innerHTML = summaries.map(s => {
-    const cutoff14 = new Date(); cutoff14.setDate(cutoff14.getDate()-14);
-    const touches14 = s.touches.filter(d => new Date(d) >= cutoff14).length;
-    const limit = getLimit(s.tier);
-    const pct = Math.min(100, Math.round(touches14 / limit * 100));
-    const warning = touches14 >= limit;
-    const sorted = [...s.touches].sort((a,b) => new Date(b)-new Date(a));
-    const lastTouch = sorted[0] || '';
-
-    return `<div class="account-card ${s.cooling ? 'cooling' : ''}">
-      <div class="account-card-header">
-        <div class="account-card-name">${s.name}</div>
-        ${tierBadge(s.tier)}
-      </div>
-      <div style="font-size:11px;color:var(--text3);">${s.sfId||''} ${s.country ? '· '+s.country : ''}</div>
+  const summaries=getAccountSummaries();
+  const grid=document.getElementById('accounts-grid');
+  const empty=document.getElementById('accounts-empty');
+  if (summaries.length===0) { grid.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  grid.innerHTML=summaries.map(s=>{
+    const c14=new Date(); c14.setDate(c14.getDate()-14);
+    const t14=s.touches.filter(d=>new Date(d)>=c14).length;
+    const limit=getLimit(s.tier);
+    const pct=Math.min(100,Math.round(t14/limit*100));
+    const sorted=[...s.touches].sort((a,b)=>new Date(b)-new Date(a));
+    const last=sorted[0]||'';
+    return `<div class="account-card ${s.cooling?'cooling':''}">
+      <div class="account-card-header"><div class="account-card-name">${s.name}</div>${tierBadge(s.tier)}</div>
+      <div style="font-size:11px;color:var(--text3);">${s.sfId||''} ${s.country?'· '+s.country:''}</div>
       <div class="account-card-stats">
         <div class="account-stat"><div class="account-stat-val">${s.touches.length}</div><div class="account-stat-lbl">Total touches</div></div>
-        <div class="account-stat"><div class="account-stat-val" style="${warning?'color:var(--red)':''}">${touches14}</div><div class="account-stat-lbl">Last 14 days</div></div>
-        <div class="account-stat"><div class="account-stat-val">${lastTouch ? daysBetween(lastTouch)+'d' : '—'}</div><div class="account-stat-lbl">Days since</div></div>
+        <div class="account-stat"><div class="account-stat-val" style="${t14>=limit?'color:var(--red)':''}">${t14}</div><div class="account-stat-lbl">Last 14 days</div></div>
+        <div class="account-stat"><div class="account-stat-val">${last?daysBetween(last)+'d':'—'}</div><div class="account-stat-lbl">Days since</div></div>
       </div>
       <div class="progress-bar-wrap">
-        <div class="progress-bar-label"><span>14-day usage</span><span>${touches14}/${limit}</span></div>
-        <div class="progress-bar"><div class="progress-bar-fill ${warning?'warning':''}" style="width:${pct}%"></div></div>
+        <div class="progress-bar-label"><span>14-day usage</span><span>${t14}/${limit}</span></div>
+        <div class="progress-bar"><div class="progress-bar-fill ${t14>=limit?'warning':''}" style="width:${pct}%"></div></div>
       </div>
-      ${s.cooling ? `<div style="margin-top:10px;font-size:11px;font-weight:600;color:var(--red);">⬤ COOLING OFF — Do not contact</div>` : ''}
+      ${s.cooling?`<div style="margin-top:10px;font-size:11px;font-weight:600;color:var(--red);">⬤ COOLING OFF — Do not contact</div>`:''}
     </div>`;
   }).join('');
 }
-
+ 
 // ══════════════════════════════════════════
-//  CSV DOWNLOAD / UPLOAD
+//  CSV
 // ══════════════════════════════════════════
 function downloadTemplate() {
-  const headers = ['sfId','account','domain','country','date','by','tier','channel','campaign','cooling','outcome','notes'];
-  const example = ['0015g00000XXXXX','Acme Corp','acme.com','United Kingdom','2025-01-15','Sarah Jones','Tier 1','Email','Q1 Product Launch','No','Opened','Follow up next week'];
-  const csv = [headers.join(','), example.join(',')].join('\n');
-  downloadCSV(csv, 'touchpoints_template.csv');
+  const h=['sfId','account','domain','country','date','by','tier','channel','campaign','cooling','outcome','notes'];
+  const ex=['0015g00000XXXXX','Acme Corp','acme.com','United Kingdom','2025-01-15','Sarah Jones','Tier 1','Email','Q1 Product Launch','No','Opened','Follow up'];
+  downloadCSV([h,ex].map(r=>r.join(',')).join('\n'),'touchpoints_template.csv');
 }
-
-function downloadCSV(content, filename) {
-  const blob = new Blob([content], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = filename; a.click();
-  URL.revokeObjectURL(url);
+function downloadCSV(content,filename) {
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([content],{type:'text/csv'}));
+  a.download=filename; a.click();
 }
-
 function parseCSV(text) {
-  const lines = text.trim().split('\n');
-  if (lines.length < 2) return [];
-  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
-  return lines.slice(1).map(line => {
-    const vals = line.split(',').map(v => v.trim().replace(/^"|"$/g,''));
-    const obj = {};
-    headers.forEach((h,i) => obj[h] = vals[i]||'');
-    return obj;
+  const lines=text.trim().split('\n'); if(lines.length<2) return [];
+  const headers=lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
+  return lines.slice(1).map(line=>{
+    const vals=line.split(',').map(v=>v.trim().replace(/^"|"$/g,''));
+    const obj={}; headers.forEach((h,i)=>obj[h]=vals[i]||''); return obj;
   });
 }
-
-function handleCSVUpload(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const rows = parseCSV(ev.target.result);
-    let added = 0;
-    rows.forEach(r => {
-      if (!r.account && !r.sfId) return;
-      touchpoints.unshift({
-        id: Date.now().toString() + Math.random(),
-        sfId: r.sfId||'', domain: r.domain||'', country: r.country||'',
-        account: r.account||r.sfId||'',
-        date: r.date||today(), by: r.by||'', tier: r.tier||'Tier 2',
-        channel: r.channel||'Email', campaign: r.campaign||'',
-        cooling: r.cooling||'No', outcome: r.outcome||'', notes: r.notes||''
-      });
-      added++;
-    });
-    save();
-    showToast(`Imported ${added} touchpoints`);
-    renderDashboard(); renderTracker(); renderAccounts();
-    e.target.value = '';
+ 
+async function handleCSVUpload(e) {
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=async ev=>{
+    const rows=parseCSV(ev.target.result);
+    const valid=rows.filter(r=>r.account||r.sfId);
+    if(!valid.length){showToast('No valid rows found in CSV');return;}
+    setSyncStatus('syncing',`Uploading ${valid.length} rows…`);
+    let ok=0,fail=0;
+    for(const r of valid){
+      const fields={};
+      if(r.sfId)    fields['Salesforce Account ID']=r.sfId;
+      if(r.domain)  fields['Account Domain']=r.domain;
+      if(r.country) fields['Country']=r.country;
+      fields['Account'] =r.account||r.sfId||'';
+      fields['Date']    =r.date||today();
+      fields['Sent By'] =r.by||'';
+      fields['Tier']    =r.tier||'Tier 2';
+      fields['Channel'] =r.channel||'Email';
+      fields['Campaign']=r.campaign||'';
+      fields['Cooling Off']=r.cooling||'No';
+      if(r.outcome) fields['Outcome']=r.outcome;
+      if(r.notes)   fields['Notes']=r.notes;
+      try{
+        const res=await fetch(AIRTABLE_URL,{method:'POST',headers:{Authorization:'Bearer '+AIRTABLE_TOKEN,'Content-Type':'application/json'},body:JSON.stringify({fields})});
+        if(res.ok) ok++; else fail++;
+      }catch{fail++;}
+    }
+    showToast(`Imported ${ok} touchpoints${fail?` (${fail} failed)`:''}`);
+    await loadAirtable();
+    e.target.value='';
   };
   reader.readAsText(file);
 }
-
+ 
 // ══════════════════════════════════════════
 //  CAMPAIGN CHECKER
 // ══════════════════════════════════════════
 function downloadCheckerTemplate() {
-  const csv = 'sfId,account,domain,country\n0015g00000XXXXX,Acme Corp,acme.com,United Kingdom\n,Beta Industries,beta.io,Germany';
-  downloadCSV(csv, 'checker_template.csv');
+  downloadCSV('sfId,account,domain,country\n0015g00000XXXXX,Acme Corp,acme.com,United Kingdom\n,Beta Industries,beta.io,Germany','checker_template.csv');
 }
-
 function handleCheckerUpload(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const rows = parseCSV(ev.target.result);
-    checkerData = rows.map(r => {
-      const sfId = r.sfId||'';
-      const account = r.account||'';
-      const domain = r.domain||'';
-      const country = r.country||'';
-
-      // Match in touchpoints
-      const matches = touchpoints.filter(t =>
-        (sfId && t.sfId === sfId) ||
-        (domain && t.domain && t.domain.toLowerCase() === domain.toLowerCase()) ||
-        (account && t.account.toLowerCase() === account.toLowerCase())
-      );
-
-      let statusKey = 'unknown';
-      let touches14 = 0;
-      let lastTouch = '';
-      let tier = '';
-      let cooling = false;
-      let limit = 2;
-
-      if (matches.length > 0) {
-        const cutoff14 = new Date(); cutoff14.setDate(cutoff14.getDate()-14);
-        touches14 = matches.filter(t => new Date(t.date) >= cutoff14).length;
-        const sorted = matches.map(t=>t.date).sort((a,b)=>new Date(b)-new Date(a));
-        lastTouch = sorted[0]||'';
-        tier = matches[matches.length-1].tier||'Tier 2';
-        limit = getLimit(tier);
-        cooling = matches.some(t => t.cooling === 'Yes');
-        if (cooling) statusKey = 'cooling';
-        else if (touches14 >= limit) statusKey = 'limit';
-        else statusKey = 'clear';
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const rows=parseCSV(ev.target.result);
+    checkerData=rows.map(r=>{
+      const sfId=r.sfId||'', account=r.account||'', domain=r.domain||'', country=r.country||'';
+      const matches=touchpoints.filter(t=>(sfId&&t.sfId===sfId)||(domain&&t.domain&&t.domain.toLowerCase()===domain.toLowerCase())||(account&&t.account.toLowerCase()===account.toLowerCase()));
+      let statusKey='unknown', touches14=0, lastTouch='', tier='', limit=2;
+      if(matches.length>0){
+        const c14=new Date(); c14.setDate(c14.getDate()-14);
+        touches14=matches.filter(t=>new Date(t.date)>=c14).length;
+        lastTouch=matches.map(t=>t.date).sort((a,b)=>new Date(b)-new Date(a))[0]||'';
+        tier=matches[matches.length-1].tier||'Tier 2'; limit=getLimit(tier);
+        const cool=matches.some(t=>t.cooling==='Yes');
+        statusKey=cool?'cooling':touches14>=limit?'limit':'clear';
       }
-
-      let daysUntilClear = '—';
-      if ((statusKey === 'cooling' || statusKey === 'limit') && lastTouch) {
-        const clearDate = new Date(lastTouch);
-        clearDate.setDate(clearDate.getDate()+14);
-        const diff = Math.ceil((clearDate - new Date()) / 86400000);
-        daysUntilClear = diff > 0 ? diff + 'd' : 'Ready';
+      let daysUntilClear='—';
+      if((statusKey==='cooling'||statusKey==='limit')&&lastTouch){
+        const cd=new Date(lastTouch); cd.setDate(cd.getDate()+14);
+        const diff=Math.ceil((cd-new Date())/86400000);
+        daysUntilClear=diff>0?diff+'d':'Ready';
       }
-
-      return { sfId, account, domain, country, statusKey, touches14, lastTouch, tier, limit, daysUntilClear };
+      return {sfId,account,domain,country,statusKey,touches14,lastTouch,tier,limit,daysUntilClear};
     });
-
-    document.getElementById('checker-dropzone').style.display = 'none';
-    document.getElementById('checker-results').style.display = 'block';
+    document.getElementById('checker-dropzone').style.display='none';
+    document.getElementById('checker-results').style.display='block';
     renderCheckerResults();
-    e.target.value = '';
+    e.target.value='';
   };
   reader.readAsText(file);
 }
-
 function renderCheckerResults() {
-  const search = (document.getElementById('checker-search').value||'').toLowerCase();
-  const filter = document.getElementById('checker-filter').value;
-
-  const filtered = checkerData.filter(r => {
-    const matchSearch = !search || r.account.toLowerCase().includes(search) || r.sfId.toLowerCase().includes(search) || r.domain.toLowerCase().includes(search);
-    const matchFilter = !filter || r.statusKey === filter;
-    return matchSearch && matchFilter;
+  const search=(document.getElementById('checker-search').value||'').toLowerCase();
+  const filter=document.getElementById('checker-filter').value;
+  const filtered=checkerData.filter(r=>{
+    const ms=!search||r.account.toLowerCase().includes(search)||r.sfId.toLowerCase().includes(search)||r.domain.toLowerCase().includes(search);
+    return ms&&(!filter||r.statusKey===filter);
   });
-
-  const counts = { clear:0, limit:0, cooling:0, unknown:0 };
-  checkerData.forEach(r => counts[r.statusKey]++);
-
-  document.getElementById('checker-summary').innerHTML = `
+  const counts={clear:0,limit:0,cooling:0,unknown:0};
+  checkerData.forEach(r=>counts[r.statusKey]++);
+  document.getElementById('checker-summary').innerHTML=`
     <div class="stat-card success" style="flex:1;min-width:120px;padding:12px 16px;"><div class="stat-label">Clear to contact</div><div class="stat-value">${counts.clear}</div></div>
     <div class="stat-card" style="border-color:#FDE8C8;background:#FEF5E7;flex:1;min-width:120px;padding:12px 16px;"><div class="stat-label" style="color:#92400E;">At limit</div><div class="stat-value" style="color:var(--amber);">${counts.limit}</div></div>
     <div class="stat-card danger" style="flex:1;min-width:120px;padding:12px 16px;"><div class="stat-label">Cooling Off</div><div class="stat-value">${counts.cooling}</div></div>
-    <div class="stat-card" style="flex:1;min-width:120px;padding:12px 16px;"><div class="stat-label">Not in tracker</div><div class="stat-value">${counts.unknown}</div></div>
-  `;
-
-  const statusMap = {
-    clear: `<span class="status-active">⬤ Clear to contact</span>`,
-    limit: `<span class="status-limit">⬤ At limit</span>`,
-    cooling: `<span class="status-cooling">⬤ Cooling Off</span>`,
-    unknown: `<span class="badge badge-none">Not in tracker</span>`
-  };
-
-  const tbody = document.getElementById('checker-tbody');
-  tbody.innerHTML = filtered.map(r => `<tr>
+    <div class="stat-card" style="flex:1;min-width:120px;padding:12px 16px;"><div class="stat-label">Not in tracker</div><div class="stat-value">${counts.unknown}</div></div>`;
+  const sm={clear:`<span class="status-active">⬤ Clear</span>`,limit:`<span class="status-limit">⬤ At limit</span>`,cooling:`<span class="status-cooling">⬤ Cooling Off</span>`,unknown:`<span class="badge badge-none">Not tracked</span>`};
+  document.getElementById('checker-tbody').innerHTML=filtered.map(r=>`<tr>
     <td class="account-name">${r.account||'—'}</td>
     <td><span class="date-cell">${r.sfId||'—'}</span></td>
     <td style="color:var(--text2);font-size:12px;">${r.domain||'—'}</td>
@@ -980,311 +911,230 @@ function renderCheckerResults() {
     <td>${r.statusKey==='unknown'?'—':r.limit}</td>
     <td><span class="date-cell">${r.lastTouch||'—'}</span></td>
     <td>${r.daysUntilClear}</td>
-    <td>${statusMap[r.statusKey]}</td>
+    <td>${sm[r.statusKey]}</td>
   </tr>`).join('');
 }
-
 function downloadCheckerResults() {
-  const headers = ['account','sfId','domain','country','touches14d','limit','lastTouch','daysUntilClear','status'];
-  const rows = checkerData.map(r => [r.account,r.sfId,r.domain,r.country,r.touches14,r.limit,r.lastTouch,r.daysUntilClear,r.statusKey]);
-  const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
-  downloadCSV(csv, 'checker_results.csv');
+  const h=['account','sfId','domain','country','touches14d','limit','lastTouch','daysUntilClear','status'];
+  const rows=checkerData.map(r=>[r.account,r.sfId,r.domain,r.country,r.touches14,r.limit,r.lastTouch,r.daysUntilClear,r.statusKey]);
+  downloadCSV([h,...rows].map(r=>r.join(',')).join('\n'),'checker_results.csv');
 }
-
 function resetChecker() {
-  checkerData = [];
-  document.getElementById('checker-dropzone').style.display = 'block';
-  document.getElementById('checker-results').style.display = 'none';
+  checkerData=[];
+  document.getElementById('checker-dropzone').style.display='block';
+  document.getElementById('checker-results').style.display='none';
 }
-
+ 
 // ══════════════════════════════════════════
-//  INTELLIGENCE TAB
+//  INTELLIGENCE — Supabase
 // ══════════════════════════════════════════
-function initIntelligence() {
-  // Build intelligence data from touchpoints + example scaffold if empty
-  buildIntelData();
-  populateIntelFilters();
-  iFilter();
-  document.getElementById('i-loading').style.display = 'none';
-  document.getElementById('i-table').style.display = 'table';
-}
-
-function buildIntelData() {
-  // Build from touchpoints data
-  const summaries = getAccountSummaries();
-  const stageOrder = ['Unreached','Unengaged','Aware','Engaged','Potential Opportunity','Active Opportunity'];
-
-  intelData = summaries.map(s => {
-    const cutoff14 = new Date(); cutoff14.setDate(cutoff14.getDate()-14);
-    const touches14 = s.touches.filter(d => new Date(d) >= cutoff14).length;
-    const limit = getLimit(s.tier);
-
-    // Derive stage from engagement signals
-    let stage = 'Unreached';
-    const allTouches = touchpoints.filter(t => t.account === s.name || (s.sfId && t.sfId === s.sfId));
-    const hasOutcome = allTouches.some(t => t.outcome && t.outcome !== '');
-    const hasMeeting = allTouches.some(t => t.outcome === 'Meeting Booked');
-    const hasReplied = allTouches.some(t => t.outcome === 'Replied');
-    const hasClicked = allTouches.some(t => t.outcome === 'Clicked');
-    const hasOpened = allTouches.some(t => t.outcome === 'Opened');
-
-    if (hasMeeting) stage = 'Active Opportunity';
-    else if (hasReplied) stage = 'Potential Opportunity';
-    else if (hasClicked) stage = 'Engaged';
-    else if (hasOpened) stage = 'Aware';
-    else if (allTouches.length > 0) stage = 'Unengaged';
-
-    // Engagement level
-    let eng = 'LOW';
-    if (touches14 >= limit) eng = 'HIGH';
-    else if (touches14 > 0) eng = 'MEDIUM';
-    if (hasMeeting || hasReplied) eng = 'VERY HIGH';
-
-    // Product from campaign names
-    const campaigns = allTouches.map(t => t.campaign).filter(Boolean);
-    const product = campaigns.length > 0 ? campaigns[0].split(' ').slice(0,2).join(' ') : '—';
-
-    const sorted = [...s.touches].sort((a,b)=>new Date(b)-new Date(a));
-
-    return {
-      account_name: s.name,
-      sf_id: s.sfId||'',
-      product: product,
-      stage: stage,
-      stage_date: sorted[0]||'',
-      engagement_level: eng,
-      region: deriveRegion(s.country),
-      country: s.country||'—'
-    };
-  });
-
-  // If no data yet, add example rows so the tab isn't empty
-  if (intelData.length === 0) {
-    intelData = [
-      { account_name:'Acme Corp', sf_id:'0015g00000AAA', product:'Product A', stage:'Engaged', stage_date:'2025-05-01', engagement_level:'HIGH', region:'EMEA', country:'United Kingdom' },
-      { account_name:'Beta Industries', sf_id:'0015g00000BBB', product:'Product B', stage:'Aware', stage_date:'2025-04-20', engagement_level:'MEDIUM', region:'EMEA', country:'Germany' },
-      { account_name:'Gamma LLC', sf_id:'0015g00000CCC', product:'Product A', stage:'Unengaged', stage_date:'2025-03-10', engagement_level:'LOW', region:'NAM', country:'United States' },
-      { account_name:'Delta Co', sf_id:'0015g00000DDD', product:'Product C', stage:'Active Opportunity', stage_date:'2025-05-10', engagement_level:'VERY HIGH', region:'APAC', country:'Australia' },
-      { account_name:'Echo Solutions', sf_id:'0015g00000EEE', product:'Product B', stage:'Potential Opportunity', stage_date:'2025-04-30', engagement_level:'HIGH', region:'NAM', country:'Canada' },
-    ];
+let intelLoaded = false;
+ 
+async function initIntelligence() {
+  if (intelLoaded) return;
+  document.getElementById('i-loading').style.display='flex';
+  document.getElementById('i-table').style.display='none';
+  document.getElementById('i-empty').style.display='none';
+ 
+  try {
+    // Load from account_product_stages joined with accounts
+    // We'll fetch account_product_stages and accounts separately then join in JS
+    const [stagesRes, accountsRes] = await Promise.all([
+      fetch(`${SUPABASE_URL}/rest/v1/account_product_stages?select=*&limit=10000`, {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+      }),
+      fetch(`${SUPABASE_URL}/rest/v1/accounts?select=sf_account_id,account_name,country,region,no_of_rooms,no_of_properties,adr,industry,hierarchy_level,account_owner&limit=10000`, {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+      })
+    ]);
+ 
+    if (!stagesRes.ok) throw new Error('Supabase stages error: ' + stagesRes.status + ' ' + await stagesRes.text());
+    if (!accountsRes.ok) throw new Error('Supabase accounts error: ' + accountsRes.status + ' ' + await accountsRes.text());
+ 
+    const stages   = await stagesRes.json();
+    const accounts = await accountsRes.json();
+ 
+    // Build accounts lookup by sf_account_id
+    const acctMap = {};
+    accounts.forEach(a => { if(a.sf_account_id) acctMap[a.sf_account_id] = a; });
+ 
+    // Merge stages with account details
+    intelData = stages.map(s => {
+      const acct = acctMap[s.sf_account_id] || {};
+      return {
+        sf_account_id:    s.sf_account_id || '',
+        account_name:     s.account_name || acct.account_name || '—',
+        product:          s.product || '—',
+        stage:            s.stage || 'Unreached',
+        stage_date:       s.stage_date || '',
+        region:           acct.region || s.region || '—',
+        country:          acct.country || s.country || '—',
+        no_of_rooms:      acct.no_of_rooms || '',
+        no_of_properties: acct.no_of_properties || '',
+        adr:              acct.adr || '',
+        industry:         acct.industry || '',
+        hierarchy_level:  acct.hierarchy_level || '',
+        account_owner:    acct.account_owner || s.account_owner || '—'
+      };
+    });
+ 
+    intelLoaded = true;
+    document.getElementById('i-loading').style.display='none';
+    document.getElementById('i-table').style.display='table';
+    populateIntelFilters();
+    iFilter();
+  } catch (err) {
+    console.error('Supabase error:', err);
+    document.getElementById('i-loading').innerHTML = `<span style="color:#ef4444;">✗ Could not load from Supabase: ${err.message}</span>`;
   }
 }
-
-function deriveRegion(country) {
-  if (!country) return 'Unknown';
-  const c = country.toLowerCase();
-  const emea = ['united kingdom','germany','france','italy','spain','netherlands','sweden','norway','denmark','finland','belgium','switzerland','austria','poland','ireland','portugal','south africa','uae','saudi arabia','israel'];
-  const apac = ['australia','japan','china','india','singapore','south korea','new zealand','indonesia','malaysia','thailand','philippines','vietnam'];
-  const nam = ['united states','canada','usa','us'];
-  const latam = ['brazil','mexico','argentina','chile','colombia'];
-  if (emea.some(e => c.includes(e))) return 'EMEA';
-  if (apac.some(e => c.includes(e))) return 'APAC';
-  if (nam.some(e => c.includes(e))) return 'NAM';
-  if (latam.some(e => c.includes(e))) return 'LATAM';
-  return 'Other';
-}
-
+ 
 function populateIntelFilters() {
-  // Products
-  const products = [...new Set(intelData.map(r=>r.product).filter(p=>p&&p!=='—'))];
-  const pSel = document.getElementById('i-product');
-  pSel.innerHTML = '<option value="">All Products</option>' + products.map(p=>`<option>${p}</option>`).join('');
-  // Regions
-  const regions = [...new Set(intelData.map(r=>r.region).filter(Boolean))];
-  const rSel = document.getElementById('i-region');
-  rSel.innerHTML = '<option value="">All Regions</option>' + regions.map(r=>`<option>${r}</option>`).join('');
+  const products=[...new Set(intelData.map(r=>r.product).filter(p=>p&&p!=='—'))].sort();
+  document.getElementById('i-product').innerHTML='<option value="">All Products</option>'+products.map(p=>`<option>${p}</option>`).join('');
+  const regions=[...new Set(intelData.map(r=>r.region).filter(r=>r&&r!=='—'))].sort();
+  document.getElementById('i-region').innerHTML='<option value="">All Regions</option>'+regions.map(r=>`<option>${r}</option>`).join('');
 }
-
+ 
 function iFilter() {
-  const search = (document.getElementById('i-search').value||'').toLowerCase();
-  const product = document.getElementById('i-product').value;
-  const stage = document.getElementById('i-stage').value;
-  const region = document.getElementById('i-region').value;
-  const engagement = document.getElementById('i-engagement').value;
-
-  intelFiltered = intelData.filter(r => {
-    const matchSearch = !search || r.account_name.toLowerCase().includes(search) || r.sf_id.toLowerCase().includes(search);
-    const matchProduct = !product || r.product === product;
-    const matchStage = !stage || r.stage === stage;
-    const matchRegion = !region || r.region === region;
-    const matchEng = !engagement || r.engagement_level === engagement;
-    return matchSearch && matchProduct && matchStage && matchRegion && matchEng;
+  const search=(document.getElementById('i-search').value||'').toLowerCase();
+  const product=document.getElementById('i-product').value;
+  const stage=document.getElementById('i-stage').value;
+  const region=document.getElementById('i-region').value;
+  const engagement=document.getElementById('i-engagement').value;
+ 
+  intelFiltered=intelData.filter(r=>{
+    const ms=!search||r.account_name.toLowerCase().includes(search)||r.sf_account_id.toLowerCase().includes(search);
+    return ms&&(!product||r.product===product)&&(!stage||r.stage===stage)&&(!region||r.region===region);
   });
-
-  // Sort
-  intelFiltered.sort((a,b) => {
-    const av = a[intelSortCol]||''; const bv = b[intelSortCol]||'';
-    return av < bv ? -intelSortDir : av > bv ? intelSortDir : 0;
+ 
+  intelFiltered.sort((a,b)=>{
+    const av=a[intelSortCol]||'',bv=b[intelSortCol]||'';
+    return av<bv?-intelSortDir:av>bv?intelSortDir:0;
   });
-
-  document.getElementById('i-count').textContent = intelFiltered.length;
+ 
+  document.getElementById('i-count').textContent=intelFiltered.length;
   renderIntelTable();
 }
-
+ 
 function iSort(col) {
-  if (intelSortCol === col) intelSortDir *= -1;
-  else { intelSortCol = col; intelSortDir = 1; }
+  if(intelSortCol===col) intelSortDir*=-1; else{intelSortCol=col;intelSortDir=1;}
   iFilter();
 }
-
 function iReset() {
-  document.getElementById('i-search').value = '';
-  document.getElementById('i-product').value = '';
-  document.getElementById('i-stage').value = '';
-  document.getElementById('i-region').value = '';
-  document.getElementById('i-engagement').value = '';
+  ['i-search','i-product','i-stage','i-region','i-engagement'].forEach(id=>{document.getElementById(id).value='';});
   iFilter();
 }
-
+ 
 function renderIntelTable() {
-  const tbody = document.getElementById('i-tbody');
-  const empty = document.getElementById('i-empty');
-
-  if (intelFiltered.length === 0) {
-    tbody.innerHTML = '';
-    empty.style.display = 'flex';
-    return;
-  }
-  empty.style.display = 'none';
-
-  const stageKey = s => s.replace(/\s+/g,'').replace('Opportunity','');
-
-  tbody.innerHTML = intelFiltered.map(r => {
-    const sk = r.stage.replace(/\s/g,'').replace('Potential','Potential').replace('Active','Active');
-    const ek = r.engagement_level.replace(' ','');
-    return `<tr>
-      <td><div class="i-an">${r.account_name}</div><div class="i-ai">${r.sf_id||''}</div></td>
-      <td><span class="i-prod">${r.product||'—'}</span></td>
-      <td><span class="i-stg s-${stageKey(r.stage)}">${r.stage}</span></td>
-      <td><span class="i-dt">${r.stage_date||'—'}</span></td>
-      <td><span class="i-eng e-${ek}">${r.engagement_level}</span></td>
-      <td style="color:#9ca3af;font-size:12px;">${r.region||'—'}</td>
-      <td style="color:#9ca3af;font-size:12px;">${r.country||'—'}</td>
-    </tr>`;
-  }).join('');
+  const tbody=document.getElementById('i-tbody');
+  const empty=document.getElementById('i-empty');
+  if(intelFiltered.length===0){tbody.innerHTML='';empty.style.display='flex';return;}
+  empty.style.display='none';
+ 
+  function stageClass(s){return 's-'+(s||'').replace(/\s+/g,'');}
+ 
+  tbody.innerHTML=intelFiltered.map(r=>`<tr>
+    <td>
+      <div class="i-an">${r.account_name}</div>
+      <div class="i-ai">${r.sf_account_id||''}</div>
+    </td>
+    <td><span class="i-prod">${r.product||'—'}</span></td>
+    <td><span class="i-stg ${stageClass(r.stage)}">${r.stage}</span></td>
+    <td><span class="i-dt">${r.stage_date||'—'}</span></td>
+    <td style="color:#9ca3af;font-size:12px;">${r.no_of_rooms||'—'}</td>
+    <td style="color:#9ca3af;font-size:12px;">${r.no_of_properties||'—'}</td>
+    <td style="color:#9ca3af;font-size:12px;">${r.region||'—'}</td>
+    <td style="color:#9ca3af;font-size:12px;">${r.country||'—'}</td>
+    <td style="color:#9ca3af;font-size:12px;">${r.account_owner||'—'}</td>
+  </tr>`).join('');
 }
-
+ 
 // ══════════════════════════════════════════
 //  AI CHAT
 // ══════════════════════════════════════════
-function chatKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+function chatKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}}
+function useSug(btn){document.getElementById('chat-input').value=btn.textContent;document.getElementById('chat-sugs').style.display='none';sendChat();}
+ 
+function addMsg(role,content) {
+  const container=document.getElementById('chat-msgs');
+  const div=document.createElement('div'); div.className=`chat-msg ${role}`;
+  const bubble=document.createElement('div'); bubble.className='chat-bubble';
+  bubble.innerHTML=content.replace(/\n/g,'<br>');
+  const time=document.createElement('div'); time.className='chat-time';
+  time.textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  div.appendChild(bubble); div.appendChild(time);
+  container.appendChild(div); container.scrollTop=container.scrollHeight;
 }
-
-function useSug(btn) {
-  document.getElementById('chat-input').value = btn.textContent;
-  document.getElementById('chat-sugs').style.display = 'none';
-  sendChat();
+function addTyping(){
+  const c=document.getElementById('chat-msgs');
+  const d=document.createElement('div'); d.className='chat-msg assistant'; d.id='typing-indicator';
+  d.innerHTML=`<div class="chat-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  c.appendChild(d); c.scrollTop=c.scrollHeight;
 }
-
-function addMsg(role, content) {
-  const container = document.getElementById('chat-msgs');
-  const div = document.createElement('div');
-  div.className = `chat-msg ${role}`;
-  const bubble = document.createElement('div');
-  bubble.className = 'chat-bubble';
-  bubble.innerHTML = content.replace(/\n/g,'<br>');
-  const time = document.createElement('div');
-  time.className = 'chat-time';
-  time.textContent = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-  div.appendChild(bubble);
-  div.appendChild(time);
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-  return div;
-}
-
-function addTyping() {
-  const container = document.getElementById('chat-msgs');
-  const div = document.createElement('div');
-  div.className = 'chat-msg assistant';
-  div.id = 'typing-indicator';
-  div.innerHTML = `<div class="chat-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-}
-
-function removeTyping() {
-  const t = document.getElementById('typing-indicator');
-  if (t) t.remove();
-}
-
+function removeTyping(){const t=document.getElementById('typing-indicator');if(t)t.remove();}
+ 
 async function sendChat() {
-  const input = document.getElementById('chat-input');
-  const msg = input.value.trim();
-  if (!msg) return;
-
-  input.value = '';
-  document.getElementById('chat-send').disabled = true;
-  addMsg('user', msg);
-  chatHistory.push({ role: 'user', content: msg });
-
+  const input=document.getElementById('chat-input');
+  const msg=input.value.trim(); if(!msg) return;
+  input.value=''; document.getElementById('chat-send').disabled=true;
+  addMsg('user',msg);
+  chatHistory.push({role:'user',content:msg});
   addTyping();
-
-  // Build data context for the AI
-  const dataContext = buildDataContext();
-
-  try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: `You are an AI analyst assistant for an Account Engagement Tracker. You have access to live account data. Be concise, helpful, and data-driven. Use bullet points and short paragraphs. Here is the current account intelligence data:\n\n${dataContext}`,
-        messages: chatHistory
+ 
+  const ctx=buildDataContext();
+  try{
+    const response=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:`You are an AI analyst for an Account Engagement Tracker at RateGain. You have live data from Supabase (account_product_stages + accounts tables). Be concise and data-driven. Use bullet points. Here is the current data:\n\n${ctx}`,
+        messages:chatHistory
       })
     });
-
-    const data = await response.json();
+    const data=await response.json();
     removeTyping();
-
-    if (data.content && data.content[0]) {
-      const reply = data.content[0].text;
-      chatHistory.push({ role: 'assistant', content: reply });
-      addMsg('assistant', reply);
+    if(data.content&&data.content[0]){
+      const reply=data.content[0].text;
+      chatHistory.push({role:'assistant',content:reply});
+      addMsg('assistant',reply);
     } else {
-      addMsg('assistant', 'Sorry, I could not retrieve a response. Please check your API connection.');
+      addMsg('assistant','No response — check API connection.');
     }
-  } catch (err) {
+  }catch(err){
     removeTyping();
-    addMsg('assistant', `Error connecting to AI: ${err.message}. Make sure you're connected to the Anthropic API.`);
+    addMsg('assistant',`Error: ${err.message}`);
   }
-
-  document.getElementById('chat-send').disabled = false;
+  document.getElementById('chat-send').disabled=false;
 }
-
+ 
 function buildDataContext() {
-  const total = intelData.length;
-  const bystage = {};
-  const byregion = {};
-  const byeng = {};
-  intelData.forEach(r => {
-    bystage[r.stage] = (bystage[r.stage]||0)+1;
-    byregion[r.region] = (byregion[r.region]||0)+1;
-    byeng[r.engagement_level] = (byeng[r.engagement_level]||0)+1;
+  const total=intelData.length;
+  const bystage={}, byregion={}, byproduct={};
+  intelData.forEach(r=>{
+    bystage[r.stage]=(bystage[r.stage]||0)+1;
+    byregion[r.region]=(byregion[r.region]||0)+1;
+    byproduct[r.product]=(byproduct[r.product]||0)+1;
   });
-
-  let ctx = `Total accounts: ${total}\n\n`;
-  ctx += `Stage breakdown: ${Object.entries(bystage).map(([k,v])=>`${k}: ${v}`).join(', ')}\n`;
-  ctx += `Region breakdown: ${Object.entries(byregion).map(([k,v])=>`${k}: ${v}`).join(', ')}\n`;
-  ctx += `Engagement breakdown: ${Object.entries(byeng).map(([k,v])=>`${k}: ${v}`).join(', ')}\n\n`;
-  ctx += `Account list (first 50):\n`;
-  ctx += intelData.slice(0,50).map(r =>
-    `- ${r.account_name} | ${r.product} | Stage: ${r.stage} | Engagement: ${r.engagement_level} | Region: ${r.region} | Country: ${r.country}`
+  let ctx=`Total account-product records: ${total}\n`;
+  ctx+=`Stage breakdown: ${Object.entries(bystage).map(([k,v])=>`${k}: ${v}`).join(', ')}\n`;
+  ctx+=`Region breakdown: ${Object.entries(byregion).map(([k,v])=>`${k}: ${v}`).join(', ')}\n`;
+  ctx+=`Product breakdown: ${Object.entries(byproduct).map(([k,v])=>`${k}: ${v}`).join(', ')}\n\n`;
+  ctx+=`Sample records (first 100):\n`;
+  ctx+=intelData.slice(0,100).map(r=>
+    `- ${r.account_name} | ${r.product} | Stage: ${r.stage} | Region: ${r.region} | Country: ${r.country} | Rooms: ${r.no_of_rooms||'?'} | Properties: ${r.no_of_properties||'?'} | Owner: ${r.account_owner}`
   ).join('\n');
-
   return ctx;
 }
-
+ 
 // ══════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
-  renderDashboard();
-  // Set today's date in modal by default
-  const dateEl = document.getElementById('f-date');
-  if (dateEl) dateEl.value = today();
+  document.getElementById('f-date').value = today();
+  loadAirtable();
 });
 </script>
 </body>
