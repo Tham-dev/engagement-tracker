@@ -3,779 +3,1289 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Account Intelligence — RateGain</title>
+<title>Account Engagement Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
-
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg:        #0d0f12;
-    --surface:   #141720;
-    --border:    #1f2330;
-    --border2:   #2a2f42;
-    --text:      #e2e6f0;
-    --muted:     #6b7280;
-    --accent:    #4f8ef7;
-    --accent2:   #7c5cfc;
-    --green:     #22c55e;
-    --yellow:    #f59e0b;
-    --orange:    #f97316;
-    --red:       #ef4444;
-    --purple:    #a855f7;
+    --bg: #F7F6F2; --surface: #FFFFFF; --surface2: #F0EEE9; --border: #E2DDD6; --border2: #CCC8C0;
+    --text: #1A1916; --text2: #6B6760; --text3: #9B9892;
+    --accent: #2D5BE3; --accent-light: #EEF2FD; --accent-text: #1A3BA8;
+    --green: #1D7A4A; --green-light: #E6F5EC; --red: #C4310F; --red-light: #FDF0EC;
+    --amber: #A05D00; --amber-light: #FEF5E7; --purple: #5B3FBF; --purple-light: #F0ECFD;
+    --radius: 10px; --radius-sm: 6px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; }
 
-    --supabase-url: 'https://mtlujmdpxtveawrhljxg.supabase.co';
-    --supabase-key: 'sb_secret_r0SsdawEUv__yKoC9SrpvA_2u_MjvM-';
-  }
+  /* HEADER */
+  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; }
+  .header-brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; }
+  .brand-icon { width: 28px; height: 28px; background: var(--accent); border-radius: 7px; display: flex; align-items: center; justify-content: center; }
+  .brand-icon svg { width: 16px; height: 16px; }
+  .nav-tabs { display: flex; gap: 2px; background: var(--surface2); padding: 3px; border-radius: var(--radius-sm); }
+  .tab-btn { padding: 5px 14px; border: none; background: transparent; border-radius: 4px; font-size: 13px; font-weight: 500; color: var(--text2); cursor: pointer; transition: all 0.15s; font-family: inherit; white-space: nowrap; }
+  .tab-btn.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+  .tab-btn.intel-tab { color: var(--purple); }
+  .tab-btn.intel-tab.active { color: var(--purple); background: var(--surface); }
+  .header-actions { display: flex; gap: 8px; align-items: center; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* MAIN / PAGES */
+  .main { padding: 24px; max-width: 1400px; margin: 0 auto; }
+  .page { display: none; }
+  .page.active { display: block; }
+  #page-intelligence { display: none; position: fixed; top: 56px; left: 0; right: 0; bottom: 0; grid-template-columns: 1fr 380px; grid-template-rows: auto 1fr; }
+  #page-intelligence.active { display: grid; }
 
-  body {
-    font-family: 'IBM Plex Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    font-size: 14px;
-  }
+  /* STATS */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow); }
+  .stat-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .stat-value { font-size: 28px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .stat-card.accent { border-color: #C5D4F9; background: var(--accent-light); } .stat-card.accent .stat-value { color: var(--accent-text); }
+  .stat-card.danger { border-color: #F5CABD; background: var(--red-light); } .stat-card.danger .stat-value { color: var(--red); }
+  .stat-card.success { border-color: #B8DFC8; background: var(--green-light); } .stat-card.success .stat-value { color: var(--green); }
 
-  /* ── Header ── */
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-  }
-  .logo {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    color: var(--accent);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .header-meta {
-    font-size: 12px;
-    color: var(--muted);
-    font-family: 'IBM Plex Mono', monospace;
-  }
-  #last-sync { color: var(--accent); }
+  /* SECTION */
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .section-title { font-size: 15px; font-weight: 600; }
+  .page-sub { font-size: 13px; color: var(--text2); margin-bottom: 0; margin-top: 2px; }
 
-  /* ── Layout ── */
-  .app {
-    display: grid;
-    grid-template-columns: 1fr 380px;
-    grid-template-rows: auto 1fr;
-    height: calc(100vh - 57px);
-    overflow: hidden;
-  }
+  /* TABLE */
+  .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .table-toolbar { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .search-wrap { position: relative; flex: 1; min-width: 180px; }
+  .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--text3); pointer-events: none; }
+  .search-input { width: 100%; padding: 7px 12px 7px 32px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; font-family: inherit; background: var(--bg); color: var(--text); outline: none; }
+  .search-input:focus { border-color: var(--accent); }
+  select.filter-select { padding: 7px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; font-family: inherit; background: var(--bg); color: var(--text); outline: none; cursor: pointer; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead { background: var(--surface2); }
+  th { padding: 9px 14px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg); }
 
-  /* ── Filters ── */
-  .filters {
-    grid-column: 1 / -1;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 20px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-    flex-wrap: wrap;
-  }
-  .filter-label {
-    font-size: 11px;
-    color: var(--muted);
-    font-family: 'IBM Plex Mono', monospace;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-right: 4px;
-  }
-  select {
-    background: var(--bg);
-    border: 1px solid var(--border2);
-    color: var(--text);
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 13px;
-    cursor: pointer;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  select:focus { border-color: var(--accent); }
+  /* TRACKER FIXED COLS */
+  .tracker-scroll { overflow-x: auto; }
+  .tracker-scroll table { min-width: 1100px; table-layout: fixed; }
+  .tracker-scroll .col-num{width:36px} .col-sfid{width:140px} .col-acct{width:130px} .col-domain{width:110px} .col-ctry{width:90px} .col-date{width:90px} .col-by{width:90px} .col-tier{width:72px} .col-chan{width:90px} .col-camp{width:160px} .col-cool{width:78px} .col-out{width:110px} .col-notes{width:110px}
+  .tracker-scroll .col-acts { width:100px; position:sticky; right:0; background:var(--surface); box-shadow:-2px 0 6px rgba(0,0,0,0.06); }
+  tr:hover .col-acts { background: var(--bg); }
+  .tracker-scroll th.col-acts { background:var(--surface2); position:sticky; right:0; box-shadow:-2px 0 6px rgba(0,0,0,0.06); }
+  .cell-truncate { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block; }
 
-  input[type=text] {
-    background: var(--bg);
-    border: 1px solid var(--border2);
-    color: var(--text);
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 13px;
-    outline: none;
-    width: 200px;
-    transition: border-color 0.15s;
-  }
-  input[type=text]:focus { border-color: var(--accent); }
-  input[type=text]::placeholder { color: var(--muted); }
+  /* BADGES */
+  .badge { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:100px; font-size:11px; font-weight:500; white-space:nowrap; }
+  .badge-tier1{background:var(--purple-light);color:var(--purple)} .badge-tier2{background:var(--accent-light);color:var(--accent-text)} .badge-tier3{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
+  .badge-yes{background:var(--red-light);color:var(--red)} .badge-no{background:var(--green-light);color:var(--green)}
+  .badge-opened{background:var(--green-light);color:var(--green)} .badge-clicked{background:var(--accent-light);color:var(--accent-text)} .badge-replied{background:var(--green-light);color:var(--green)} .badge-meeting{background:#EEF7F0;color:#166534} .badge-none{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
+  .badge-channel-email{background:var(--accent-light);color:var(--accent-text)} .badge-channel-linkedin{background:#E7F0FF;color:#1355C1} .badge-channel-webinar{background:var(--purple-light);color:var(--purple)} .badge-channel-event{background:var(--amber-light);color:var(--amber)} .badge-channel-direct{background:var(--green-light);color:var(--green)} .badge-channel-paid{background:#FEF9EE;color:#92400E}
+  .account-name{font-weight:500} .date-cell{font-family:'DM Mono',monospace;font-size:12px;color:var(--text2)} .notes-cell{color:var(--text2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-  .btn-reset {
-    background: none;
-    border: 1px solid var(--border2);
-    color: var(--muted);
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.15s;
-    font-family: 'IBM Plex Mono', monospace;
-  }
-  .btn-reset:hover { border-color: var(--accent); color: var(--accent); }
+  /* STATUS BADGES IN DASHBOARD */
+  .status-active{background:var(--green-light);color:var(--green);display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500;}
+  .status-limit{background:var(--amber-light);color:var(--amber);display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500;}
+  .status-cooling{background:var(--red-light);color:var(--red);display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500;}
 
-  .count-badge {
-    margin-left: auto;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: var(--muted);
-  }
-  .count-badge span { color: var(--text); font-weight: 500; }
+  /* BUTTONS */
+  .btn { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); color:var(--text); font-size:13px; font-weight:500; font-family:inherit; cursor:pointer; transition:all 0.12s; text-decoration:none; white-space:nowrap; }
+  .btn:hover{background:var(--surface2);border-color:var(--border2)} .btn svg{width:14px;height:14px;flex-shrink:0}
+  .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)} .btn-primary:hover{background:var(--accent-text);border-color:var(--accent-text)}
+  .btn-danger{color:var(--red);border-color:#F5CABD} .btn-danger:hover{background:var(--red-light)}
+  .btn-sm{padding:4px 10px;font-size:12px}
 
-  /* ── Table panel ── */
-  .table-panel {
-    overflow-y: auto;
-    border-right: 1px solid var(--border);
-  }
+  /* MODAL */
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:1000;align-items:center;justify-content:center;padding:24px}
+  .modal-overlay.open{display:flex}
+  .modal{background:var(--surface);border-radius:14px;padding:28px;width:100%;max-width:560px;box-shadow:0 20px 60px rgba(0,0,0,0.15);max-height:90vh;overflow-y:auto}
+  .modal-title{font-size:17px;font-weight:600;margin-bottom:20px}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .form-group{display:flex;flex-direction:column;gap:5px} .form-group.full{grid-column:1/-1}
+  label.form-label{font-size:12px;font-weight:500;color:var(--text2)}
+  input.form-input,select.form-input,textarea.form-input{padding:8px 11px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;color:var(--text);background:var(--surface);outline:none;transition:border-color 0.12s}
+  input.form-input:focus,select.form-input:focus,textarea.form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(45,91,227,0.1)}
+  textarea.form-input{resize:vertical;min-height:72px}
+  .form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  thead {
-    position: sticky;
-    top: 0;
-    background: var(--surface);
-    z-index: 10;
-  }
-  th {
-    padding: 10px 14px;
-    text-align: left;
-    font-size: 11px;
-    color: var(--muted);
-    font-family: 'IBM Plex Mono', monospace;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
-    cursor: pointer;
-    user-select: none;
-  }
-  th:hover { color: var(--text); }
-  th.sort-asc::after  { content: ' ↑'; color: var(--accent); }
-  th.sort-desc::after { content: ' ↓'; color: var(--accent); }
+  /* ACCOUNTS GRID */
+  .accounts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+  .account-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);transition:box-shadow 0.15s}
+  .account-card:hover{box-shadow:var(--shadow-md)} .account-card.cooling{border-left:3px solid var(--red)}
+  .account-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+  .account-card-name{font-weight:600;font-size:14px}
+  .account-card-stats{display:flex;gap:16px;margin-top:10px}
+  .account-stat{display:flex;flex-direction:column;gap:1px}
+  .account-stat-val{font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
+  .account-stat-lbl{font-size:11px;color:var(--text3)}
+  .progress-bar-wrap{margin-top:10px}
+  .progress-bar-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:4px}
+  .progress-bar{height:4px;background:var(--surface2);border-radius:100px;overflow:hidden}
+  .progress-bar-fill{height:100%;border-radius:100px;background:var(--accent);transition:width 0.4s}
+  .progress-bar-fill.warning{background:var(--red)}
 
-  td {
-    padding: 9px 14px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: middle;
-    white-space: nowrap;
-    max-width: 200px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  tr:hover td { background: rgba(79,142,247,0.04); }
+  /* RULES */
+  .rules-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+  .rules-card h3{font-size:14px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .rules-table{width:100%;border-collapse:collapse} .rules-table td{padding:8px 0;border-bottom:1px solid var(--border);font-size:13px} .rules-table tr:last-child td{border:none} .rules-table td:first-child{color:var(--text2);width:160px;font-weight:500}
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px} .dot-red{background:var(--red)} .dot-amber{background:#D97706} .dot-green{background:var(--green)}
 
-  .account-name { font-weight: 500; color: var(--text); }
-  .account-id   { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); }
-  .product-tag  {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-family: 'IBM Plex Mono', monospace;
-    background: rgba(79,142,247,0.12);
-    color: var(--accent);
-    border: 1px solid rgba(79,142,247,0.2);
-  }
+  /* MISC */
+  .empty-state{padding:48px 24px;text-align:center;color:var(--text2)} .empty-state svg{width:40px;height:40px;margin:0 auto 12px;opacity:0.3} .empty-state p{font-size:14px}
+  .toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;padding:10px 16px;border-radius:var(--radius-sm);font-size:13px;z-index:9999;opacity:0;transform:translateY(8px);transition:all 0.2s;pointer-events:none} .toast.show{opacity:1;transform:translateY(0)}
+  .cooling-alert{background:var(--red-light);border:1px solid #F5CABD;border-radius:var(--radius);padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:13px} .cooling-alert svg{width:16px;height:16px;color:var(--red);flex-shrink:0}
+  @keyframes spin{to{transform:rotate(360deg)}}
 
-  /* Stage badges */
-  .stage-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 3px 9px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 500;
-    white-space: nowrap;
-  }
-  .stage-badge::before {
-    content: '';
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: currentColor;
-    opacity: 0.8;
-  }
-  .stage-Unreached          { background: rgba(107,114,128,0.15); color: #9ca3af; border: 1px solid rgba(107,114,128,0.2); }
-  .stage-Unengaged          { background: rgba(245,158,11,0.12);  color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
-  .stage-Aware              { background: rgba(79,142,247,0.12);  color: #4f8ef7; border: 1px solid rgba(79,142,247,0.2); }
-  .stage-Engaged            { background: rgba(34,197,94,0.12);   color: #22c55e; border: 1px solid rgba(34,197,94,0.2); }
-  .stage-Potential          { background: rgba(168,85,247,0.12);  color: #a855f7; border: 1px solid rgba(168,85,247,0.2); }
-  .stage-Active             { background: rgba(249,115,22,0.12);  color: #f97316; border: 1px solid rgba(249,115,22,0.2); }
+  /* ════ INTELLIGENCE TAB STYLES ════ */
+  .intel-filters { grid-column:1/-1; display:flex; align-items:center; gap:8px; padding:10px 16px; background:#1a1a2e; border-bottom:1px solid #2d2d45; flex-wrap:wrap; }
+  .i-lbl { font-size:11px; color:#6b7280; text-transform:uppercase; letter-spacing:0.06em; font-weight:600; }
+  .i-input { background:#252540; border:1px solid #3a3a55; color:#e2e6f0; padding:5px 10px; border-radius:6px; font-size:12px; outline:none; width:170px; font-family:inherit; }
+  .i-input::placeholder{color:#4b5563} .i-input:focus{border-color:#4f7ef7}
+  .i-sel { background:#252540; border:1px solid #3a3a55; color:#e2e6f0; padding:5px 9px; border-radius:6px; font-size:12px; cursor:pointer; outline:none; font-family:inherit; }
+  .i-rst { background:none; border:1px solid #3a3a55; color:#6b7280; padding:5px 10px; border-radius:6px; font-size:11px; cursor:pointer; font-family:inherit; }
+  .i-rst:hover{border-color:#4f7ef7;color:#4f7ef7}
+  .i-cnt { margin-left:auto; font-size:12px; color:#6b7280; } .i-cnt span{color:#e2e6f0;font-weight:600;}
 
-  .engagement-badge {
-    display: inline-block;
-    padding: 2px 7px;
-    border-radius: 4px;
-    font-size: 10px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 500;
-  }
-  .eng-LOW       { background: rgba(107,114,128,0.15); color: #9ca3af; }
-  .eng-MEDIUM    { background: rgba(245,158,11,0.15);  color: #f59e0b; }
-  .eng-HIGH      { background: rgba(34,197,94,0.15);   color: #22c55e; }
-  .eng-VERY-HIGH { background: rgba(249,115,22,0.15);  color: #f97316; }
+  .i-tbl-panel { background:#13131f; overflow-y:auto; border-right:1px solid #2d2d45; }
+  .i-tbl { width:100%; border-collapse:collapse; }
+  .i-tbl thead { position:sticky; top:0; background:#1a1a2e; z-index:5; }
+  .i-tbl th { padding:9px 12px; text-align:left; font-size:10px; color:#6b7280; text-transform:uppercase; letter-spacing:0.07em; border-bottom:1px solid #2d2d45; white-space:nowrap; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .i-tbl th:hover{color:#e2e6f0}
+  .i-tbl td { padding:8px 12px; border-bottom:1px solid #1e1e30; vertical-align:middle; white-space:nowrap; }
+  .i-tbl tr:hover td{background:rgba(79,126,247,0.04)}
+  .i-an{font-weight:500;color:#e2e6f0;font-size:13px} .i-ai{font-family:'DM Mono',monospace;font-size:10px;color:#4b5563}
+  .i-prod{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;background:rgba(79,126,247,0.12);color:#4f7ef7;border:1px solid rgba(79,126,247,0.2)}
+  .i-stg{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500}
+  .i-stg::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.8}
+  .s-Unreached{background:rgba(107,114,128,.15);color:#9ca3af;border:1px solid rgba(107,114,128,.2)}
+  .s-Unengaged{background:rgba(245,158,11,.12);color:#f59e0b;border:1px solid rgba(245,158,11,.2)}
+  .s-Aware{background:rgba(79,126,247,.12);color:#4f7ef7;border:1px solid rgba(79,126,247,.2)}
+  .s-Engaged{background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.2)}
+  .s-Potential{background:rgba(168,85,247,.12);color:#a855f7;border:1px solid rgba(168,85,247,.2)}
+  .s-Active{background:rgba(249,115,22,.12);color:#f97316;border:1px solid rgba(249,115,22,.2)}
+  .i-eng{display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;font-family:'DM Mono',monospace;font-weight:600}
+  .e-LOW{background:rgba(107,114,128,.15);color:#9ca3af} .e-MEDIUM{background:rgba(245,158,11,.15);color:#f59e0b} .e-HIGH{background:rgba(34,197,94,.15);color:#22c55e} .e-VERYHIGH{background:rgba(249,115,22,.15);color:#f97316}
+  .i-dt{font-family:'DM Mono',monospace;font-size:11px;color:#6b7280}
+  .i-empty-state{display:flex;align-items:center;justify-content:center;height:200px;color:#4b5563;font-size:13px}
+  .i-loading-state{display:flex;align-items:center;justify-content:center;height:200px;gap:10px;color:#6b7280;font-size:13px}
+  .i-spin{width:20px;height:20px;border:2px solid #2d2d45;border-top-color:#4f7ef7;border-radius:50%;animation:spin .7s linear infinite}
 
-  .date-text { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); }
+  /* CHAT */
+  .chat-panel{background:#1a1a2e;display:flex;flex-direction:column;overflow:hidden}
+  .chat-head{padding:12px 14px;border-bottom:1px solid #2d2d45;display:flex;align-items:center;gap:8px}
+  .chat-ico{width:26px;height:26px;border-radius:6px;background:linear-gradient(135deg,#4f7ef7,#7c5cfc);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+  .chat-head h3{font-size:13px;font-weight:600;color:#e2e6f0} .chat-head p{font-size:11px;color:#6b7280}
+  .chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+  .chat-msg{display:flex;flex-direction:column;gap:2px} .chat-msg.user{align-items:flex-end} .chat-msg.assistant{align-items:flex-start}
+  .chat-bubble{max-width:92%;padding:8px 12px;border-radius:10px;font-size:12.5px;line-height:1.55}
+  .user .chat-bubble{background:#4f7ef7;color:#fff;border-bottom-right-radius:2px}
+  .assistant .chat-bubble{background:#13131f;border:1px solid #2d2d45;color:#d1d5db;border-bottom-left-radius:2px}
+  .chat-time{font-size:10px;color:#4b5563;font-family:'DM Mono',monospace}
+  .chat-sugs{display:flex;flex-direction:column;gap:5px;margin-top:4px;width:100%}
+  .sug-btn{background:none;border:1px solid #2d2d45;color:#6b7280;padding:6px 10px;border-radius:7px;font-size:11.5px;text-align:left;cursor:pointer;transition:all .15s;line-height:1.4;font-family:inherit}
+  .sug-btn:hover{border-color:#4f7ef7;color:#e2e6f0;background:rgba(79,126,247,.06)}
+  .chat-input-area{padding:10px;border-top:1px solid #2d2d45;display:flex;gap:7px}
+  .chat-ta{flex:1;background:#13131f;border:1px solid #2d2d45;color:#e2e6f0;padding:8px 10px;border-radius:7px;font-family:inherit;font-size:12.5px;resize:none;outline:none;height:64px;line-height:1.5}
+  .chat-ta:focus{border-color:#4f7ef7} .chat-ta::placeholder{color:#4b5563}
+  .chat-send-btn{background:#4f7ef7;border:none;color:#fff;width:34px;height:34px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;align-self:flex-end;transition:opacity .15s;flex-shrink:0}
+  .chat-send-btn:hover{opacity:.85} .chat-send-btn:disabled{opacity:.4;cursor:not-allowed}
+  .typing{display:flex;gap:4px;align-items:center;padding:2px 0}
+  .typing span{width:5px;height:5px;background:#6b7280;border-radius:50%;animation:tbounce 1.2s infinite}
+  .typing span:nth-child(2){animation-delay:.2s} .typing span:nth-child(3){animation-delay:.4s}
+  @keyframes tbounce{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-4px);opacity:1}}
+  .i-tbl-panel::-webkit-scrollbar,.chat-msgs::-webkit-scrollbar{width:5px}
+  .i-tbl-panel::-webkit-scrollbar-track,.chat-msgs::-webkit-scrollbar-track{background:transparent}
+  .i-tbl-panel::-webkit-scrollbar-thumb,.chat-msgs::-webkit-scrollbar-thumb{background:#2d2d45;border-radius:3px}
 
-  /* Loading / empty */
-  .state-overlay {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 300px;
-    gap: 12px;
-    color: var(--muted);
-  }
-  .spinner {
-    width: 24px; height: 24px;
-    border: 2px solid var(--border2);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── Chat panel ── */
-  .chat-panel {
-    display: flex;
-    flex-direction: column;
-    background: var(--surface);
-    overflow: hidden;
-  }
-
-  .chat-header {
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .chat-header-icon {
-    width: 28px; height: 28px;
-    border-radius: 6px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
-  }
-  .chat-header-text h3 { font-size: 13px; font-weight: 600; }
-  .chat-header-text p  { font-size: 11px; color: var(--muted); }
-
-  .chat-messages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .chat-msg { display: flex; flex-direction: column; gap: 3px; }
-  .chat-msg.user { align-items: flex-end; }
-  .chat-msg.assistant { align-items: flex-start; }
-
-  .chat-bubble {
-    max-width: 92%;
-    padding: 9px 13px;
-    border-radius: 12px;
-    font-size: 13px;
-    line-height: 1.55;
-  }
-  .user .chat-bubble {
-    background: var(--accent);
-    color: #fff;
-    border-bottom-right-radius: 3px;
-  }
-  .assistant .chat-bubble {
-    background: var(--bg);
-    border: 1px solid var(--border2);
-    color: var(--text);
-    border-bottom-left-radius: 3px;
-  }
-  .chat-time {
-    font-size: 10px;
-    color: var(--muted);
-    font-family: 'IBM Plex Mono', monospace;
-  }
-
-  .chat-suggestions {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-top: 4px;
-  }
-  .suggestion-btn {
-    background: none;
-    border: 1px solid var(--border2);
-    color: var(--muted);
-    padding: 7px 11px;
-    border-radius: 8px;
-    font-size: 12px;
-    text-align: left;
-    cursor: pointer;
-    transition: all 0.15s;
-    font-family: 'IBM Plex Sans', sans-serif;
-    line-height: 1.4;
-  }
-  .suggestion-btn:hover { border-color: var(--accent); color: var(--text); background: rgba(79,142,247,0.06); }
-
-  .chat-input-area {
-    padding: 12px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    gap: 8px;
-  }
-  .chat-input-area textarea {
-    flex: 1;
-    background: var(--bg);
-    border: 1px solid var(--border2);
-    color: var(--text);
-    padding: 9px 12px;
-    border-radius: 8px;
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 13px;
-    resize: none;
-    outline: none;
-    height: 70px;
-    line-height: 1.5;
-    transition: border-color 0.15s;
-  }
-  .chat-input-area textarea:focus { border-color: var(--accent); }
-  .chat-input-area textarea::placeholder { color: var(--muted); }
-
-  .send-btn {
-    background: var(--accent);
-    border: none;
-    color: #fff;
-    width: 36px; height: 36px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    align-self: flex-end;
-    transition: opacity 0.15s;
-    flex-shrink: 0;
-  }
-  .send-btn:hover { opacity: 0.85; }
-  .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  /* Typing indicator */
-  .typing { display: flex; gap: 4px; align-items: center; padding: 4px 0; }
-  .typing span {
-    width: 6px; height: 6px;
-    background: var(--muted);
-    border-radius: 50%;
-    animation: bounce 1.2s infinite;
-  }
-  .typing span:nth-child(2) { animation-delay: 0.2s; }
-  .typing span:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes bounce {
-    0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
-    40%           { transform: translateY(-5px); opacity: 1; }
-  }
-
-  /* Scrollbars */
-  ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+  @media(max-width:600px){.main{padding:16px}.form-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">⬡ RateGain · Account Intelligence</div>
-  <div class="header-meta">Last sync: <span id="last-sync">—</span></div>
+<header class="header">
+  <div class="header-brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1.5" fill="white"/><rect x="9" y="2" width="5" height="5" rx="1.5" fill="white" opacity="0.7"/><rect x="2" y="9" width="5" height="5" rx="1.5" fill="white" opacity="0.7"/><rect x="9" y="9" width="5" height="5" rx="1.5" fill="white" opacity="0.4"/></svg>
+    </div>
+    Account Engagement Tracker
+  </div>
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="tab-btn" onclick="showPage('tracker')">Touchpoints</button>
+    <button class="tab-btn" onclick="showPage('accounts')">Accounts</button>
+    <button class="tab-btn" onclick="showPage('checker')">Campaign Checker</button>
+    <button class="tab-btn intel-tab" onclick="showPage('intelligence')">✦ Intelligence</button>
+    <button class="tab-btn" onclick="showPage('rules')">Rules</button>
+  </div>
+  <div class="header-actions">
+    <button class="btn" onclick="downloadTemplate()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 13h10"/></svg>CSV Template
+    </button>
+    <label class="btn" style="cursor:pointer;">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 10V2M5 5l3-3 3 3"/><path d="M3 13h10"/></svg>Bulk Upload
+      <input type="file" accept=".csv" id="csv-upload-input" style="display:none" onchange="handleCSVUpload(event)">
+    </label>
+    <button class="btn btn-primary" onclick="openModal()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>Log Touchpoint
+    </button>
+  </div>
 </header>
 
-<div class="app">
+<main class="main">
 
-  <!-- Filters -->
-  <div class="filters">
-    <span class="filter-label">Filter</span>
-    <input type="text" id="f-search" placeholder="Search account…" oninput="applyFilters()">
-    <select id="f-product" onchange="applyFilters()">
-      <option value="">All Products</option>
-    </select>
-    <select id="f-stage" onchange="applyFilters()">
-      <option value="">All Stages</option>
-      <option>Unreached</option>
-      <option>Unengaged</option>
-      <option>Aware</option>
-      <option>Engaged</option>
-      <option>Potential Opportunity</option>
-      <option>Active Opportunity</option>
-    </select>
-    <select id="f-region" onchange="applyFilters()">
-      <option value="">All Regions</option>
-    </select>
-    <select id="f-engagement" onchange="applyFilters()">
-      <option value="">All Engagement</option>
-      <option>LOW</option>
-      <option>MEDIUM</option>
-      <option>HIGH</option>
-      <option>VERY HIGH</option>
-    </select>
-    <button class="btn-reset" onclick="resetFilters()">Reset</button>
-    <div class="count-badge">Showing <span id="row-count">0</span> records</div>
+<!-- DASHBOARD -->
+<div id="page-dashboard" class="page active">
+  <div id="cooling-banner" style="display:none" class="cooling-alert">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><line x1="8" y1="5" x2="8" y2="8"/><circle cx="8" cy="11" r="0.5" fill="currentColor"/></svg>
+    <span id="cooling-text"></span>
   </div>
+  <div class="stats-grid" id="stats-grid"></div>
+  <div class="section-header"><span class="section-title">Account Status Overview</span></div>
+  <div class="table-wrap">
+    <table><thead><tr><th>Account</th><th>SF Account ID</th><th>Country</th><th>Tier</th><th>Total Touches</th><th>Last Touch</th><th>Days Since</th><th>Touches (14d)</th><th>Status</th></tr></thead>
+    <tbody id="dashboard-tbody"></tbody></table>
+  </div>
+</div>
 
-  <!-- Table -->
-  <div class="table-panel">
-    <div id="table-loading" class="state-overlay">
-      <div class="spinner"></div>
-      <span>Loading account data…</span>
+<!-- TRACKER -->
+<div id="page-tracker" class="page">
+  <div class="section-header">
+    <div><div class="section-title">All Touchpoints</div><div class="page-sub">Every outreach logged — one row per touchpoint</div></div>
+    <button class="btn btn-primary" onclick="openModal()"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>Log Touchpoint</button>
+  </div>
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <div class="search-wrap"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="4"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg><input class="search-input" id="tracker-search" type="text" placeholder="Search accounts, campaigns..." oninput="renderTracker()"></div>
+      <select class="filter-select" id="tracker-channel" onchange="renderTracker()"><option value="">All channels</option><option>Email</option><option>LinkedIn</option><option>Webinar</option><option>Event</option><option>Direct Mail</option><option>Paid Ad</option></select>
+      <select class="filter-select" id="tracker-tier" onchange="renderTracker()"><option value="">All tiers</option><option>Tier 1</option><option>Tier 2</option><option>Tier 3</option></select>
+      <select class="filter-select" id="tracker-cooling" onchange="renderTracker()"><option value="">All</option><option value="Yes">Cooling Off</option><option value="No">Active</option></select>
     </div>
-    <table id="main-table" style="display:none">
-      <thead>
-        <tr>
-          <th onclick="sortBy('account_name')">Account</th>
-          <th onclick="sortBy('product')">Product</th>
-          <th onclick="sortBy('stage')">Stage</th>
-          <th onclick="sortBy('stage_date')">Stage Date</th>
-          <th onclick="sortBy('engagement_level')">Engagement</th>
-          <th onclick="sortBy('region')">Region</th>
-          <th onclick="sortBy('country')">Country</th>
-        </tr>
-      </thead>
-      <tbody id="table-body"></tbody>
+    <div class="tracker-scroll">
+      <table><thead><tr><th class="col-num">#</th><th class="col-sfid">SF Account ID</th><th class="col-acct">Account</th><th class="col-domain">Domain</th><th class="col-ctry">Country</th><th class="col-date">Date</th><th class="col-by">Sent By</th><th class="col-tier">Tier</th><th class="col-chan">Channel</th><th class="col-camp">Campaign / Email</th><th class="col-cool">Cooling?</th><th class="col-out">Outcome</th><th class="col-notes">Notes</th><th class="col-acts"></th></tr></thead>
+      <tbody id="tracker-tbody"></tbody></table>
+    </div>
+    <div id="tracker-empty" class="empty-state" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="15" x2="12" y2="15"/></svg><p>No touchpoints match your filters</p></div>
+  </div>
+</div>
+
+<!-- ACCOUNTS -->
+<div id="page-accounts" class="page">
+  <div class="section-header"><div><div class="section-title">Accounts</div><div class="page-sub">Summary view per account with touchpoint limits</div></div></div>
+  <div class="accounts-grid" id="accounts-grid"></div>
+  <div id="accounts-empty" class="empty-state" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><p>No accounts yet — log your first touchpoint to get started</p></div>
+</div>
+
+<!-- CAMPAIGN CHECKER -->
+<div id="page-checker" class="page">
+  <div class="section-header">
+    <div><div class="section-title">Campaign Checker</div><div class="page-sub">Upload your outreach list — instantly see who you can contact and who is cooling off</div></div>
+    <label class="btn btn-primary" style="cursor:pointer;"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M8 10V2M5 5l3-3 3 3"/><path d="M3 13h10"/></svg>Upload List<input type="file" accept=".csv" id="checker-upload-input" style="display:none" onchange="handleCheckerUpload(event)"></label>
+  </div>
+  <div id="checker-dropzone" style="border:2px dashed var(--border2);border-radius:var(--radius);padding:48px 24px;text-align:center;color:var(--text2);background:var(--surface);">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;margin:0 auto 12px;opacity:0.35;display:block;"><path d="M9 12h6M12 9v6"/><path d="M21 15a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h4l2 3h8a2 2 0 012 2z"/></svg>
+    <div style="font-size:15px;font-weight:500;margin-bottom:6px;">Upload your campaign contact list</div>
+    <div style="font-size:13px;margin-bottom:16px;">CSV with at least one of: <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">sfId</code>, <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">domain</code>, or <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">account</code></div>
+    <label class="btn" style="cursor:pointer;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M8 10V2M5 5l3-3 3 3"/><path d="M3 13h10"/></svg>Choose CSV file<input type="file" accept=".csv" style="display:none" onchange="handleCheckerUpload(event)"></label>
+    <div style="font-size:12px;color:var(--text3);margin-top:12px;">Download a <button onclick="downloadCheckerTemplate()" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:12px;font-family:inherit;text-decoration:underline;">sample template</button></div>
+  </div>
+  <div id="checker-results" style="display:none;">
+    <div id="checker-summary" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;"></div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center;">
+      <div class="search-wrap" style="flex:1;min-width:180px;"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="4"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg><input class="search-input" id="checker-search" type="text" placeholder="Search accounts..." oninput="renderCheckerResults()"></div>
+      <select class="filter-select" id="checker-filter" onchange="renderCheckerResults()"><option value="">All statuses</option><option value="clear">Clear to contact</option><option value="limit">At limit</option><option value="cooling">Cooling Off</option><option value="unknown">Not in tracker</option></select>
+      <button class="btn" onclick="downloadCheckerResults()"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 13h10"/></svg>Export results</button>
+      <button class="btn" onclick="resetChecker()">Clear list</button>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>Account</th><th>SF Account ID</th><th>Domain</th><th>Country</th><th>Touches (14d)</th><th>Limit</th><th>Last Touch</th><th>Days Until Clear</th><th>Status</th></tr></thead><tbody id="checker-tbody"></tbody></table></div>
+  </div>
+</div>
+
+<!-- RULES -->
+<div id="page-rules" class="page">
+  <div class="rules-card">
+    <h3><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><line x1="8" y1="5" x2="8" y2="9"/><circle cx="8" cy="11.5" r="0.5" fill="currentColor"/></svg>Over-communication rules</h3>
+    <table class="rules-table"><tr><td>Tier 1 accounts</td><td>Max <strong>2 touches per 14-day window</strong> across ALL channels</td></tr><tr><td>Tier 2 accounts</td><td>Max <strong>2 touches per 14-day window</strong></td></tr><tr><td>Tier 3 accounts</td><td>Max <strong>1 touch per 14-day window</strong></td></tr><tr><td>Cooling Off period</td><td>Set 'Cooling Off = Yes' → account paused for 14 days</td></tr><tr><td>Who can override</td><td>Team lead only — add note in Notes column</td></tr></table>
+  </div>
+  <div class="rules-card">
+    <h3><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M3 4h10M3 12h6"/></svg>How to log a touchpoint</h3>
+    <ol style="padding-left:18px;display:flex;flex-direction:column;gap:7px;font-size:13px;"><li>Click <strong>Log Touchpoint</strong> from any page</li><li>Fill in Account Name, Date, Sent By, Tier, Channel</li><li>Enter the Campaign / Email Name</li><li>If account has hit the touch limit in 14 days → set Cooling Off = Yes</li><li>Check Dashboard for instant status update</li></ol>
+  </div>
+  <div class="rules-card">
+    <h3><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l4 4 4-4M4 8l4 4 4-4"/></svg>Status indicators</h3>
+    <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;"><div style="display:flex;align-items:center;gap:8px;"><span class="dot dot-green"></span><strong>Active</strong> — within touch limits</div><div style="display:flex;align-items:center;gap:8px;"><span class="dot dot-amber"></span><strong>At limit</strong> — approaching max touches</div><div style="display:flex;align-items:center;gap:8px;"><span class="dot dot-red"></span><strong>Cooling Off</strong> — do not contact</div></div>
+  </div>
+</div>
+
+</main>
+
+<!-- INTELLIGENCE PAGE (full height, outside main) -->
+<div id="page-intelligence">
+  <div class="intel-filters">
+    <span class="i-lbl">Filter</span>
+    <input class="i-input" id="i-search" placeholder="Search account…" oninput="iFilter()">
+    <select class="i-sel" id="i-product" onchange="iFilter()"><option value="">All Products</option></select>
+    <select class="i-sel" id="i-stage" onchange="iFilter()"><option value="">All Stages</option><option>Unreached</option><option>Unengaged</option><option>Aware</option><option>Engaged</option><option>Potential Opportunity</option><option>Active Opportunity</option></select>
+    <select class="i-sel" id="i-region" onchange="iFilter()"><option value="">All Regions</option></select>
+    <select class="i-sel" id="i-engagement" onchange="iFilter()"><option value="">All Engagement</option><option>LOW</option><option>MEDIUM</option><option>HIGH</option><option>VERY HIGH</option></select>
+    <button class="i-rst" onclick="iReset()">Reset</button>
+    <div class="i-cnt">Showing <span id="i-count">0</span> records</div>
+  </div>
+  <div class="i-tbl-panel">
+    <div id="i-loading" class="i-loading-state"><div class="i-spin"></div><span>Loading account intelligence…</span></div>
+    <table class="i-tbl" id="i-table" style="display:none">
+      <thead><tr>
+        <th onclick="iSort('account_name')">Account ↕</th>
+        <th onclick="iSort('product')">Product ↕</th>
+        <th onclick="iSort('stage')">Stage ↕</th>
+        <th onclick="iSort('stage_date')">Stage Date ↕</th>
+        <th onclick="iSort('engagement_level')">Engagement ↕</th>
+        <th onclick="iSort('region')">Region ↕</th>
+        <th onclick="iSort('country')">Country ↕</th>
+      </tr></thead>
+      <tbody id="i-tbody"></tbody>
     </table>
-    <div id="table-empty" class="state-overlay" style="display:none">
-      <span>No records match the current filters.</span>
-    </div>
+    <div id="i-empty" class="i-empty-state" style="display:none">No records match the current filters.</div>
   </div>
-
-  <!-- Chat panel -->
   <div class="chat-panel">
-    <div class="chat-header">
-      <div class="chat-header-icon">✦</div>
-      <div class="chat-header-text">
-        <h3>AI Analysis</h3>
-        <p>Ask anything about your accounts</p>
-      </div>
+    <div class="chat-head">
+      <div class="chat-ico">✦</div>
+      <div><h3>AI Analysis</h3><p>Ask anything about your accounts</p></div>
     </div>
-
-    <div class="chat-messages" id="chat-messages">
+    <div class="chat-msgs" id="chat-msgs">
       <div class="chat-msg assistant">
-        <div class="chat-bubble">
-          Hi! I have access to your account data. Ask me anything about stages, products, regions, or engagement trends.
-        </div>
-        <div class="chat-suggestions" id="suggestions">
-          <button class="suggestion-btn" onclick="useSuggestion(this)">Which accounts are in Active Opportunity stage?</button>
-          <button class="suggestion-btn" onclick="useSuggestion(this)">Show me Engaged accounts for hospibi</button>
-          <button class="suggestion-btn" onclick="useSuggestion(this)">Which regions have the most Aware stage accounts?</button>
-          <button class="suggestion-btn" onclick="useSuggestion(this)">How many accounts have HIGH or VERY HIGH engagement?</button>
+        <div class="chat-bubble">Hi! I have access to your live account intelligence data. Ask me anything about stages, products, regions, or engagement trends.</div>
+        <div class="chat-sugs" id="chat-sugs">
+          <button class="sug-btn" onclick="useSug(this)">Which accounts are in Active Opportunity stage?</button>
+          <button class="sug-btn" onclick="useSug(this)">Show me Engaged accounts by region</button>
+          <button class="sug-btn" onclick="useSug(this)">Which regions have the most Aware accounts?</button>
+          <button class="sug-btn" onclick="useSug(this)">How many accounts have HIGH or VERY HIGH engagement?</button>
         </div>
       </div>
     </div>
-
     <div class="chat-input-area">
-      <textarea id="chat-input" placeholder="Ask about your accounts…" onkeydown="chatKeydown(event)"></textarea>
-      <button class="send-btn" id="send-btn" onclick="sendChat()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <line x1="22" y1="2" x2="11" y2="13"></line>
-          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-        </svg>
+      <textarea class="chat-ta" id="chat-input" placeholder="Ask about your accounts…" onkeydown="chatKey(event)"></textarea>
+      <button class="chat-send-btn" id="chat-send" onclick="sendChat()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
       </button>
     </div>
   </div>
-
 </div>
 
-<script>
-// ── Config ────────────────────────────────────────────────────────────────────
-const SUPABASE_URL = 'https://mtlujmdpxtveawrhljxg.supabase.co';
-const SUPABASE_KEY = 'sb_secret_r0SsdawEUv__yKoC9SrpvA_2u_MjvM-';
-const CLAUDE_MODEL = 'claude-sonnet-4-20250514';
+<!-- LOG TOUCHPOINT MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Log Touchpoint</div>
+    <div class="form-grid">
+      <div class="form-group full" style="background:var(--accent-light);border:1px solid #C5D4F9;border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:2px;">
+        <div style="font-size:11px;font-weight:600;color:var(--accent-text);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Account Identifier — use SF ID when available</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+          <div class="form-group" style="margin:0;"><label class="form-label">Salesforce Account ID</label><input id="f-sfid" class="form-input" type="text" placeholder="e.g. 0015g00000XXXXX"></div>
+          <div class="form-group" style="margin:0;"><label class="form-label">Account Domain</label><input id="f-domain" class="form-input" type="text" placeholder="e.g. acme.com"></div>
+          <div class="form-group" style="margin:0;"><label class="form-label">Country</label><input id="f-country" class="form-input" type="text" placeholder="e.g. United Kingdom"></div>
+        </div>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Account Name *</label>
+        <input id="f-account" class="form-input" type="text" placeholder="e.g. Acme Corp" list="accounts-list">
+        <datalist id="accounts-list"></datalist>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Date *</label>
+        <input id="f-date" class="form-input" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sent By *</label>
+        <input id="f-by" class="form-input" type="text" placeholder="e.g. Sarah Jones">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tier *</label>
+        <select id="f-tier" class="form-input">
+          <option value="">Select tier…</option>
+          <option>Tier 1</option>
+          <option>Tier 2</option>
+          <option>Tier 3</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Channel *</label>
+        <select id="f-channel" class="form-input">
+          <option value="">Select channel…</option>
+          <option>Email</option>
+          <option>LinkedIn</option>
+          <option>Webinar</option>
+          <option>Event</option>
+          <option>Direct Mail</option>
+          <option>Paid Ad</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Campaign / Email Name *</label>
+        <input id="f-campaign" class="form-input" type="text" placeholder="e.g. Q2 Product Launch Email">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cooling Off?</label>
+        <select id="f-cooling" class="form-input">
+          <option value="No">No</option>
+          <option value="Yes">Yes</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Outcome</label>
+        <select id="f-outcome" class="form-input">
+          <option value="">None</option>
+          <option>Opened</option>
+          <option>Clicked</option>
+          <option>Replied</option>
+          <option>Meeting Booked</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Notes</label>
+        <textarea id="f-notes" class="form-input" placeholder="Any additional context…"></textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTouchpoint()">Save Touchpoint</button>
+    </div>
+  </div>
+</div>
 
-// ── State ─────────────────────────────────────────────────────────────────────
-let allData   = [];
-let filtered  = [];
-let sortCol   = 'account_name';
-let sortDir   = 'asc';
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════
+//  DATA STORE
+// ══════════════════════════════════════════
+let touchpoints = JSON.parse(localStorage.getItem('aet_touchpoints') || '[]');
+let editingId = null;
+let checkerData = [];
+let intelData = [];
+let intelFiltered = [];
+let intelSortCol = 'account_name';
+let intelSortDir = 1;
 let chatHistory = [];
 
-// ── Supabase fetch ────────────────────────────────────────────────────────────
-async function fetchData() {
-  try {
-    // Fetch account_product_stages joined with accounts for region/country
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/account_product_stages?select=sf_account_id,account_name,product,stage,stage_date,event_type,engagement_level,accounts(region,country,industry,hierarchy_level,no_of_rooms,no_of_properties,adr,account_owner)&order=account_name.asc&limit=5000`,
-      { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
-    );
-    const data = await res.json();
+function save() {
+  localStorage.setItem('aet_touchpoints', JSON.stringify(touchpoints));
+}
 
-    // Flatten joined fields
-    allData = (data || []).map(r => ({
-      ...r,
-      region:           r.accounts?.region || '',
-      country:          r.accounts?.country || '',
-      industry:         r.accounts?.industry || '',
-      hierarchy_level:  r.accounts?.hierarchy_level || '',
-      account_owner:    r.accounts?.account_owner || '',
-      no_of_rooms:      r.accounts?.no_of_rooms || '',
-      no_of_properties: r.accounts?.no_of_properties || '',
-      adr:              r.accounts?.adr || '',
-    }));
+// ══════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const pg = document.getElementById('page-' + name);
+  if (pg) pg.classList.add('active');
+  const btns = document.querySelectorAll('.tab-btn');
+  btns.forEach(b => { if (b.textContent.toLowerCase().includes(name === 'intelligence' ? 'intelligence' : name)) b.classList.add('active'); });
+  if (name === 'dashboard') renderDashboard();
+  if (name === 'tracker') renderTracker();
+  if (name === 'accounts') renderAccounts();
+  if (name === 'checker') {} // checker renders on upload
+  if (name === 'intelligence') initIntelligence();
+}
 
-    document.getElementById('last-sync').textContent = new Date().toLocaleTimeString();
-    populateFilterOptions();
-    applyFilters();
+// ══════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════
+function today() {
+  return new Date().toISOString().split('T')[0];
+}
 
-    document.getElementById('table-loading').style.display = 'none';
-    document.getElementById('main-table').style.display = '';
-  } catch (err) {
-    document.getElementById('table-loading').innerHTML =
-      `<span style="color:var(--red)">Failed to load data. Check Supabase config.</span>`;
-    console.error(err);
+function daysBetween(dateStr) {
+  if (!dateStr) return null;
+  const d = new Date(dateStr);
+  const now = new Date();
+  now.setHours(0,0,0,0);
+  return Math.floor((now - d) / 86400000);
+}
+
+function touchesIn14Days(accountKey) {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - 14);
+  return touchpoints.filter(t => {
+    const match = t.account.toLowerCase() === accountKey.toLowerCase() ||
+                  (t.sfId && t.sfId === accountKey) ||
+                  (t.domain && t.domain === accountKey);
+    return match && new Date(t.date) >= cutoff;
+  }).length;
+}
+
+function getLimit(tier) {
+  if (tier === 'Tier 3') return 1;
+  return 2;
+}
+
+function tierBadge(tier) {
+  if (tier === 'Tier 1') return `<span class="badge badge-tier1">Tier 1</span>`;
+  if (tier === 'Tier 2') return `<span class="badge badge-tier2">Tier 2</span>`;
+  return `<span class="badge badge-tier3">Tier 3</span>`;
+}
+
+function channelBadge(ch) {
+  const map = { 'Email':'email','LinkedIn':'linkedin','Webinar':'webinar','Event':'event','Direct Mail':'direct','Paid Ad':'paid' };
+  const cls = map[ch] || 'email';
+  return `<span class="badge badge-channel-${cls}">${ch||'—'}</span>`;
+}
+
+function outcomeBadge(o) {
+  if (!o) return `<span class="badge badge-none">—</span>`;
+  const map = { 'Opened':'opened','Clicked':'clicked','Replied':'replied','Meeting Booked':'meeting' };
+  return `<span class="badge badge-${map[o]||'none'}">${o}</span>`;
+}
+
+function coolingBadge(v) {
+  return v === 'Yes' ? `<span class="badge badge-yes">Yes</span>` : `<span class="badge badge-no">No</span>`;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ══════════════════════════════════════════
+//  MODAL
+// ══════════════════════════════════════════
+function openModal(id) {
+  editingId = id || null;
+  document.getElementById('modal-title').textContent = editingId ? 'Edit Touchpoint' : 'Log Touchpoint';
+  const fields = ['sfid','domain','country','account','date','by','tier','channel','campaign','cooling','outcome','notes'];
+  fields.forEach(f => {
+    const el = document.getElementById('f-' + f);
+    if (el) el.value = '';
+  });
+  document.getElementById('f-date').value = today();
+  document.getElementById('f-cooling').value = 'No';
+
+  if (editingId) {
+    const t = touchpoints.find(x => x.id === editingId);
+    if (t) {
+      document.getElementById('f-sfid').value = t.sfId || '';
+      document.getElementById('f-domain').value = t.domain || '';
+      document.getElementById('f-country').value = t.country || '';
+      document.getElementById('f-account').value = t.account || '';
+      document.getElementById('f-date').value = t.date || '';
+      document.getElementById('f-by').value = t.by || '';
+      document.getElementById('f-tier').value = t.tier || '';
+      document.getElementById('f-channel').value = t.channel || '';
+      document.getElementById('f-campaign').value = t.campaign || '';
+      document.getElementById('f-cooling').value = t.cooling || 'No';
+      document.getElementById('f-outcome').value = t.outcome || '';
+      document.getElementById('f-notes').value = t.notes || '';
+    }
   }
+
+  // Populate datalist
+  const dl = document.getElementById('accounts-list');
+  const names = [...new Set(touchpoints.map(t => t.account).filter(Boolean))];
+  dl.innerHTML = names.map(n => `<option value="${n}">`).join('');
+
+  document.getElementById('modal-overlay').classList.add('open');
 }
 
-// ── Filter dropdowns ──────────────────────────────────────────────────────────
-function populateFilterOptions() {
-  const products = [...new Set(allData.map(r => r.product).filter(Boolean))].sort();
-  const regions  = [...new Set(allData.map(r => r.region).filter(Boolean))].sort();
-
-  const pSel = document.getElementById('f-product');
-  pSel.innerHTML = '<option value="">All Products</option>' +
-    products.map(p => `<option>${p}</option>`).join('');
-
-  const rSel = document.getElementById('f-region');
-  rSel.innerHTML = '<option value="">All Regions</option>' +
-    regions.map(r => `<option>${r}</option>`).join('');
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  editingId = null;
 }
 
-// ── Filter + sort ─────────────────────────────────────────────────────────────
-function applyFilters() {
-  const search = document.getElementById('f-search').value.toLowerCase();
-  const product    = document.getElementById('f-product').value;
-  const stage      = document.getElementById('f-stage').value;
-  const region     = document.getElementById('f-region').value;
-  const engagement = document.getElementById('f-engagement').value;
-
-  filtered = allData.filter(r => {
-    if (search && !(r.account_name || '').toLowerCase().includes(search) &&
-                  !(r.sf_account_id || '').toLowerCase().includes(search)) return false;
-    if (product    && r.product !== product) return false;
-    if (stage      && r.stage   !== stage)   return false;
-    if (region     && r.region  !== region)  return false;
-    if (engagement && r.engagement_level !== engagement) return false;
-    return true;
-  });
-
-  sortData();
-  renderTable();
-  document.getElementById('row-count').textContent = filtered.length.toLocaleString();
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
 }
 
-function resetFilters() {
-  document.getElementById('f-search').value = '';
-  document.getElementById('f-product').value = '';
-  document.getElementById('f-stage').value = '';
-  document.getElementById('f-region').value = '';
-  document.getElementById('f-engagement').value = '';
-  applyFilters();
-}
+function saveTouchpoint() {
+  const account = document.getElementById('f-account').value.trim();
+  const date = document.getElementById('f-date').value;
+  const by = document.getElementById('f-by').value.trim();
+  const tier = document.getElementById('f-tier').value;
+  const channel = document.getElementById('f-channel').value;
+  const campaign = document.getElementById('f-campaign').value.trim();
 
-// ── Sort ──────────────────────────────────────────────────────────────────────
-function sortBy(col) {
-  if (sortCol === col) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
-  else { sortCol = col; sortDir = 'asc'; }
-  document.querySelectorAll('th').forEach(th => th.className = '');
-  event.target.className = `sort-${sortDir}`;
-  sortData();
-  renderTable();
-}
-
-function sortData() {
-  filtered.sort((a, b) => {
-    const va = (a[sortCol] || '').toString().toLowerCase();
-    const vb = (b[sortCol] || '').toString().toLowerCase();
-    return sortDir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
-  });
-}
-
-// ── Render ────────────────────────────────────────────────────────────────────
-const STAGE_CLASS = {
-  'Unreached':            'stage-Unreached',
-  'Unengaged':            'stage-Unengaged',
-  'Aware':                'stage-Aware',
-  'Engaged':              'stage-Engaged',
-  'Potential Opportunity':'stage-Potential',
-  'Active Opportunity':   'stage-Active',
-};
-
-function renderTable() {
-  const tbody = document.getElementById('table-body');
-  if (!filtered.length) {
-    document.getElementById('main-table').style.display = 'none';
-    document.getElementById('table-empty').style.display = '';
-    tbody.innerHTML = '';
+  if (!account || !date || !by || !tier || !channel || !campaign) {
+    showToast('Please fill in all required fields (*)');
     return;
   }
-  document.getElementById('main-table').style.display = '';
-  document.getElementById('table-empty').style.display = 'none';
 
-  tbody.innerHTML = filtered.map(r => {
-    const stageCls = STAGE_CLASS[r.stage] || 'stage-Unreached';
-    const engCls   = r.engagement_level ? `eng-${r.engagement_level.replace(' ', '-')}` : '';
-    const date     = r.stage_date ? r.stage_date.split('T')[0] : '—';
+  const record = {
+    id: editingId || Date.now().toString(),
+    sfId: document.getElementById('f-sfid').value.trim(),
+    domain: document.getElementById('f-domain').value.trim(),
+    country: document.getElementById('f-country').value.trim(),
+    account, date, by, tier, channel, campaign,
+    cooling: document.getElementById('f-cooling').value,
+    outcome: document.getElementById('f-outcome').value,
+    notes: document.getElementById('f-notes').value.trim()
+  };
+
+  if (editingId) {
+    const idx = touchpoints.findIndex(x => x.id === editingId);
+    if (idx > -1) touchpoints[idx] = record;
+  } else {
+    touchpoints.unshift(record);
+  }
+
+  save();
+  closeModal();
+  showToast(editingId ? 'Touchpoint updated' : 'Touchpoint logged');
+  renderDashboard();
+  renderTracker();
+  renderAccounts();
+}
+
+function deleteTouchpoint(id) {
+  if (!confirm('Delete this touchpoint?')) return;
+  touchpoints = touchpoints.filter(t => t.id !== id);
+  save();
+  showToast('Deleted');
+  renderDashboard();
+  renderTracker();
+  renderAccounts();
+}
+
+// ══════════════════════════════════════════
+//  DASHBOARD
+// ══════════════════════════════════════════
+function getAccountSummaries() {
+  const map = {};
+  touchpoints.forEach(t => {
+    const key = t.sfId || t.account;
+    if (!map[key]) map[key] = { name: t.account, sfId: t.sfId||'', country: t.country||'', tier: t.tier, touches: [], cooling: false };
+    map[key].touches.push(t.date);
+    if (t.cooling === 'Yes') map[key].cooling = true;
+    map[key].tier = t.tier; // latest tier
+    map[key].country = t.country || map[key].country;
+    map[key].sfId = t.sfId || map[key].sfId;
+  });
+  return Object.values(map);
+}
+
+function renderDashboard() {
+  const summaries = getAccountSummaries();
+  const coolingAccounts = summaries.filter(s => s.cooling);
+  const banner = document.getElementById('cooling-banner');
+  const coolingText = document.getElementById('cooling-text');
+  if (coolingAccounts.length > 0) {
+    banner.style.display = 'flex';
+    coolingText.textContent = `${coolingAccounts.length} account${coolingAccounts.length > 1 ? 's' : ''} currently cooling off: ${coolingAccounts.map(a => a.name).join(', ')}`;
+  } else {
+    banner.style.display = 'none';
+  }
+
+  const statsGrid = document.getElementById('stats-grid');
+  const totalAccounts = summaries.length;
+  const totalTouchpoints = touchpoints.length;
+  const cooling = coolingAccounts.length;
+  const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 14);
+  const active14 = touchpoints.filter(t => new Date(t.date) >= cutoff).length;
+
+  statsGrid.innerHTML = `
+    <div class="stat-card accent"><div class="stat-label">Total Accounts</div><div class="stat-value">${totalAccounts}</div></div>
+    <div class="stat-card"><div class="stat-label">Total Touchpoints</div><div class="stat-value">${totalTouchpoints}</div></div>
+    <div class="stat-card"><div class="stat-label">Active (14d)</div><div class="stat-value">${active14}</div></div>
+    <div class="stat-card danger"><div class="stat-label">Cooling Off</div><div class="stat-value">${cooling}</div></div>
+  `;
+
+  const tbody = document.getElementById('dashboard-tbody');
+  if (summaries.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text3);">No touchpoints yet — click Log Touchpoint to get started</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = summaries.map(s => {
+    const sorted = [...s.touches].sort((a,b) => new Date(b)-new Date(a));
+    const lastTouch = sorted[0] || '';
+    const daysSince = lastTouch ? daysBetween(lastTouch) : null;
+    const cutoff14 = new Date(); cutoff14.setDate(cutoff14.getDate()-14);
+    const touches14 = s.touches.filter(d => new Date(d) >= cutoff14).length;
+    const limit = getLimit(s.tier);
+    let statusHtml;
+    if (s.cooling) {
+      statusHtml = `<span class="status-cooling">⬤ Cooling Off</span>`;
+    } else if (touches14 >= limit) {
+      statusHtml = `<span class="status-limit">⬤ At Limit</span>`;
+    } else {
+      statusHtml = `<span class="status-active">⬤ Active</span>`;
+    }
     return `<tr>
-      <td>
-        <div class="account-name">${esc(r.account_name || '—')}</div>
-        <div class="account-id">${esc(r.sf_account_id)}</div>
-      </td>
-      <td><span class="product-tag">${esc(r.product || '—')}</span></td>
-      <td><span class="stage-badge ${stageCls}">${esc(r.stage || '—')}</span></td>
-      <td><span class="date-text">${date}</span></td>
-      <td>${r.engagement_level ? `<span class="engagement-badge ${engCls}">${esc(r.engagement_level)}</span>` : '<span style="color:var(--muted)">—</span>'}</td>
-      <td>${esc(r.region || '—')}</td>
-      <td>${esc(r.country || '—')}</td>
+      <td class="account-name">${s.name}</td>
+      <td><span class="date-cell">${s.sfId||'—'}</span></td>
+      <td>${s.country||'—'}</td>
+      <td>${tierBadge(s.tier)}</td>
+      <td>${s.touches.length}</td>
+      <td><span class="date-cell">${lastTouch||'—'}</span></td>
+      <td>${daysSince !== null ? daysSince + 'd' : '—'}</td>
+      <td>${touches14} / ${limit}</td>
+      <td>${statusHtml}</td>
     </tr>`;
   }).join('');
 }
 
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
+// ══════════════════════════════════════════
+//  TRACKER
+// ══════════════════════════════════════════
+function renderTracker() {
+  const search = document.getElementById('tracker-search').value.toLowerCase();
+  const channel = document.getElementById('tracker-channel').value;
+  const tier = document.getElementById('tracker-tier').value;
+  const cooling = document.getElementById('tracker-cooling').value;
 
-// ── Chat ──────────────────────────────────────────────────────────────────────
-function buildDataContext() {
-  // Summarise current filtered data for Claude
-  const total = filtered.length;
-  const stageCounts = {};
-  const productCounts = {};
-  const regionCounts = {};
-  const engCounts = {};
-
-  filtered.forEach(r => {
-    stageCounts[r.stage || 'Unknown']       = (stageCounts[r.stage || 'Unknown'] || 0) + 1;
-    productCounts[r.product || 'Unknown']   = (productCounts[r.product || 'Unknown'] || 0) + 1;
-    regionCounts[r.region || 'Unknown']     = (regionCounts[r.region || 'Unknown'] || 0) + 1;
-    engCounts[r.engagement_level || 'None'] = (engCounts[r.engagement_level || 'None'] || 0) + 1;
+  let filtered = touchpoints.filter(t => {
+    const matchSearch = !search || t.account.toLowerCase().includes(search) || (t.campaign||'').toLowerCase().includes(search) || (t.sfId||'').toLowerCase().includes(search);
+    const matchChannel = !channel || t.channel === channel;
+    const matchTier = !tier || t.tier === tier;
+    const matchCooling = !cooling || t.cooling === cooling;
+    return matchSearch && matchChannel && matchTier && matchCooling;
   });
 
-  // Pass a sample of individual records (up to 200) for specific queries
-  const sample = filtered.slice(0, 200).map(r =>
-    `${r.account_name}|${r.sf_account_id}|${r.product}|${r.stage}|${r.stage_date || ''}|${r.engagement_level || ''}|${r.region || ''}|${r.country || ''}`
-  ).join('\n');
+  const tbody = document.getElementById('tracker-tbody');
+  const empty = document.getElementById('tracker-empty');
 
-  return `You are an AI analyst for RateGain's Account Intelligence dashboard.
-Current view has ${total} account-product records (after any active filters).
+  if (filtered.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
 
-STAGE BREAKDOWN:
-${Object.entries(stageCounts).map(([k,v]) => `  ${k}: ${v}`).join('\n')}
+  tbody.innerHTML = filtered.map((t, i) => `<tr>
+    <td class="col-num" style="color:var(--text3);font-size:12px;">${i+1}</td>
+    <td class="col-sfid"><span class="cell-truncate date-cell" title="${t.sfId||''}">${t.sfId||'—'}</span></td>
+    <td class="col-acct"><span class="cell-truncate account-name" title="${t.account}">${t.account}</span></td>
+    <td class="col-domain"><span class="cell-truncate" style="color:var(--text2);font-size:12px;" title="${t.domain||''}">${t.domain||'—'}</span></td>
+    <td class="col-ctry"><span class="cell-truncate" title="${t.country||''}">${t.country||'—'}</span></td>
+    <td class="col-date"><span class="date-cell">${t.date}</span></td>
+    <td class="col-by"><span class="cell-truncate" title="${t.by}">${t.by}</span></td>
+    <td class="col-tier">${tierBadge(t.tier)}</td>
+    <td class="col-chan">${channelBadge(t.channel)}</td>
+    <td class="col-camp"><span class="cell-truncate" title="${t.campaign}">${t.campaign}</span></td>
+    <td class="col-cool">${coolingBadge(t.cooling)}</td>
+    <td class="col-out">${outcomeBadge(t.outcome)}</td>
+    <td class="col-notes"><span class="cell-truncate notes-cell" title="${t.notes||''}">${t.notes||'—'}</span></td>
+    <td class="col-acts">
+      <div style="display:flex;gap:4px;">
+        <button class="btn btn-sm" onclick="openModal('${t.id}')">Edit</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteTouchpoint('${t.id}')">Del</button>
+      </div>
+    </td>
+  </tr>`).join('');
+}
 
-PRODUCT BREAKDOWN:
-${Object.entries(productCounts).map(([k,v]) => `  ${k}: ${v}`).join('\n')}
+// ══════════════════════════════════════════
+//  ACCOUNTS
+// ══════════════════════════════════════════
+function renderAccounts() {
+  const summaries = getAccountSummaries();
+  const grid = document.getElementById('accounts-grid');
+  const empty = document.getElementById('accounts-empty');
 
-REGION BREAKDOWN:
-${Object.entries(regionCounts).map(([k,v]) => `  ${k}: ${v}`).join('\n')}
+  if (summaries.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
 
-ENGAGEMENT BREAKDOWN:
-${Object.entries(engCounts).map(([k,v]) => `  ${k}: ${v}`).join('\n')}
+  grid.innerHTML = summaries.map(s => {
+    const cutoff14 = new Date(); cutoff14.setDate(cutoff14.getDate()-14);
+    const touches14 = s.touches.filter(d => new Date(d) >= cutoff14).length;
+    const limit = getLimit(s.tier);
+    const pct = Math.min(100, Math.round(touches14 / limit * 100));
+    const warning = touches14 >= limit;
+    const sorted = [...s.touches].sort((a,b) => new Date(b)-new Date(a));
+    const lastTouch = sorted[0] || '';
 
-SAMPLE RECORDS (account_name|sf_id|product|stage|stage_date|engagement|region|country):
-${sample}
+    return `<div class="account-card ${s.cooling ? 'cooling' : ''}">
+      <div class="account-card-header">
+        <div class="account-card-name">${s.name}</div>
+        ${tierBadge(s.tier)}
+      </div>
+      <div style="font-size:11px;color:var(--text3);">${s.sfId||''} ${s.country ? '· '+s.country : ''}</div>
+      <div class="account-card-stats">
+        <div class="account-stat"><div class="account-stat-val">${s.touches.length}</div><div class="account-stat-lbl">Total touches</div></div>
+        <div class="account-stat"><div class="account-stat-val" style="${warning?'color:var(--red)':''}">${touches14}</div><div class="account-stat-lbl">Last 14 days</div></div>
+        <div class="account-stat"><div class="account-stat-val">${lastTouch ? daysBetween(lastTouch)+'d' : '—'}</div><div class="account-stat-lbl">Days since</div></div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-label"><span>14-day usage</span><span>${touches14}/${limit}</span></div>
+        <div class="progress-bar"><div class="progress-bar-fill ${warning?'warning':''}" style="width:${pct}%"></div></div>
+      </div>
+      ${s.cooling ? `<div style="margin-top:10px;font-size:11px;font-weight:600;color:var(--red);">⬤ COOLING OFF — Do not contact</div>` : ''}
+    </div>`;
+  }).join('');
+}
 
-Answer the user's question concisely and analytically. Use bullet points where helpful. If listing accounts, limit to top 10 and say "and X more" if there are more.`;
+// ══════════════════════════════════════════
+//  CSV DOWNLOAD / UPLOAD
+// ══════════════════════════════════════════
+function downloadTemplate() {
+  const headers = ['sfId','account','domain','country','date','by','tier','channel','campaign','cooling','outcome','notes'];
+  const example = ['0015g00000XXXXX','Acme Corp','acme.com','United Kingdom','2025-01-15','Sarah Jones','Tier 1','Email','Q1 Product Launch','No','Opened','Follow up next week'];
+  const csv = [headers.join(','), example.join(',')].join('\n');
+  downloadCSV(csv, 'touchpoints_template.csv');
+}
+
+function downloadCSV(content, filename) {
+  const blob = new Blob([content], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) return [];
+  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
+  return lines.slice(1).map(line => {
+    const vals = line.split(',').map(v => v.trim().replace(/^"|"$/g,''));
+    const obj = {};
+    headers.forEach((h,i) => obj[h] = vals[i]||'');
+    return obj;
+  });
+}
+
+function handleCSVUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const rows = parseCSV(ev.target.result);
+    let added = 0;
+    rows.forEach(r => {
+      if (!r.account && !r.sfId) return;
+      touchpoints.unshift({
+        id: Date.now().toString() + Math.random(),
+        sfId: r.sfId||'', domain: r.domain||'', country: r.country||'',
+        account: r.account||r.sfId||'',
+        date: r.date||today(), by: r.by||'', tier: r.tier||'Tier 2',
+        channel: r.channel||'Email', campaign: r.campaign||'',
+        cooling: r.cooling||'No', outcome: r.outcome||'', notes: r.notes||''
+      });
+      added++;
+    });
+    save();
+    showToast(`Imported ${added} touchpoints`);
+    renderDashboard(); renderTracker(); renderAccounts();
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+// ══════════════════════════════════════════
+//  CAMPAIGN CHECKER
+// ══════════════════════════════════════════
+function downloadCheckerTemplate() {
+  const csv = 'sfId,account,domain,country\n0015g00000XXXXX,Acme Corp,acme.com,United Kingdom\n,Beta Industries,beta.io,Germany';
+  downloadCSV(csv, 'checker_template.csv');
+}
+
+function handleCheckerUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const rows = parseCSV(ev.target.result);
+    checkerData = rows.map(r => {
+      const sfId = r.sfId||'';
+      const account = r.account||'';
+      const domain = r.domain||'';
+      const country = r.country||'';
+
+      // Match in touchpoints
+      const matches = touchpoints.filter(t =>
+        (sfId && t.sfId === sfId) ||
+        (domain && t.domain && t.domain.toLowerCase() === domain.toLowerCase()) ||
+        (account && t.account.toLowerCase() === account.toLowerCase())
+      );
+
+      let statusKey = 'unknown';
+      let touches14 = 0;
+      let lastTouch = '';
+      let tier = '';
+      let cooling = false;
+      let limit = 2;
+
+      if (matches.length > 0) {
+        const cutoff14 = new Date(); cutoff14.setDate(cutoff14.getDate()-14);
+        touches14 = matches.filter(t => new Date(t.date) >= cutoff14).length;
+        const sorted = matches.map(t=>t.date).sort((a,b)=>new Date(b)-new Date(a));
+        lastTouch = sorted[0]||'';
+        tier = matches[matches.length-1].tier||'Tier 2';
+        limit = getLimit(tier);
+        cooling = matches.some(t => t.cooling === 'Yes');
+        if (cooling) statusKey = 'cooling';
+        else if (touches14 >= limit) statusKey = 'limit';
+        else statusKey = 'clear';
+      }
+
+      let daysUntilClear = '—';
+      if ((statusKey === 'cooling' || statusKey === 'limit') && lastTouch) {
+        const clearDate = new Date(lastTouch);
+        clearDate.setDate(clearDate.getDate()+14);
+        const diff = Math.ceil((clearDate - new Date()) / 86400000);
+        daysUntilClear = diff > 0 ? diff + 'd' : 'Ready';
+      }
+
+      return { sfId, account, domain, country, statusKey, touches14, lastTouch, tier, limit, daysUntilClear };
+    });
+
+    document.getElementById('checker-dropzone').style.display = 'none';
+    document.getElementById('checker-results').style.display = 'block';
+    renderCheckerResults();
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function renderCheckerResults() {
+  const search = (document.getElementById('checker-search').value||'').toLowerCase();
+  const filter = document.getElementById('checker-filter').value;
+
+  const filtered = checkerData.filter(r => {
+    const matchSearch = !search || r.account.toLowerCase().includes(search) || r.sfId.toLowerCase().includes(search) || r.domain.toLowerCase().includes(search);
+    const matchFilter = !filter || r.statusKey === filter;
+    return matchSearch && matchFilter;
+  });
+
+  const counts = { clear:0, limit:0, cooling:0, unknown:0 };
+  checkerData.forEach(r => counts[r.statusKey]++);
+
+  document.getElementById('checker-summary').innerHTML = `
+    <div class="stat-card success" style="flex:1;min-width:120px;padding:12px 16px;"><div class="stat-label">Clear to contact</div><div class="stat-value">${counts.clear}</div></div>
+    <div class="stat-card" style="border-color:#FDE8C8;background:#FEF5E7;flex:1;min-width:120px;padding:12px 16px;"><div class="stat-label" style="color:#92400E;">At limit</div><div class="stat-value" style="color:var(--amber);">${counts.limit}</div></div>
+    <div class="stat-card danger" style="flex:1;min-width:120px;padding:12px 16px;"><div class="stat-label">Cooling Off</div><div class="stat-value">${counts.cooling}</div></div>
+    <div class="stat-card" style="flex:1;min-width:120px;padding:12px 16px;"><div class="stat-label">Not in tracker</div><div class="stat-value">${counts.unknown}</div></div>
+  `;
+
+  const statusMap = {
+    clear: `<span class="status-active">⬤ Clear to contact</span>`,
+    limit: `<span class="status-limit">⬤ At limit</span>`,
+    cooling: `<span class="status-cooling">⬤ Cooling Off</span>`,
+    unknown: `<span class="badge badge-none">Not in tracker</span>`
+  };
+
+  const tbody = document.getElementById('checker-tbody');
+  tbody.innerHTML = filtered.map(r => `<tr>
+    <td class="account-name">${r.account||'—'}</td>
+    <td><span class="date-cell">${r.sfId||'—'}</span></td>
+    <td style="color:var(--text2);font-size:12px;">${r.domain||'—'}</td>
+    <td>${r.country||'—'}</td>
+    <td>${r.statusKey==='unknown'?'—':r.touches14}</td>
+    <td>${r.statusKey==='unknown'?'—':r.limit}</td>
+    <td><span class="date-cell">${r.lastTouch||'—'}</span></td>
+    <td>${r.daysUntilClear}</td>
+    <td>${statusMap[r.statusKey]}</td>
+  </tr>`).join('');
+}
+
+function downloadCheckerResults() {
+  const headers = ['account','sfId','domain','country','touches14d','limit','lastTouch','daysUntilClear','status'];
+  const rows = checkerData.map(r => [r.account,r.sfId,r.domain,r.country,r.touches14,r.limit,r.lastTouch,r.daysUntilClear,r.statusKey]);
+  const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+  downloadCSV(csv, 'checker_results.csv');
+}
+
+function resetChecker() {
+  checkerData = [];
+  document.getElementById('checker-dropzone').style.display = 'block';
+  document.getElementById('checker-results').style.display = 'none';
+}
+
+// ══════════════════════════════════════════
+//  INTELLIGENCE TAB
+// ══════════════════════════════════════════
+function initIntelligence() {
+  // Build intelligence data from touchpoints + example scaffold if empty
+  buildIntelData();
+  populateIntelFilters();
+  iFilter();
+  document.getElementById('i-loading').style.display = 'none';
+  document.getElementById('i-table').style.display = 'table';
+}
+
+function buildIntelData() {
+  // Build from touchpoints data
+  const summaries = getAccountSummaries();
+  const stageOrder = ['Unreached','Unengaged','Aware','Engaged','Potential Opportunity','Active Opportunity'];
+
+  intelData = summaries.map(s => {
+    const cutoff14 = new Date(); cutoff14.setDate(cutoff14.getDate()-14);
+    const touches14 = s.touches.filter(d => new Date(d) >= cutoff14).length;
+    const limit = getLimit(s.tier);
+
+    // Derive stage from engagement signals
+    let stage = 'Unreached';
+    const allTouches = touchpoints.filter(t => t.account === s.name || (s.sfId && t.sfId === s.sfId));
+    const hasOutcome = allTouches.some(t => t.outcome && t.outcome !== '');
+    const hasMeeting = allTouches.some(t => t.outcome === 'Meeting Booked');
+    const hasReplied = allTouches.some(t => t.outcome === 'Replied');
+    const hasClicked = allTouches.some(t => t.outcome === 'Clicked');
+    const hasOpened = allTouches.some(t => t.outcome === 'Opened');
+
+    if (hasMeeting) stage = 'Active Opportunity';
+    else if (hasReplied) stage = 'Potential Opportunity';
+    else if (hasClicked) stage = 'Engaged';
+    else if (hasOpened) stage = 'Aware';
+    else if (allTouches.length > 0) stage = 'Unengaged';
+
+    // Engagement level
+    let eng = 'LOW';
+    if (touches14 >= limit) eng = 'HIGH';
+    else if (touches14 > 0) eng = 'MEDIUM';
+    if (hasMeeting || hasReplied) eng = 'VERY HIGH';
+
+    // Product from campaign names
+    const campaigns = allTouches.map(t => t.campaign).filter(Boolean);
+    const product = campaigns.length > 0 ? campaigns[0].split(' ').slice(0,2).join(' ') : '—';
+
+    const sorted = [...s.touches].sort((a,b)=>new Date(b)-new Date(a));
+
+    return {
+      account_name: s.name,
+      sf_id: s.sfId||'',
+      product: product,
+      stage: stage,
+      stage_date: sorted[0]||'',
+      engagement_level: eng,
+      region: deriveRegion(s.country),
+      country: s.country||'—'
+    };
+  });
+
+  // If no data yet, add example rows so the tab isn't empty
+  if (intelData.length === 0) {
+    intelData = [
+      { account_name:'Acme Corp', sf_id:'0015g00000AAA', product:'Product A', stage:'Engaged', stage_date:'2025-05-01', engagement_level:'HIGH', region:'EMEA', country:'United Kingdom' },
+      { account_name:'Beta Industries', sf_id:'0015g00000BBB', product:'Product B', stage:'Aware', stage_date:'2025-04-20', engagement_level:'MEDIUM', region:'EMEA', country:'Germany' },
+      { account_name:'Gamma LLC', sf_id:'0015g00000CCC', product:'Product A', stage:'Unengaged', stage_date:'2025-03-10', engagement_level:'LOW', region:'NAM', country:'United States' },
+      { account_name:'Delta Co', sf_id:'0015g00000DDD', product:'Product C', stage:'Active Opportunity', stage_date:'2025-05-10', engagement_level:'VERY HIGH', region:'APAC', country:'Australia' },
+      { account_name:'Echo Solutions', sf_id:'0015g00000EEE', product:'Product B', stage:'Potential Opportunity', stage_date:'2025-04-30', engagement_level:'HIGH', region:'NAM', country:'Canada' },
+    ];
+  }
+}
+
+function deriveRegion(country) {
+  if (!country) return 'Unknown';
+  const c = country.toLowerCase();
+  const emea = ['united kingdom','germany','france','italy','spain','netherlands','sweden','norway','denmark','finland','belgium','switzerland','austria','poland','ireland','portugal','south africa','uae','saudi arabia','israel'];
+  const apac = ['australia','japan','china','india','singapore','south korea','new zealand','indonesia','malaysia','thailand','philippines','vietnam'];
+  const nam = ['united states','canada','usa','us'];
+  const latam = ['brazil','mexico','argentina','chile','colombia'];
+  if (emea.some(e => c.includes(e))) return 'EMEA';
+  if (apac.some(e => c.includes(e))) return 'APAC';
+  if (nam.some(e => c.includes(e))) return 'NAM';
+  if (latam.some(e => c.includes(e))) return 'LATAM';
+  return 'Other';
+}
+
+function populateIntelFilters() {
+  // Products
+  const products = [...new Set(intelData.map(r=>r.product).filter(p=>p&&p!=='—'))];
+  const pSel = document.getElementById('i-product');
+  pSel.innerHTML = '<option value="">All Products</option>' + products.map(p=>`<option>${p}</option>`).join('');
+  // Regions
+  const regions = [...new Set(intelData.map(r=>r.region).filter(Boolean))];
+  const rSel = document.getElementById('i-region');
+  rSel.innerHTML = '<option value="">All Regions</option>' + regions.map(r=>`<option>${r}</option>`).join('');
+}
+
+function iFilter() {
+  const search = (document.getElementById('i-search').value||'').toLowerCase();
+  const product = document.getElementById('i-product').value;
+  const stage = document.getElementById('i-stage').value;
+  const region = document.getElementById('i-region').value;
+  const engagement = document.getElementById('i-engagement').value;
+
+  intelFiltered = intelData.filter(r => {
+    const matchSearch = !search || r.account_name.toLowerCase().includes(search) || r.sf_id.toLowerCase().includes(search);
+    const matchProduct = !product || r.product === product;
+    const matchStage = !stage || r.stage === stage;
+    const matchRegion = !region || r.region === region;
+    const matchEng = !engagement || r.engagement_level === engagement;
+    return matchSearch && matchProduct && matchStage && matchRegion && matchEng;
+  });
+
+  // Sort
+  intelFiltered.sort((a,b) => {
+    const av = a[intelSortCol]||''; const bv = b[intelSortCol]||'';
+    return av < bv ? -intelSortDir : av > bv ? intelSortDir : 0;
+  });
+
+  document.getElementById('i-count').textContent = intelFiltered.length;
+  renderIntelTable();
+}
+
+function iSort(col) {
+  if (intelSortCol === col) intelSortDir *= -1;
+  else { intelSortCol = col; intelSortDir = 1; }
+  iFilter();
+}
+
+function iReset() {
+  document.getElementById('i-search').value = '';
+  document.getElementById('i-product').value = '';
+  document.getElementById('i-stage').value = '';
+  document.getElementById('i-region').value = '';
+  document.getElementById('i-engagement').value = '';
+  iFilter();
+}
+
+function renderIntelTable() {
+  const tbody = document.getElementById('i-tbody');
+  const empty = document.getElementById('i-empty');
+
+  if (intelFiltered.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'flex';
+    return;
+  }
+  empty.style.display = 'none';
+
+  const stageKey = s => s.replace(/\s+/g,'').replace('Opportunity','');
+
+  tbody.innerHTML = intelFiltered.map(r => {
+    const sk = r.stage.replace(/\s/g,'').replace('Potential','Potential').replace('Active','Active');
+    const ek = r.engagement_level.replace(' ','');
+    return `<tr>
+      <td><div class="i-an">${r.account_name}</div><div class="i-ai">${r.sf_id||''}</div></td>
+      <td><span class="i-prod">${r.product||'—'}</span></td>
+      <td><span class="i-stg s-${stageKey(r.stage)}">${r.stage}</span></td>
+      <td><span class="i-dt">${r.stage_date||'—'}</span></td>
+      <td><span class="i-eng e-${ek}">${r.engagement_level}</span></td>
+      <td style="color:#9ca3af;font-size:12px;">${r.region||'—'}</td>
+      <td style="color:#9ca3af;font-size:12px;">${r.country||'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+//  AI CHAT
+// ══════════════════════════════════════════
+function chatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+}
+
+function useSug(btn) {
+  document.getElementById('chat-input').value = btn.textContent;
+  document.getElementById('chat-sugs').style.display = 'none';
+  sendChat();
+}
+
+function addMsg(role, content) {
+  const container = document.getElementById('chat-msgs');
+  const div = document.createElement('div');
+  div.className = `chat-msg ${role}`;
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble';
+  bubble.innerHTML = content.replace(/\n/g,'<br>');
+  const time = document.createElement('div');
+  time.className = 'chat-time';
+  time.textContent = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  div.appendChild(bubble);
+  div.appendChild(time);
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return div;
+}
+
+function addTyping() {
+  const container = document.getElementById('chat-msgs');
+  const div = document.createElement('div');
+  div.className = 'chat-msg assistant';
+  div.id = 'typing-indicator';
+  div.innerHTML = `<div class="chat-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById('typing-indicator');
+  if (t) t.remove();
 }
 
 async function sendChat() {
   const input = document.getElementById('chat-input');
-  const text  = input.value.trim();
-  if (!text) return;
+  const msg = input.value.trim();
+  if (!msg) return;
 
-  document.getElementById('suggestions')?.remove();
   input.value = '';
-  appendMsg('user', text);
+  document.getElementById('chat-send').disabled = true;
+  addMsg('user', msg);
+  chatHistory.push({ role: 'user', content: msg });
 
-  const sendBtn = document.getElementById('send-btn');
-  sendBtn.disabled = true;
-  const typingEl = appendTyping();
+  addTyping();
 
-  chatHistory.push({ role: 'user', content: text });
+  // Build data context for the AI
+  const dataContext = buildDataContext();
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: CLAUDE_MODEL,
+        model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
-        system: buildDataContext(),
-        messages: chatHistory,
+        system: `You are an AI analyst assistant for an Account Engagement Tracker. You have access to live account data. Be concise, helpful, and data-driven. Use bullet points and short paragraphs. Here is the current account intelligence data:\n\n${dataContext}`,
+        messages: chatHistory
       })
     });
 
-    const data = await res.json();
-    const reply = data.content?.[0]?.text || 'Sorry, I could not generate a response.';
-    chatHistory.push({ role: 'assistant', content: reply });
+    const data = await response.json();
+    removeTyping();
 
-    typingEl.remove();
-    appendMsg('assistant', reply);
+    if (data.content && data.content[0]) {
+      const reply = data.content[0].text;
+      chatHistory.push({ role: 'assistant', content: reply });
+      addMsg('assistant', reply);
+    } else {
+      addMsg('assistant', 'Sorry, I could not retrieve a response. Please check your API connection.');
+    }
   } catch (err) {
-    typingEl.remove();
-    appendMsg('assistant', 'Connection error. Please try again.');
-    console.error(err);
+    removeTyping();
+    addMsg('assistant', `Error connecting to AI: ${err.message}. Make sure you're connected to the Anthropic API.`);
   }
 
-  sendBtn.disabled = false;
+  document.getElementById('chat-send').disabled = false;
 }
 
-function appendMsg(role, text) {
-  const msgs = document.getElementById('chat-messages');
-  const div  = document.createElement('div');
-  div.className = `chat-msg ${role}`;
-  const formatted = text
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
-    .replace(/\n/g, '<br>');
-  div.innerHTML = `
-    <div class="chat-bubble">${formatted}</div>
-    <div class="chat-time">${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</div>`;
-  msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
-  return div;
+function buildDataContext() {
+  const total = intelData.length;
+  const bystage = {};
+  const byregion = {};
+  const byeng = {};
+  intelData.forEach(r => {
+    bystage[r.stage] = (bystage[r.stage]||0)+1;
+    byregion[r.region] = (byregion[r.region]||0)+1;
+    byeng[r.engagement_level] = (byeng[r.engagement_level]||0)+1;
+  });
+
+  let ctx = `Total accounts: ${total}\n\n`;
+  ctx += `Stage breakdown: ${Object.entries(bystage).map(([k,v])=>`${k}: ${v}`).join(', ')}\n`;
+  ctx += `Region breakdown: ${Object.entries(byregion).map(([k,v])=>`${k}: ${v}`).join(', ')}\n`;
+  ctx += `Engagement breakdown: ${Object.entries(byeng).map(([k,v])=>`${k}: ${v}`).join(', ')}\n\n`;
+  ctx += `Account list (first 50):\n`;
+  ctx += intelData.slice(0,50).map(r =>
+    `- ${r.account_name} | ${r.product} | Stage: ${r.stage} | Engagement: ${r.engagement_level} | Region: ${r.region} | Country: ${r.country}`
+  ).join('\n');
+
+  return ctx;
 }
 
-function appendTyping() {
-  const msgs = document.getElementById('chat-messages');
-  const div  = document.createElement('div');
-  div.className = 'chat-msg assistant';
-  div.innerHTML = `<div class="chat-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
-  msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
-  return div;
-}
-
-function useSuggestion(btn) {
-  document.getElementById('chat-input').value = btn.textContent;
-  document.getElementById('suggestions')?.remove();
-  sendChat();
-}
-
-function chatKeydown(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
-}
-
-// ── Init ──────────────────────────────────────────────────────────────────────
-fetchData();
+// ══════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  renderDashboard();
+  // Set today's date in modal by default
+  const dateEl = document.getElementById('f-date');
+  if (dateEl) dateEl.value = today();
+});
 </script>
 </body>
 </html>
