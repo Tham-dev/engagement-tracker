@@ -214,32 +214,18 @@
     Account Engagement Tracker
   </div>
   <div class="nav-tabs">
-    <button class="tab-btn active" onclick="showPage('dashboard')">Dashboard</button>
-    <button class="tab-btn" onclick="showPage('tracker')">Touchpoints</button>
-    <button class="tab-btn" onclick="showPage('accounts')">Accounts</button>
-    <button class="tab-btn" onclick="showPage('checker')">Campaign Checker</button>
-    <button class="tab-btn intel-tab" onclick="showPage('intelligence')">✦ Intelligence</button>
-    <button class="tab-btn" onclick="showPage('rules')">Rules</button>
+    <button class="tab-btn intel-tab active" onclick="showPage('intelligence')">✦ Intelligence</button>
+    <button class="tab-btn" onclick="showPage('dashboard')">Dashboard</button>
   </div>
   <div class="header-actions">
     <span id="sync-indicator">Loading…</span>
-    <button class="btn" onclick="downloadTemplate()">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 13h10"/></svg>CSV Template
-    </button>
-    <label class="btn" style="cursor:pointer;">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 10V2M5 5l3-3 3 3"/><path d="M3 13h10"/></svg>Bulk Upload
-      <input type="file" accept=".csv" id="csv-upload-input" style="display:none" onchange="handleCSVUpload(event)">
-    </label>
-    <button class="btn btn-primary" onclick="openModal()">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>Log Touchpoint
-    </button>
   </div>
 </header>
  
 <main class="main">
  
 <!-- DASHBOARD -->
-<div id="page-dashboard" class="page active">
+<div id="page-dashboard" class="page">
   <div id="cooling-banner" style="display:none" class="cooling-alert">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><line x1="8" y1="5" x2="8" y2="8"/><circle cx="8" cy="11" r="0.5" fill="currentColor"/></svg>
     <span id="cooling-text"></span>
@@ -257,70 +243,6 @@
   </div>
 </div>
  
-<!-- TRACKER -->
-<div id="page-tracker" class="page">
-  <div class="section-header">
-    <div><div class="section-title">All Touchpoints</div><div class="page-sub">Every outreach logged — one row per touchpoint</div></div>
-    <button class="btn btn-primary" onclick="openModal()"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>Log Touchpoint</button>
-  </div>
-  <div class="table-wrap">
-    <div class="table-toolbar">
-      <div class="search-wrap"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="4"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg><input class="search-input" id="tracker-search" type="text" placeholder="Search accounts, campaigns..." oninput="renderTracker()"></div>
-      <select class="filter-select" id="tracker-channel" onchange="renderTracker()"><option value="">All channels</option><option>Email</option><option>LinkedIn</option><option>Webinar</option><option>Event</option><option>Direct Mail</option><option>Paid Ad</option></select>
-      <select class="filter-select" id="tracker-tier" onchange="renderTracker()"><option value="">All tiers</option><option>Tier 1</option><option>Tier 2</option><option>Tier 3</option></select>
-      <select class="filter-select" id="tracker-cooling" onchange="renderTracker()"><option value="">All</option><option value="Yes">Cooling Off</option><option value="No">Active</option></select>
-    </div>
-    <div class="tracker-scroll">
-      <table><thead><tr><th class="col-num">#</th><th class="col-sfid">SF Account ID</th><th class="col-acct">Account</th><th class="col-domain">Domain</th><th class="col-ctry">Country</th><th class="col-date">Date</th><th class="col-by">Sent By</th><th class="col-tier">Tier</th><th class="col-chan">Channel</th><th class="col-camp">Campaign / Email</th><th class="col-cool">Cooling?</th><th class="col-out">Outcome</th><th class="col-notes">Notes</th><th class="col-acts"></th></tr></thead>
-      <tbody id="tracker-tbody"><tr><td colspan="14" class="loading-row"><span class="spinner"></span>Loading from Airtable…</td></tr></tbody></table>
-    </div>
-    <div id="tracker-empty" class="empty-state" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="15" x2="12" y2="15"/></svg><p>No touchpoints match your filters</p></div>
-  </div>
-</div>
- 
-<!-- ACCOUNTS -->
-<div id="page-accounts" class="page">
-  <div class="section-header"><div><div class="section-title">Accounts</div><div class="page-sub">Summary view per account with touchpoint limits</div></div></div>
-  <div class="accounts-grid" id="accounts-grid"><div class="loading-row" style="grid-column:1/-1"><span class="spinner"></span>Loading…</div></div>
-  <div id="accounts-empty" class="empty-state" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><p>No accounts yet</p></div>
-</div>
- 
-<!-- CAMPAIGN CHECKER -->
-<div id="page-checker" class="page">
-  <div class="section-header">
-    <div><div class="section-title">Campaign Checker</div><div class="page-sub">Upload your outreach list — instantly see who you can contact and who is cooling off</div></div>
-    <label class="btn btn-primary" style="cursor:pointer;"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M8 10V2M5 5l3-3 3 3"/><path d="M3 13h10"/></svg>Upload List<input type="file" accept=".csv" id="checker-upload-input" style="display:none" onchange="handleCheckerUpload(event)"></label>
-  </div>
-  <div id="checker-dropzone" style="border:2px dashed var(--border2);border-radius:var(--radius);padding:48px 24px;text-align:center;color:var(--text2);background:var(--surface);">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;margin:0 auto 12px;opacity:0.35;display:block;"><path d="M9 12h6M12 9v6"/><path d="M21 15a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h4l2 3h8a2 2 0 012 2z"/></svg>
-    <div style="font-size:15px;font-weight:500;margin-bottom:6px;">Upload your campaign contact list</div>
-    <div style="font-size:13px;margin-bottom:16px;">CSV with at least one of: <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">sfId</code>, <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">domain</code>, or <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">account</code></div>
-    <label class="btn" style="cursor:pointer;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M8 10V2M5 5l3-3 3 3"/><path d="M3 13h10"/></svg>Choose CSV file<input type="file" accept=".csv" style="display:none" onchange="handleCheckerUpload(event)"></label>
-    <div style="font-size:12px;color:var(--text3);margin-top:12px;">Download a <button onclick="downloadCheckerTemplate()" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:12px;font-family:inherit;text-decoration:underline;">sample template</button></div>
-  </div>
-  <div id="checker-results" style="display:none;">
-    <div id="checker-summary" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;"></div>
-    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center;">
-      <div class="search-wrap" style="flex:1;min-width:180px;"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="4"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg><input class="search-input" id="checker-search" type="text" placeholder="Search accounts..." oninput="renderCheckerResults()"></div>
-      <select class="filter-select" id="checker-filter" onchange="renderCheckerResults()"><option value="">All statuses</option><option value="clear">Clear to contact</option><option value="limit">At limit</option><option value="cooling">Cooling Off</option><option value="unknown">Not in tracker</option></select>
-      <button class="btn" onclick="downloadCheckerResults()"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 13h10"/></svg>Export results</button>
-      <button class="btn" onclick="resetChecker()">Clear list</button>
-    </div>
-    <div class="table-wrap"><table><thead><tr><th>Account</th><th>SF Account ID</th><th>Domain</th><th>Country</th><th>Touches (14d)</th><th>Limit</th><th>Last Touch</th><th>Days Until Clear</th><th>Status</th></tr></thead><tbody id="checker-tbody"></tbody></table></div>
-  </div>
-</div>
- 
-<!-- RULES -->
-<div id="page-rules" class="page">
-  <div class="rules-card">
-    <h3><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><line x1="8" y1="5" x2="8" y2="9"/><circle cx="8" cy="11.5" r="0.5" fill="currentColor"/></svg>Over-communication rules</h3>
-    <table class="rules-table"><tr><td>Tier 1 accounts</td><td>Max <strong>2 touches per 14-day window</strong> across ALL channels</td></tr><tr><td>Tier 2 accounts</td><td>Max <strong>2 touches per 14-day window</strong></td></tr><tr><td>Tier 3 accounts</td><td>Max <strong>1 touch per 14-day window</strong></td></tr><tr><td>Cooling Off period</td><td>Set 'Cooling Off = Yes' → account paused for 14 days</td></tr><tr><td>Who can override</td><td>Team lead only — add note in Notes column</td></tr></table>
-  </div>
-  <div class="rules-card">
-    <h3><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M3 4h10M3 12h6"/></svg>Status indicators</h3>
-    <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;"><div><span class="dot dot-green"></span><strong>Active</strong> — within touch limits</div><div><span class="dot dot-amber"></span><strong>At limit</strong> — approaching max touches</div><div><span class="dot dot-red"></span><strong>Cooling Off</strong> — do not contact</div></div>
-  </div>
-</div>
  
 </main>
  
@@ -421,7 +343,7 @@ const AIRTABLE_TABLE = 'Touchpoints';
 const AIRTABLE_URL   = `https://api.airtable.com/v0/${AIRTABLE_BASE}/${encodeURIComponent(AIRTABLE_TABLE)}`;
  
 const SUPABASE_URL   = 'https://mtlujmdpxtveawrhljxg.supabase.co';
-const SUPABASE_KEY   = 'sb_publishable_gxnzx22MGBxG41UE1luKow_r8mHHmHK';
+const SUPABASE_KEY   = 'sb_publishable_UhmlGR4ullaoH5bds4A86g_v18c9v-n';
  
 // ══════════════════════════════════════════
 //  STATE
@@ -583,7 +505,8 @@ function showPage(name) {
   const pg = document.getElementById('page-' + name);
   if (pg) pg.classList.add('active');
   document.querySelectorAll('.tab-btn').forEach(b => {
-    if (b.textContent.toLowerCase().includes(name === 'intelligence' ? 'intelligence' : name)) b.classList.add('active');
+    if (name === 'intelligence' && b.classList.contains('intel-tab')) b.classList.add('active');
+    if (name === 'dashboard' && b.textContent.trim() === 'Dashboard') b.classList.add('active');
   });
   if (name === 'intelligence') initIntelligence();
 }
@@ -1084,7 +1007,7 @@ async function sendChat() {
  
   const ctx=buildDataContext();
   try{
-    const response=await fetch('https://api.anthropic.com/v1/messages',{
+    const response=await fetch('https://chat-proxy-pi.vercel.app/api/chat',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
@@ -1135,6 +1058,7 @@ function buildDataContext() {
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('f-date').value = today();
   loadAirtable();
+  showPage('intelligence');
 });
 </script>
 </body>
