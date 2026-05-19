@@ -279,7 +279,8 @@
   <div class="chat-panel">
     <div class="chat-head">
       <div class="chat-ico">✦</div>
-      <div><h3>AI Analysis</h3><p>Ask anything about your accounts</p></div>
+      <div style="flex:1"><h3>AI Analysis</h3><p>Ask anything — table filters automatically</p></div>
+      <button onclick="iReset()" style="background:none;border:1px solid #2d2d45;color:#6b7280;padding:4px 9px;border-radius:5px;font-size:11px;cursor:pointer;font-family:inherit;" title="Reset table filters">Reset filters</button>
     </div>
     <div class="chat-msgs" id="chat-msgs">
       <div class="chat-msg assistant">
@@ -1006,21 +1007,58 @@ async function sendChat() {
   addTyping();
  
   const ctx=buildDataContext();
+  const products=[...new Set(intelData.map(r=>r.product).filter(p=>p&&p!=='—'))].join(', ');
+  const regions=[...new Set(intelData.map(r=>r.region).filter(r=>r&&r!=='—'))].join(', ');
+ 
   try{
     const response=await fetch('https://chat-proxy-pi.vercel.app/api/chat',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        system:`You are an AI analyst for an Account Engagement Tracker at RateGain. You have live data from Supabase (account_product_stages + accounts tables). Be concise and data-driven. Use bullet points. Here is the current data:\n\n${ctx}`,
+        max_tokens:1200,
+        system:`You are an AI analyst for an Account Engagement Tracker at RateGain. You have live data from Supabase.
+ 
+IMPORTANT: After your answer, you MUST always append a JSON filter block on the last line in this exact format (no extra text after it):
+FILTERS:{"stage":"","product":"","region":"","search":""}
+ 
+Rules for the filter JSON:
+- Only populate fields that the user's question is filtering on
+- "stage" must be one of exactly: Unreached, Unengaged, Aware, Engaged, Potential Opportunity, Active Opportunity — or "" for all
+- "product" must match one of the available products exactly: ${products} — or "" for all
+- "region" must be one of: ${regions} — or "" for all  
+- "search" is a free-text account name search — use only if user asks about a specific account name
+- If the question is general/analytical with no specific filter, set all fields to ""
+ 
+Example — "show me Aware-stage RevAI accounts in APAC":
+FILTERS:{"stage":"Aware","product":"revai","region":"APAC","search":""}
+ 
+Example — "how many accounts are Unengaged?":
+FILTERS:{"stage":"Unengaged","product":"","region":"","search":""}
+ 
+Example — "what is the breakdown by stage?":
+FILTERS:{"stage":"","product":"","region":"","search":""}
+ 
+Be concise and data-driven. Use bullet points. Here is the current data:\n\n${ctx}`,
         messages:chatHistory
       })
     });
     const data=await response.json();
     removeTyping();
     if(data.content&&data.content[0]){
-      const reply=data.content[0].text;
+      let reply=data.content[0].text;
+ 
+      // Extract and apply filters
+      const filterMatch=reply.match(/FILTERS:(\{[^\n]+\})\s*$/m);
+      if(filterMatch){
+        try{
+          const filters=JSON.parse(filterMatch[1]);
+          applyFiltersFromChat(filters);
+          // Remove the FILTERS line from the displayed reply
+          reply=reply.replace(/\nFILTERS:\{[^\n]+\}\s*$/m,'').trim();
+        }catch(e){}
+      }
+ 
       chatHistory.push({role:'assistant',content:reply});
       addMsg('assistant',reply);
     } else {
@@ -1031,6 +1069,27 @@ async function sendChat() {
     addMsg('assistant',`Error: ${err.message}`);
   }
   document.getElementById('chat-send').disabled=false;
+}
+ 
+function applyFiltersFromChat(filters) {
+  // Only apply if at least one filter is set
+  const hasFilter = filters.stage||filters.product||filters.region||filters.search;
+  if(!hasFilter) return;
+ 
+  if(filters.search!==undefined) document.getElementById('i-search').value=filters.search||'';
+  if(filters.product!==undefined) document.getElementById('i-product').value=filters.product||'';
+  if(filters.stage!==undefined) document.getElementById('i-stage').value=filters.stage||'';
+  if(filters.region!==undefined) document.getElementById('i-region').value=filters.region||'';
+ 
+  iFilter();
+ 
+  // Flash the filter bar to show user something changed
+  const filterBar=document.querySelector('.intel-filters');
+  if(filterBar){
+    filterBar.style.transition='background 0.3s';
+    filterBar.style.background='#1e2a4a';
+    setTimeout(()=>{ filterBar.style.background=''; },800);
+  }
 }
  
 function buildDataContext() {
