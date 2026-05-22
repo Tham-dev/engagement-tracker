@@ -1,1394 +1,829 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Account Engagement Tracker</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg: #F7F6F2; --surface: #FFFFFF; --surface2: #F0EEE9; --border: #E2DDD6; --border2: #CCC8C0;
-    --text: #1A1916; --text2: #6B6760; --text3: #9B9892;
-    --accent: #2D5BE3; --accent-light: #EEF2FD; --accent-text: #1A3BA8;
-    --green: #1D7A4A; --green-light: #E6F5EC; --red: #C4310F; --red-light: #FDF0EC;
-    --amber: #A05D00; --amber-light: #FEF5E7; --purple: #5B3FBF; --purple-light: #F0ECFD;
-    --radius: 10px; --radius-sm: 6px;
-    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
-  }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; }
- 
-  /* HEADER */
-  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; }
-  .header-brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; }
-  .brand-icon { width: 28px; height: 28px; background: var(--accent); border-radius: 7px; display: flex; align-items: center; justify-content: center; }
-  .brand-icon svg { width: 16px; height: 16px; }
-  .nav-tabs { display: flex; gap: 2px; background: var(--surface2); padding: 3px; border-radius: var(--radius-sm); }
-  .tab-btn { padding: 5px 14px; border: none; background: transparent; border-radius: 4px; font-size: 13px; font-weight: 500; color: var(--text2); cursor: pointer; transition: all 0.15s; font-family: inherit; white-space: nowrap; }
-  .tab-btn.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
-  .tab-btn.intel-tab { color: var(--purple); }
-  .tab-btn.intel-tab.active { color: var(--purple); background: var(--surface); }
-  .header-actions { display: flex; gap: 8px; align-items: center; }
-  #sync-indicator { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; }
-  #sync-indicator.syncing { color: var(--accent); }
-  #sync-indicator.error { color: var(--red); }
- 
-  /* MAIN / PAGES */
-  .main { padding: 24px; max-width: 1400px; margin: 0 auto; }
-  .page { display: none; }
-  .page.active { display: block; }
-  #page-intelligence { display: none; position: fixed; top: 56px; left: 0; right: 0; bottom: 0; grid-template-columns: 1fr 380px; grid-template-rows: auto 1fr; }
-  #page-intelligence.active { display: grid; }
- 
-  /* STATS */
-  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
-  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow); }
-  .stat-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
-  .stat-value { font-size: 28px; font-weight: 600; font-variant-numeric: tabular-nums; }
-  .stat-card.accent { border-color: #C5D4F9; background: var(--accent-light); } .stat-card.accent .stat-value { color: var(--accent-text); }
-  .stat-card.danger { border-color: #F5CABD; background: var(--red-light); } .stat-card.danger .stat-value { color: var(--red); }
-  .stat-card.success { border-color: #B8DFC8; background: var(--green-light); } .stat-card.success .stat-value { color: var(--green); }
- 
-  /* SECTION */
-  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-  .section-title { font-size: 15px; font-weight: 600; }
-  .page-sub { font-size: 13px; color: var(--text2); margin-bottom: 0; margin-top: 2px; }
- 
-  /* TABLE */
-  .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
-  .table-toolbar { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  .search-wrap { position: relative; flex: 1; min-width: 180px; }
-  .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--text3); pointer-events: none; }
-  .search-input { width: 100%; padding: 7px 12px 7px 32px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; font-family: inherit; background: var(--bg); color: var(--text); outline: none; }
-  .search-input:focus { border-color: var(--accent); }
-  select.filter-select { padding: 7px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; font-family: inherit; background: var(--bg); color: var(--text); outline: none; cursor: pointer; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  thead { background: var(--surface2); }
-  th { padding: 9px 14px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--border); white-space: nowrap; }
-  td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: var(--bg); }
- 
-  /* TRACKER FIXED COLS */
-  .tracker-scroll { overflow-x: auto; }
-  .tracker-scroll table { min-width: 1100px; table-layout: fixed; }
-  .tracker-scroll .col-num{width:36px} .col-sfid{width:140px} .col-acct{width:130px} .col-domain{width:110px} .col-ctry{width:90px} .col-date{width:90px} .col-by{width:90px} .col-tier{width:72px} .col-chan{width:90px} .col-camp{width:160px} .col-cool{width:78px} .col-out{width:110px} .col-notes{width:110px}
-  .tracker-scroll .col-acts { width:100px; position:sticky; right:0; background:var(--surface); box-shadow:-2px 0 6px rgba(0,0,0,0.06); }
-  tr:hover .col-acts { background: var(--bg); }
-  .tracker-scroll th.col-acts { background:var(--surface2); position:sticky; right:0; box-shadow:-2px 0 6px rgba(0,0,0,0.06); }
-  .cell-truncate { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block; }
- 
-  /* BADGES */
-  .badge { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:100px; font-size:11px; font-weight:500; white-space:nowrap; }
-  .badge-tier1{background:var(--purple-light);color:var(--purple)} .badge-tier2{background:var(--accent-light);color:var(--accent-text)} .badge-tier3{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
-  .badge-yes{background:var(--red-light);color:var(--red)} .badge-no{background:var(--green-light);color:var(--green)}
-  .badge-opened{background:var(--green-light);color:var(--green)} .badge-clicked{background:var(--accent-light);color:var(--accent-text)} .badge-replied{background:var(--green-light);color:var(--green)} .badge-meeting{background:#EEF7F0;color:#166534} .badge-none{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
-  .badge-channel-email{background:var(--accent-light);color:var(--accent-text)} .badge-channel-linkedin{background:#E7F0FF;color:#1355C1} .badge-channel-webinar{background:var(--purple-light);color:var(--purple)} .badge-channel-event{background:var(--amber-light);color:var(--amber)} .badge-channel-direct{background:var(--green-light);color:var(--green)} .badge-channel-paid{background:#FEF9EE;color:#92400E}
-  .account-name{font-weight:500} .date-cell{font-family:'DM Mono',monospace;font-size:12px;color:var(--text2)} .notes-cell{color:var(--text2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .status-active{background:var(--green-light);color:var(--green);display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500;}
-  .status-limit{background:var(--amber-light);color:var(--amber);display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500;}
-  .status-cooling{background:var(--red-light);color:var(--red);display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500;}
- 
-  /* BUTTONS */
-  .btn { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); color:var(--text); font-size:13px; font-weight:500; font-family:inherit; cursor:pointer; transition:all 0.12s; text-decoration:none; white-space:nowrap; }
-  .btn:hover{background:var(--surface2);border-color:var(--border2)} .btn svg{width:14px;height:14px;flex-shrink:0}
-  .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)} .btn-primary:hover{background:var(--accent-text);border-color:var(--accent-text)}
-  .btn-danger{color:var(--red);border-color:#F5CABD} .btn-danger:hover{background:var(--red-light)}
-  .btn-sm{padding:4px 10px;font-size:12px}
- 
-  /* MODAL */
-  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:1000;align-items:center;justify-content:center;padding:24px}
-  .modal-overlay.open{display:flex}
-  .modal{background:var(--surface);border-radius:14px;padding:28px;width:100%;max-width:560px;box-shadow:0 20px 60px rgba(0,0,0,0.15);max-height:90vh;overflow-y:auto}
-  .modal-title{font-size:17px;font-weight:600;margin-bottom:20px}
-  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  .form-group{display:flex;flex-direction:column;gap:5px} .form-group.full{grid-column:1/-1}
-  label.form-label{font-size:12px;font-weight:500;color:var(--text2)}
-  input.form-input,select.form-input,textarea.form-input{padding:8px 11px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;color:var(--text);background:var(--surface);outline:none;transition:border-color 0.12s}
-  input.form-input:focus,select.form-input:focus,textarea.form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(45,91,227,0.1)}
-  textarea.form-input{resize:vertical;min-height:72px}
-  .form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
- 
-  /* ACCOUNTS GRID */
-  .accounts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-  .account-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);transition:box-shadow 0.15s}
-  .account-card:hover{box-shadow:var(--shadow-md)} .account-card.cooling{border-left:3px solid var(--red)}
-  .account-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
-  .account-card-name{font-weight:600;font-size:14px}
-  .account-card-stats{display:flex;gap:16px;margin-top:10px}
-  .account-stat{display:flex;flex-direction:column;gap:1px}
-  .account-stat-val{font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
-  .account-stat-lbl{font-size:11px;color:var(--text3)}
-  .progress-bar-wrap{margin-top:10px}
-  .progress-bar-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:4px}
-  .progress-bar{height:4px;background:var(--surface2);border-radius:100px;overflow:hidden}
-  .progress-bar-fill{height:100%;border-radius:100px;background:var(--accent);transition:width 0.4s}
-  .progress-bar-fill.warning{background:var(--red)}
- 
-  /* RULES */
-  .rules-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
-  .rules-card h3{font-size:14px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-  .rules-table{width:100%;border-collapse:collapse} .rules-table td{padding:8px 0;border-bottom:1px solid var(--border);font-size:13px} .rules-table tr:last-child td{border:none} .rules-table td:first-child{color:var(--text2);width:160px;font-weight:500}
-  .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px} .dot-red{background:var(--red)} .dot-amber{background:#D97706} .dot-green{background:var(--green)}
- 
-  /* MISC */
-  .empty-state{padding:48px 24px;text-align:center;color:var(--text2)} .empty-state svg{width:40px;height:40px;margin:0 auto 12px;opacity:0.3} .empty-state p{font-size:14px}
-  .loading-row { text-align:center; padding: 40px; color: var(--text3); font-size: 13px; }
-  .toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;padding:10px 16px;border-radius:var(--radius-sm);font-size:13px;z-index:9999;opacity:0;transform:translateY(8px);transition:all 0.2s;pointer-events:none} .toast.show{opacity:1;transform:translateY(0)}
-  .cooling-alert{background:var(--red-light);border:1px solid #F5CABD;border-radius:var(--radius);padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:13px} .cooling-alert svg{width:16px;height:16px;color:var(--red);flex-shrink:0}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .spinner{width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px}
- 
-  /* ════ INTELLIGENCE TAB ════ */
-  .intel-filters { grid-column:1/-1; display:flex; align-items:center; gap:8px; padding:10px 16px; background:#1a1a2e; border-bottom:1px solid #2d2d45; flex-wrap:wrap; }
-  .i-lbl { font-size:11px; color:#6b7280; text-transform:uppercase; letter-spacing:0.06em; font-weight:600; }
-  .i-input { background:#252540; border:1px solid #3a3a55; color:#e2e6f0; padding:5px 10px; border-radius:6px; font-size:12px; outline:none; width:170px; font-family:inherit; }
-  .i-input::placeholder{color:#4b5563} .i-input:focus{border-color:#4f7ef7}
-  .i-sel { background:#252540; border:1px solid #3a3a55; color:#e2e6f0; padding:5px 9px; border-radius:6px; font-size:12px; cursor:pointer; outline:none; font-family:inherit; }
-  .i-rst { background:none; border:1px solid #3a3a55; color:#6b7280; padding:5px 10px; border-radius:6px; font-size:11px; cursor:pointer; font-family:inherit; }
-  .i-rst:hover{border-color:#4f7ef7;color:#4f7ef7}
-  .i-cnt { margin-left:auto; font-size:12px; color:#6b7280; } .i-cnt span{color:#e2e6f0;font-weight:600;}
-  .i-tbl-panel { background:#13131f; overflow-y:auto; border-right:1px solid #2d2d45; }
-  .i-tbl { width:100%; border-collapse:collapse; }
-  .i-tbl thead { position:sticky; top:0; background:#1a1a2e; z-index:5; }
-  .i-tbl th { padding:9px 12px; text-align:left; font-size:10px; color:#6b7280; text-transform:uppercase; letter-spacing:0.07em; border-bottom:1px solid #2d2d45; white-space:nowrap; cursor:pointer; font-family:'DM Sans',sans-serif; }
-  .i-tbl th:hover{color:#e2e6f0}
-  .i-tbl td { padding:8px 12px; border-bottom:1px solid #1e1e30; vertical-align:middle; white-space:nowrap; }
-  .i-tbl tr:hover td{background:rgba(79,126,247,0.04)}
-  .i-an{font-weight:500;color:#e2e6f0;font-size:13px} .i-ai{font-family:'DM Mono',monospace;font-size:10px;color:#4b5563}
-  .i-prod{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;background:rgba(79,126,247,0.12);color:#4f7ef7;border:1px solid rgba(79,126,247,0.2)}
-  .i-stg{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500}
-  .i-stg::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.8}
-  .s-Unreached{background:rgba(107,114,128,.15);color:#9ca3af;border:1px solid rgba(107,114,128,.2)}
-  .s-Unengaged{background:rgba(245,158,11,.12);color:#f59e0b;border:1px solid rgba(245,158,11,.2)}
-  .s-Aware{background:rgba(79,126,247,.12);color:#4f7ef7;border:1px solid rgba(79,126,247,.2)}
-  .s-Engaged{background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.2)}
-  .s-PotentialOpportunity{background:rgba(168,85,247,.12);color:#a855f7;border:1px solid rgba(168,85,247,.2)}
-  .s-ActiveOpportunity{background:rgba(249,115,22,.12);color:#f97316;border:1px solid rgba(249,115,22,.2)}
-  .i-eng{display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;font-family:'DM Mono',monospace;font-weight:600}
-  .e-LOW{background:rgba(107,114,128,.15);color:#9ca3af} .e-MEDIUM{background:rgba(245,158,11,.15);color:#f59e0b} .e-HIGH{background:rgba(34,197,94,.15);color:#22c55e} .e-VERYHIGH{background:rgba(249,115,22,.15);color:#f97316}
-  .i-dt{font-family:'DM Mono',monospace;font-size:11px;color:#6b7280}
-  .i-empty-state{display:flex;align-items:center;justify-content:center;height:200px;color:#4b5563;font-size:13px}
-  .i-loading-state{display:flex;align-items:center;justify-content:center;height:200px;gap:10px;color:#6b7280;font-size:13px}
-  .i-spin{width:20px;height:20px;border:2px solid #2d2d45;border-top-color:#4f7ef7;border-radius:50%;animation:spin .7s linear infinite}
- 
-  /* CHAT */
-  .filter-panel{background:#1a1a2e;display:flex;flex-direction:column;overflow:hidden}
-  .filter-head{padding:12px 14px;border-bottom:1px solid #2d2d45;display:flex;align-items:center;gap:8px}
-  .filter-head h3{font-size:13px;font-weight:600;color:#e2e6f0;flex:1} .filter-head p{font-size:11px;color:#6b7280}
-  .filter-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px}
-  .filter-result-count{font-size:12px;color:#6b7280;padding:6px 10px;background:#13131f;border-radius:6px;border:1px solid #2d2d45;text-align:center}
-  .filter-result-count span{color:#e2e6f0;font-weight:600;}
-  .smart-input-wrap{position:relative;}
-  .smart-input{width:100%;background:#13131f;border:1px solid #2d2d45;color:#e2e6f0;padding:10px 40px 10px 12px;border-radius:8px;font-family:inherit;font-size:13px;outline:none;box-sizing:border-box;}
-  .smart-input:focus{border-color:#4f7ef7}
-  .smart-input::placeholder{color:#4b5563}
-  .smart-go-btn{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:#4f7ef7;border:none;color:#fff;width:28px;height:28px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-  .smart-go-btn:hover{opacity:.85}
-  .quick-filters{display:flex;flex-direction:column;gap:6px;}
-  .qf-label{font-size:10px;color:#4b5563;text-transform:uppercase;letter-spacing:.06em;font-weight:600;}
-  .qf-chips{display:flex;flex-wrap:wrap;gap:5px;}
-  .qf-chip{background:none;border:1px solid #2d2d45;color:#6b7280;padding:4px 10px;border-radius:20px;font-size:11.5px;cursor:pointer;font-family:inherit;transition:all .15s;}
-  .qf-chip:hover{border-color:#4f7ef7;color:#e2e6f0;}
-  .qf-chip.active{border-color:#4f7ef7;background:rgba(79,126,247,.12);color:#4f7ef7;}
-  .active-filters{display:flex;flex-wrap:wrap;gap:5px;padding:8px 10px;background:#13131f;border-radius:7px;border:1px solid #2d2d45;min-height:36px;align-items:center;}
-  .af-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(79,126,247,.15);border:1px solid rgba(79,126,247,.3);color:#93b4f9;padding:3px 8px;border-radius:20px;font-size:11px;}
-  .af-tag button{background:none;border:none;color:#6b7280;cursor:pointer;font-size:12px;padding:0;line-height:1;display:flex;align-items:center;}
-  .af-tag button:hover{color:#e2e6f0}
-  .af-empty{font-size:11px;color:#4b5563;}
-  .divider{height:1px;background:#2d2d45;margin:4px 0;}
-  .filter-section-title{font-size:10px;color:#4b5563;text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:6px;}
-  .rooms-wrap{display:flex;align-items:center;gap:8px;}
-  .rooms-input{background:#13131f;border:1px solid #2d2d45;color:#e2e6f0;padding:5px 8px;border-radius:6px;font-size:12px;width:80px;outline:none;font-family:inherit;}
-  .rooms-input:focus{border-color:#4f7ef7}
-  .rooms-label{font-size:12px;color:#6b7280;}
-  .reset-all-btn{background:none;border:1px solid #2d2d45;color:#6b7280;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;width:100%;transition:all .15s;}
-  .reset-all-btn:hover{border-color:#4f7ef7;color:#4f7ef7}
-  .i-tbl-panel::-webkit-scrollbar,.filter-body::-webkit-scrollbar{width:5px}
-  .i-tbl-panel::-webkit-scrollbar-track,.filter-body::-webkit-scrollbar-track{background:transparent}
-  .i-tbl-panel::-webkit-scrollbar-thumb,.filter-body::-webkit-scrollbar-thumb{background:#2d2d45;border-radius:3px}
- 
-  /* RIGHT PANEL TABS */
-  .rpanel { background:#1a1a2e; display:flex; flex-direction:column; overflow:hidden; }
-  .rpanel-tabs { display:flex; border-bottom:1px solid #2d2d45; flex-shrink:0; }
-  .rpanel-tab { flex:1; padding:10px; border:none; background:none; color:#6b7280; font-size:12px; font-weight:500; cursor:pointer; font-family:inherit; border-bottom:2px solid transparent; transition:all .15s; }
-  .rpanel-tab.active { color:#e2e6f0; border-bottom-color:#4f7ef7; }
-  .rpanel-tab:hover:not(.active) { color:#9ca3af; }
-  .rpanel-view { display:none; flex:1; overflow-y:auto; flex-direction:column; }
-  .rpanel-view.active { display:flex; }
- 
-  /* ANALYTICS */
-  .analytics-body { padding:14px; display:flex; flex-direction:column; gap:14px; }
-  .an-section-title { font-size:10px; color:#4b5563; text-transform:uppercase; letter-spacing:.07em; font-weight:600; margin-bottom:8px; }
-  .funnel-cards { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
-  .fc { border-radius:8px; padding:10px 11px; border:1px solid; }
-  .fc-name { font-size:10px; font-weight:600; letter-spacing:.03em; margin-bottom:5px; }
-  .fc-count { font-size:22px; font-weight:600; font-variant-numeric:tabular-nums; line-height:1; }
-  .fc-pct { font-size:10px; opacity:.65; margin-top:2px; }
-  .fc-bar { height:3px; border-radius:2px; margin-top:8px; opacity:.7; }
-  .fc.s0{background:#13131f;border-color:#2d2d45;} .fc.s0 .fc-name{color:#6b7280;} .fc.s0 .fc-count{color:#9ca3af;} .fc.s0 .fc-bar{background:#6b7280;}
-  .fc.s1{background:#1c1a10;border-color:#3a3210;} .fc.s1 .fc-name{color:#d97706;} .fc.s1 .fc-count{color:#f59e0b;} .fc.s1 .fc-bar{background:#f59e0b;}
-  .fc.s2{background:#101828;border-color:#1a3050;} .fc.s2 .fc-name{color:#3b82f6;} .fc.s2 .fc-count{color:#60a5fa;} .fc.s2 .fc-bar{background:#3b82f6;}
-  .fc.s3{background:#0f1e18;border-color:#1a3a28;} .fc.s3 .fc-name{color:#16a34a;} .fc.s3 .fc-count{color:#22c55e;} .fc.s3 .fc-bar{background:#22c55e;}
-  .fc.s4{background:#1a102e;border-color:#2e1a50;} .fc.s4 .fc-name{color:#9333ea;} .fc.s4 .fc-count{color:#a855f7;} .fc.s4 .fc-bar{background:#a855f7;}
-  .fc.s5{background:#1e1208;border-color:#3a2010;} .fc.s5 .fc-name{color:#ea580c;} .fc.s5 .fc-count{color:#f97316;} .fc.s5 .fc-bar{background:#f97316;}
-  .fc.clickable { cursor:pointer; transition:transform .1s; }
-  .fc.clickable:hover { transform:translateY(-1px); }
-  .fc.fc-selected { outline:2px solid #4f7ef7; }
- 
-  /* PRODUCT BARS */
-  .prod-bar-wrap { display:flex; flex-direction:column; gap:8px; }
-  .pb-row { display:flex; flex-direction:column; gap:4px; }
-  .pb-label { display:flex; justify-content:space-between; font-size:11px; color:#9ca3af; }
-  .pb-track { height:7px; background:#1e1e30; border-radius:4px; overflow:hidden; display:flex; }
-  .pb-seg { height:100%; }
-  .pb-legend { display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
-  .pb-li { display:flex; align-items:center; gap:4px; font-size:10px; color:#6b7280; }
-  .pb-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
- 
-  /* CHART */
-  .chart-wrap { background:#13131f; border-radius:8px; border:1px solid #2d2d45; padding:12px; }
-  .chart-canvas { width:100%; height:140px; display:block; }
- 
-  @media(max-width:600px){.main{padding:16px}.form-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}}
+:root {
+  --bg:#0a0d12; --surface:#111520; --surface2:#161c2a; --surface3:#1d2538;
+  --border:#252e42; --border2:#2e3a52; --text:#e8ecf4; --text2:#8a94a8; --text3:#5a6480;
+  --accent:#4f9cf9; --accent2:#7c5cfc; --accent3:#f97316;
+  --green:#22c55e; --red:#ef4444; --yellow:#f59e0b; --cyan:#06b6d4;
+  --radius:10px; --radius-lg:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;min-height:100vh;}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(10,13,18,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;height:52px;gap:0;}
+.nav-brand{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:var(--accent);margin-right:28px;white-space:nowrap;}
+.nav-brand span{color:var(--text3);font-weight:400;font-size:11px;}
+.nav-tabs{display:flex;gap:2px;}
+.nav-tab{padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text3);border:none;background:transparent;transition:all 0.15s;white-space:nowrap;}
+.nav-tab:hover{color:var(--text2);background:var(--surface2);}
+.nav-tab.active{color:var(--accent);background:rgba(79,156,249,0.12);}
+
+.page{display:none;padding:20px;max-width:1400px;margin:0 auto;}
+.page.active{display:block;}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;}
+.card-title{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text2);margin-bottom:14px;display:flex;align-items:center;gap:7px;}
+.card-title .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:20px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;}
+.stat-label{font-size:11px;color:var(--text3);letter-spacing:0.05em;text-transform:uppercase;font-family:'DM Mono',monospace;}
+.stat-value{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--text);margin-top:2px;}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:2px;}
+.stat-card.c-accent{border-color:rgba(79,156,249,0.3);background:rgba(79,156,249,0.05);}.stat-card.c-accent .stat-value{color:var(--accent);}
+.stat-card.c-green{border-color:rgba(34,197,94,0.3);background:rgba(34,197,94,0.05);}.stat-card.c-green .stat-value{color:var(--green);}
+.stat-card.c-yellow{border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.05);}.stat-card.c-yellow .stat-value{color:var(--yellow);}
+.stat-card.c-red{border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.05);}.stat-card.c-red .stat-value{color:var(--red);}
+.stat-card.c-purple{border-color:rgba(124,92,252,0.3);background:rgba(124,92,252,0.05);}.stat-card.c-purple .stat-value{color:var(--accent2);}
+
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{background:var(--surface2);color:var(--text3);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;padding:9px 12px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none;}
+thead th:hover{color:var(--text2);}
+tbody tr{border-bottom:1px solid var(--border);transition:background 0.1s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:var(--surface2);}
+tbody td{padding:9px 12px;color:var(--text2);white-space:nowrap;}
+tbody td.primary{color:var(--text);font-weight:500;}
+
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:20px;font-size:11px;font-weight:600;font-family:'DM Mono',monospace;}
+.badge.blue{background:rgba(79,156,249,0.15);color:var(--accent);border:1px solid rgba(79,156,249,0.25);}
+.badge.green{background:rgba(34,197,94,0.15);color:var(--green);border:1px solid rgba(34,197,94,0.25);}
+.badge.yellow{background:rgba(245,158,11,0.15);color:var(--yellow);border:1px solid rgba(245,158,11,0.25);}
+.badge.red{background:rgba(239,68,68,0.15);color:var(--red);border:1px solid rgba(239,68,68,0.25);}
+.badge.purple{background:rgba(124,92,252,0.15);color:var(--accent2);border:1px solid rgba(124,92,252,0.25);}
+.badge.cyan{background:rgba(6,182,212,0.15);color:var(--cyan);border:1px solid rgba(6,182,212,0.25);}
+.badge.gray{background:rgba(90,100,128,0.12);color:var(--text3);border:1px solid rgba(90,100,128,0.2);}
+.badge.orange{background:rgba(249,115,22,0.15);color:var(--accent3);border:1px solid rgba(249,115,22,0.25);}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+@media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+
+.filter-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
+.search-input{flex:1;min-width:180px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:7px 11px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;}
+.search-input:focus{border-color:var(--accent);}
+.search-input::placeholder{color:var(--text3);}
+select.filter-select{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:7px 11px;color:var(--text2);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer;}
+select.filter-select:focus{border-color:var(--accent);}
+
+.btn{padding:7px 14px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;gap:5px;}
+.btn:hover{border-color:var(--border2);color:var(--text);}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+.btn.primary:hover{background:#3d8ef0;}
+.btn.sm{padding:5px 10px;font-size:12px;}
+
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.section-title{font-family:'Syne',sans-serif;font-weight:700;font-size:17px;color:var(--text);}
+.section-sub{font-size:12px;color:var(--text3);margin-top:2px;}
+
+.inner-tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:18px;}
+.inner-tab{padding:7px 14px;cursor:pointer;font-size:13px;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.15s;}
+.inner-tab:hover{color:var(--text2);}
+.inner-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+.funnel-container{display:flex;flex-direction:column;gap:5px;}
+.funnel-row{display:flex;align-items:center;gap:10px;padding:6px 0;}
+.funnel-label{font-size:12px;color:var(--text2);width:105px;flex-shrink:0;font-family:'DM Mono',monospace;}
+.funnel-track{flex:1;background:var(--surface3);border-radius:4px;height:18px;overflow:hidden;}
+.funnel-fill{height:100%;border-radius:4px;transition:width 0.7s cubic-bezier(0.4,0,0.2,1);display:flex;align-items:center;padding-left:7px;}
+.funnel-fill span{font-size:11px;font-weight:700;color:rgba(255,255,255,0.9);font-family:'DM Mono',monospace;}
+.funnel-num{font-family:'DM Mono',monospace;font-size:12px;color:var(--text3);width:44px;text-align:right;}
+
+.mini-chart{display:flex;flex-direction:column;gap:7px;}
+.mc-row{display:flex;align-items:center;gap:9px;}
+.mc-label{font-size:12px;color:var(--text2);width:130px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.mc-track{flex:1;height:7px;background:var(--surface3);border-radius:4px;overflow:hidden;}
+.mc-fill{height:100%;border-radius:4px;transition:width 0.6s;}
+.mc-val{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);width:32px;text-align:right;}
+
+.timeline{display:flex;flex-direction:column;}
+.tl-item{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);}
+.tl-item:last-child{border-bottom:none;}
+.tl-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);margin-top:4px;flex-shrink:0;}
+.tl-dot.g{background:var(--green);}.tl-dot.y{background:var(--yellow);}
+.tl-title{font-size:13px;color:var(--text);font-weight:500;}
+.tl-meta{font-size:11px;color:var(--text3);margin-top:1px;font-family:'DM Mono',monospace;}
+
+.account-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.account-row:last-child{border-bottom:none;}
+.acct-av{width:30px;height:30px;border-radius:7px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:var(--accent);flex-shrink:0;}
+.acct-name{font-size:13px;color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.acct-meta{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;}
+.acct-score{font-family:'Syne',sans-serif;font-weight:700;font-size:17px;color:var(--accent);}
+
+.campaign-pill{display:inline-block;padding:2px 7px;border-radius:20px;font-size:11px;background:var(--surface3);color:var(--text2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle;}
+
+.loading{color:var(--text3);font-size:12px;padding:32px;text-align:center;font-family:'DM Mono',monospace;}
+.empty{text-align:center;padding:40px;color:var(--text3);}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr;}}
+.form-group{display:flex;flex-direction:column;gap:5px;}
+.form-group.full{grid-column:1/-1;}
+label{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:0.04em;text-transform:uppercase;}
+input,select,textarea{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:8px 11px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;width:100%;transition:border-color 0.15s;}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);}
+input::placeholder{color:var(--text3);}
+textarea{resize:vertical;min-height:72px;}
+
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:var(--surface);}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+
+#toast{position:fixed;bottom:20px;right:20px;z-index:9999;background:var(--surface3);border:1px solid var(--border2);border-radius:9px;padding:10px 18px;color:var(--text);font-size:13px;box-shadow:0 4px 20px rgba(0,0,0,0.4);transform:translateY(60px);opacity:0;transition:all 0.3s;}
+#toast.show{transform:translateY(0);opacity:1;}
+#toast.success{border-color:rgba(34,197,94,0.4);}
+#toast.error{border-color:rgba(239,68,68,0.4);}
 </style>
 </head>
 <body>
- 
-<header class="header">
-  <div class="header-brand">
-    <div class="brand-icon">
-      <svg viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1.5" fill="white"/><rect x="9" y="2" width="5" height="5" rx="1.5" fill="white" opacity="0.7"/><rect x="2" y="9" width="5" height="5" rx="1.5" fill="white" opacity="0.7"/><rect x="9" y="9" width="5" height="5" rx="1.5" fill="white" opacity="0.4"/></svg>
-    </div>
-    Account Engagement Tracker
-  </div>
+
+<nav>
+  <div class="nav-brand">◈ AET <span>v3</span></div>
   <div class="nav-tabs">
-    <button class="tab-btn intel-tab active" onclick="showPage('intelligence')">✦ Intelligence</button>
-    <button class="tab-btn" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="nav-tab active" onclick="switchTab('intelligence',this)">✦ Intelligence</button>
+    <button class="nav-tab" onclick="switchTab('analysis',this)">◈ Analysis</button>
+    <button class="nav-tab" onclick="switchTab('dashboard',this)">▦ Dashboard</button>
+    <button class="nav-tab" onclick="switchTab('log',this)">+ Log</button>
   </div>
-  <div class="header-actions">
-    <span id="sync-indicator">Loading…</span>
-    <button class="btn" id="export-btn" onclick="exportCSV()" style="display:none;">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 13h10"/></svg>Export CSV
-    </button>
+</nav>
+
+<!-- ====================================================== -->
+<!-- INTELLIGENCE                                            -->
+<!-- ====================================================== -->
+<div id="tab-intelligence" class="page active">
+  <div class="section-header">
+    <div>
+      <div class="section-title">Account Intelligence</div>
+      <div class="section-sub">Product stage pipeline · <span id="intel-count">—</span> records</div>
+    </div>
+    <div style="display:flex;gap:7px">
+      <button class="btn sm" onclick="exportCSV('intel-table','intelligence')">↓ CSV</button>
+      <button class="btn sm primary" onclick="loadIntelligence()">↻ Refresh</button>
+    </div>
   </div>
-</header>
- 
-<main class="main">
- 
-<!-- DASHBOARD -->
-<div id="page-dashboard" class="page">
-  <div id="cooling-banner" style="display:none" class="cooling-alert">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><line x1="8" y1="5" x2="8" y2="8"/><circle cx="8" cy="11" r="0.5" fill="currentColor"/></svg>
-    <span id="cooling-text"></span>
+
+  <div class="filter-bar">
+    <input class="search-input" id="intel-search" placeholder="Search accounts, owners…" oninput="filterIntel()" />
+    <select class="filter-select" id="intel-stage" onchange="filterIntel()">
+      <option value="">All Stages</option>
+      <option>Unreached</option><option>Unengaged</option><option>Aware</option>
+      <option>Engaged</option><option>Potential Opp.</option><option>Active Opp.</option>
+    </select>
+    <select class="filter-select" id="intel-product" onchange="filterIntel()">
+      <option value="">All Products</option>
+    </select>
+    <select class="filter-select" id="intel-region" onchange="filterIntel()">
+      <option value="">All Regions</option>
+    </select>
+    <select class="filter-select" id="intel-eng-status" onchange="filterIntel()">
+      <option value="">All Engagement</option>
+      <option value="active">Active</option>
+      <option value="cooling">Cooling Off</option>
+      <option value="not_reached">Not Reached</option>
+    </select>
   </div>
-  <div class="stats-grid" id="stats-grid">
-    <div class="stat-card accent"><div class="stat-label">Total Accounts</div><div class="stat-value" id="stat-accounts">—</div></div>
-    <div class="stat-card"><div class="stat-label">Total Touchpoints</div><div class="stat-value" id="stat-total">—</div></div>
-    <div class="stat-card"><div class="stat-label">Active (14d)</div><div class="stat-value" id="stat-active">—</div></div>
-    <div class="stat-card danger"><div class="stat-label">Cooling Off</div><div class="stat-value" id="stat-cooling">—</div></div>
-  </div>
-  <div class="section-header"><span class="section-title">Account Status Overview</span></div>
+
   <div class="table-wrap">
-    <table><thead><tr><th>Account</th><th>SF Account ID</th><th>Country</th><th>Tier</th><th>Total Touches</th><th>Last Touch</th><th>Days Since</th><th>Touches (14d)</th><th>Status</th></tr></thead>
-    <tbody id="dashboard-tbody"><tr><td colspan="9" class="loading-row"><span class="spinner"></span>Loading from Airtable…</td></tr></tbody></table>
-  </div>
-</div>
- 
- 
-</main>
- 
-<!-- INTELLIGENCE PAGE -->
-<div id="page-intelligence">
-  <div class="intel-filters">
-    <span class="i-lbl">Account Intelligence</span>
-    <div id="intel-header-count" style="margin-left:auto;font-size:12px;color:#6b7280;">Loading…</div>
-  </div>
-  <div class="i-tbl-panel">
-    <div id="i-loading" class="i-loading-state"><div class="i-spin"></div><span>Loading from Supabase…</span></div>
-    <table class="i-tbl" id="i-table" style="display:none">
+    <table id="intel-table">
       <thead><tr>
-        <th onclick="iSort('account_name')">Account ↕</th>
-        <th onclick="iSort('product')">Product ↕</th>
-        <th onclick="iSort('stage')">Stage ↕</th>
-        <th onclick="iSort('stage_date')">Stage Date ↕</th>
-        <th onclick="iSort('no_of_rooms')">Rooms ↕</th>
-        <th onclick="iSort('no_of_properties')">Properties ↕</th>
-        <th onclick="iSort('region')">Region ↕</th>
-        <th onclick="iSort('country')">Country ↕</th>
-        <th onclick="iSort('account_owner')">Owner ↕</th>
+        <th onclick="sortTbl('intel-table',0)">Account ↕</th>
+        <th onclick="sortTbl('intel-table',1)">Product ↕</th>
+        <th onclick="sortTbl('intel-table',2)">Stage ↕</th>
+        <th onclick="sortTbl('intel-table',3)">Stage Date ↕</th>
+        <th onclick="sortTbl('intel-table',4)">Properties ↕</th>
+        <th onclick="sortTbl('intel-table',5)">Region ↕</th>
+        <th onclick="sortTbl('intel-table',6)">Country ↕</th>
+        <th onclick="sortTbl('intel-table',7)">Owner ↕</th>
+        <th onclick="sortTbl('intel-table',8)">Eng. Status ↕</th>
       </tr></thead>
-      <tbody id="i-tbody"></tbody>
+      <tbody id="intel-tbody"><tr><td colspan="9" class="loading">Loading…</td></tr></tbody>
     </table>
-    <div id="i-empty" class="i-empty-state" style="display:none">No records match the current filters.</div>
   </div>
- 
-  <!-- RIGHT PANEL with sub-tabs -->
-  <div class="rpanel">
-    <div class="rpanel-tabs">
-      <button class="rpanel-tab active" onclick="switchRPanel('filters')">⚙ Filters</button>
-      <button class="rpanel-tab" onclick="switchRPanel('analytics')">◈ Analytics</button>
+  <div id="intel-pg" style="margin-top:10px;display:flex;gap:7px;align-items:center;justify-content:flex-end"></div>
+</div>
+
+<!-- ====================================================== -->
+<!-- ANALYSIS                                                -->
+<!-- ====================================================== -->
+<div id="tab-analysis" class="page">
+  <div class="section-header">
+    <div>
+      <div class="section-title">Analysis</div>
+      <div class="section-sub">Pardot email campaigns · pipeline health · geography</div>
     </div>
- 
-    <!-- FILTERS VIEW -->
-    <div class="rpanel-view active filter-body" id="rpanel-filters">
-      <div class="filter-result-count" style="margin:14px 14px 0;">Showing <span id="i-count">0</span> records</div>
- 
-      <div style="padding:0 14px;margin-top:12px;">
-        <div class="filter-section-title">Search</div>
-        <div class="search-wrap" style="margin:0;">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:13px;height:13px;color:#4b5563;pointer-events:none;"><circle cx="7" cy="7" r="4"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg>
-          <input class="smart-input" id="i-search" style="padding-left:30px;" placeholder="Search account name…" oninput="iFilter()">
-        </div>
+    <button class="btn sm primary" onclick="loadAnalysis()">↻ Refresh</button>
+  </div>
+
+  <div class="inner-tabs">
+    <div class="inner-tab active" onclick="switchInner('an','pipeline',this)">Pipeline</div>
+    <div class="inner-tab" onclick="switchInner('an','engagement',this)">Email Engagement</div>
+    <div class="inner-tab" onclick="switchInner('an','campaigns',this)">Campaigns</div>
+    <div class="inner-tab" onclick="switchInner('an','geography',this)">Geography</div>
+  </div>
+
+  <div id="an-pipeline">
+    <div class="grid-2" style="margin-bottom:14px">
+      <div class="card">
+        <div class="card-title"><span class="dot"></span>Stage Funnel</div>
+        <div class="funnel-container" id="funnel-chart"><div class="loading">Loading…</div></div>
       </div>
- 
-      <div class="divider" style="margin:12px 14px;"></div>
- 
-      <div style="padding:0 14px;">
-        <div class="filter-section-title">Stage</div>
-        <div class="qf-chips" id="stage-chips">
-          <button class="qf-chip active" onclick="toggleChip(this,'stage','')">All</button>
-          <button class="qf-chip" onclick="toggleChip(this,'stage','Unreached')">Unreached</button>
-          <button class="qf-chip" onclick="toggleChip(this,'stage','Unengaged')">Unengaged</button>
-          <button class="qf-chip" onclick="toggleChip(this,'stage','Aware')">Aware</button>
-          <button class="qf-chip" onclick="toggleChip(this,'stage','Engaged')">Engaged</button>
-          <button class="qf-chip" onclick="toggleChip(this,'stage','Potential Opportunity')">Potential Opp.</button>
-          <button class="qf-chip" onclick="toggleChip(this,'stage','Active Opportunity')">Active Opp.</button>
-        </div>
-      </div>
- 
-      <div class="divider" style="margin:12px 14px;"></div>
- 
-      <div style="padding:0 14px;">
-        <div class="filter-section-title">Product</div>
-        <div class="qf-chips" id="product-chips">
-          <button class="qf-chip active" onclick="toggleChip(this,'product','')">All</button>
-        </div>
-      </div>
- 
-      <div class="divider" style="margin:12px 14px;"></div>
- 
-      <div style="padding:0 14px;">
-        <div class="filter-section-title">Region</div>
-        <div class="qf-chips" id="region-chips">
-          <button class="qf-chip active" onclick="toggleChip(this,'region','')">All</button>
-        </div>
-      </div>
- 
-      <div class="divider" style="margin:12px 14px;"></div>
- 
-      <div style="padding:0 14px;">
-        <div class="filter-section-title">Min. rooms</div>
-        <div class="rooms-wrap">
-          <input class="rooms-input" id="min-rooms" type="number" min="0" placeholder="e.g. 100" oninput="iFilter()">
-          <span class="rooms-label">rooms or more</span>
-        </div>
-      </div>
- 
-      <div class="divider" style="margin:12px 14px;"></div>
- 
-      <div style="padding:0 14px 14px;">
-        <div class="filter-section-title" style="margin-bottom:8px;">Active filters</div>
-        <div class="active-filters" id="active-filters"><span class="af-empty">No filters applied</span></div>
-        <button onclick="resetAllFilters()" class="reset-all-btn" style="margin-top:10px;">Reset all filters</button>
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>By Product</div>
+        <div class="mini-chart" id="product-dist"><div class="loading">Loading…</div></div>
       </div>
     </div>
- 
-    <!-- ANALYTICS VIEW -->
-    <div class="rpanel-view" id="rpanel-analytics">
-      <div class="analytics-body">
- 
-        <div>
-          <div class="an-section-title">Stage funnel — click to filter</div>
-          <div class="funnel-cards" id="funnel-cards"></div>
-        </div>
- 
-        <div>
-          <div class="an-section-title">Stage distribution by product</div>
-          <div class="prod-bar-wrap" id="prod-bars"></div>
-        </div>
- 
-        <div>
-          <div class="an-section-title">Stage date trend (last 12 months)</div>
-          <div class="chart-wrap">
-            <canvas class="chart-canvas" id="trend-chart"></canvas>
-          </div>
-        </div>
- 
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--green)"></span>Active Opportunities</div>
+        <div class="timeline" id="active-opps"><div class="loading">Loading…</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--yellow)"></span>Potential Opportunities</div>
+        <div class="timeline" id="potential-opps"><div class="loading">Loading…</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="an-engagement" style="display:none">
+    <div class="stat-grid" style="margin-bottom:14px">
+      <div class="stat-card c-accent"><div class="stat-label">Total Emails Sent</div><div class="stat-value" id="an-total">—</div></div>
+      <div class="stat-card c-green"><div class="stat-label">Unique Accounts</div><div class="stat-value" id="an-uniq">—</div></div>
+      <div class="stat-card c-yellow"><div class="stat-label">Last 7 Days</div><div class="stat-value" id="an-recent">—</div></div>
+      <div class="stat-card c-purple"><div class="stat-label">Cooling Off</div><div class="stat-value" id="an-cooling">—</div></div>
+    </div>
+    <div class="grid-2" style="margin-bottom:14px">
+      <div class="card">
+        <div class="card-title"><span class="dot"></span>Outcome Breakdown</div>
+        <div class="mini-chart" id="outcome-chart"><div class="loading">Loading…</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--green)"></span>Most Engaged Accounts</div>
+        <div id="top-accounts"><div class="loading">Loading…</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--cyan)"></span>Daily Activity — Last 30 Days</div>
+      <div class="mini-chart" id="daily-chart"><div class="loading">Loading…</div></div>
+    </div>
+  </div>
+
+  <div id="an-campaigns" style="display:none">
+    <div class="grid-2" style="margin-bottom:14px">
+      <div class="card">
+        <div class="card-title"><span class="dot"></span>Top Campaigns by Volume</div>
+        <div class="mini-chart" id="camp-vol"><div class="loading">Loading…</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--green)"></span>Response Rate (≥5 sends)</div>
+        <div class="mini-chart" id="camp-rate"><div class="loading">Loading…</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>Campaign Detail</div>
+      <div class="table-wrap">
+        <table><thead><tr>
+          <th>Campaign</th><th>Sends</th><th>Accounts</th>
+          <th>Opened</th><th>Clicked</th><th>Replied</th><th>Response %</th>
+        </tr></thead>
+        <tbody id="camp-tbody"><tr><td colspan="7" class="loading">Loading…</td></tr></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <div id="an-geography" style="display:none">
+    <div class="grid-2" style="margin-bottom:14px">
+      <div class="card">
+        <div class="card-title"><span class="dot"></span>Emails by Country (Top 20)</div>
+        <div class="mini-chart" id="geo-country"><div class="loading">Loading…</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>Pipeline by Region</div>
+        <div class="mini-chart" id="geo-region"><div class="loading">Loading…</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--green)"></span>Coverage by Country</div>
+      <div class="table-wrap">
+        <table><thead><tr>
+          <th>Country</th><th>Pipeline Accounts</th><th>Touched Accounts</th>
+          <th>Coverage %</th><th>Email Sends</th><th>Top Stage</th>
+        </tr></thead>
+        <tbody id="geo-tbody"><tr><td colspan="6" class="loading">Loading…</td></tr></tbody></table>
       </div>
     </div>
   </div>
 </div>
- 
-<!-- MODAL -->
-<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
-  <div class="modal">
-    <div class="modal-title" id="modal-title">Log Touchpoint</div>
-    <div class="form-grid">
-      <div class="form-group full" style="background:var(--accent-light);border:1px solid #C5D4F9;border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:2px;">
-        <div style="font-size:11px;font-weight:600;color:var(--accent-text);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Account Identifier — use SF ID when available</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
-          <div class="form-group" style="margin:0;"><label class="form-label">Salesforce Account ID</label><input id="f-sfid" class="form-input" type="text" placeholder="e.g. 0015g00000XXXXX"></div>
-          <div class="form-group" style="margin:0;"><label class="form-label">Account Domain</label><input id="f-domain" class="form-input" type="text" placeholder="e.g. acme.com"></div>
-          <div class="form-group" style="margin:0;"><label class="form-label">Country</label><input id="f-country" class="form-input" type="text" placeholder="e.g. United Kingdom"></div>
-        </div>
-      </div>
-      <div class="form-group full"><label class="form-label">Account Name *</label><input id="f-account" class="form-input" type="text" placeholder="e.g. Acme Corp" list="accounts-list"><datalist id="accounts-list"></datalist></div>
-      <div class="form-group"><label class="form-label">Date *</label><input id="f-date" class="form-input" type="date"></div>
-      <div class="form-group"><label class="form-label">Sent By *</label><input id="f-by" class="form-input" type="text" placeholder="e.g. Sarah Jones"></div>
-      <div class="form-group"><label class="form-label">Tier *</label><select id="f-tier" class="form-input"><option value="">Select tier…</option><option>Tier 1</option><option>Tier 2</option><option>Tier 3</option></select></div>
-      <div class="form-group"><label class="form-label">Channel *</label><select id="f-channel" class="form-input"><option value="">Select channel…</option><option>Email</option><option>LinkedIn</option><option>Webinar</option><option>Event</option><option>Direct Mail</option><option>Paid Ad</option></select></div>
-      <div class="form-group full"><label class="form-label">Campaign / Email Name *</label><input id="f-campaign" class="form-input" type="text" placeholder="e.g. Q2 Product Launch Email"></div>
-      <div class="form-group"><label class="form-label">Cooling Off?</label><select id="f-cooling" class="form-input"><option value="No">No</option><option value="Yes">Yes</option></select></div>
-      <div class="form-group"><label class="form-label">Outcome</label><select id="f-outcome" class="form-input"><option value="">None</option><option>Opened</option><option>Clicked</option><option>Replied</option><option>Meeting Booked</option></select></div>
-      <div class="form-group full"><label class="form-label">Notes</label><textarea id="f-notes" class="form-input" placeholder="Any additional context…"></textarea></div>
+
+<!-- ====================================================== -->
+<!-- DASHBOARD                                               -->
+<!-- ====================================================== -->
+<div id="tab-dashboard" class="page">
+  <div class="section-header">
+    <div>
+      <div class="section-title">Dashboard</div>
+      <div class="section-sub">Account engagement status overview · <span id="dash-count">—</span> accounts</div>
     </div>
-    <div class="form-actions">
-      <button class="btn" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary" id="save-btn" onclick="saveTouchpoint()">Save Touchpoint</button>
+    <div style="display:flex;gap:7px">
+      <button class="btn sm" onclick="exportCSV('dash-table','dashboard')">↓ CSV</button>
+      <button class="btn sm primary" onclick="loadDashboard()">↻ Refresh</button>
     </div>
   </div>
+
+  <div class="stat-grid">
+    <div class="stat-card c-accent"><div class="stat-label">Total Accounts</div><div class="stat-value" id="d-total">—</div></div>
+    <div class="stat-card c-green"><div class="stat-label">Active (14d)</div><div class="stat-value" id="d-active">—</div></div>
+    <div class="stat-card c-red"><div class="stat-label">Cooling Off</div><div class="stat-value" id="d-cooling">—</div></div>
+    <div class="stat-card c-yellow"><div class="stat-label">Not Reached</div><div class="stat-value" id="d-notreached">—</div></div>
+    <div class="stat-card"><div class="stat-label">Total Sends</div><div class="stat-value" id="d-sends">—</div></div>
+  </div>
+
+  <div class="filter-bar">
+    <input class="search-input" id="dash-search" placeholder="Search accounts…" oninput="filterDash()" />
+    <select class="filter-select" id="dash-status" onchange="filterDash()">
+      <option value="">All Statuses</option>
+      <option value="active">Active</option>
+      <option value="cooling">Cooling Off</option>
+      <option value="not_reached">Not Reached</option>
+    </select>
+    <select class="filter-select" id="dash-days" onchange="filterDash()">
+      <option value="">All Time</option>
+      <option value="7">Last 7 days</option>
+      <option value="14">Last 14 days</option>
+      <option value="30">Last 30 days</option>
+    </select>
+  </div>
+
+  <div class="table-wrap">
+    <table id="dash-table">
+      <thead><tr>
+        <th onclick="sortTbl('dash-table',0)">Account ↕</th>
+        <th onclick="sortTbl('dash-table',1)">SF Account ID ↕</th>
+        <th onclick="sortTbl('dash-table',2)">Country ↕</th>
+        <th onclick="sortTbl('dash-table',3)">Total Sends ↕</th>
+        <th onclick="sortTbl('dash-table',4)">Last Touch ↕</th>
+        <th onclick="sortTbl('dash-table',5)">Days Since ↕</th>
+        <th onclick="sortTbl('dash-table',6)">Sends (14d) ↕</th>
+        <th onclick="sortTbl('dash-table',7)">Last Campaign ↕</th>
+        <th onclick="sortTbl('dash-table',8)">Eng. Status ↕</th>
+      </tr></thead>
+      <tbody id="dash-tbody"><tr><td colspan="9" class="loading">Loading…</td></tr></tbody>
+    </table>
+  </div>
+  <div id="dash-pg" style="margin-top:10px;display:flex;gap:7px;align-items:center;justify-content:flex-end"></div>
 </div>
- 
-<div class="toast" id="toast"></div>
- 
+
+<!-- ====================================================== -->
+<!-- LOG                                                     -->
+<!-- ====================================================== -->
+<div id="tab-log" class="page">
+  <div class="section-header">
+    <div><div class="section-title">Log Touchpoint</div><div class="section-sub">Manually record an engagement event</div></div>
+  </div>
+  <div class="card" style="max-width:680px">
+    <div class="card-title"><span class="dot"></span>New Touchpoint</div>
+    <form id="log-form" onsubmit="submitTP(event)">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:14px;font-family:'DM Mono',monospace">Use SF Account ID when available — falls back to account name</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Salesforce Account ID</label><input id="f-sfid" placeholder="001XX000000XXXX" /></div>
+        <div class="form-group"><label>Account Name *</label><input id="f-name" required placeholder="Company name" /></div>
+        <div class="form-group"><label>Account Domain</label><input id="f-domain" placeholder="company.com" /></div>
+        <div class="form-group"><label>Country</label><input id="f-country" placeholder="e.g. India" /></div>
+        <div class="form-group"><label>Date *</label><input id="f-date" type="date" required /></div>
+        <div class="form-group"><label>Sent By *</label><input id="f-sentby" required placeholder="Name or Pardot (Auto)" /></div>
+        <div class="form-group"><label>Outcome</label>
+          <select id="f-outcome"><option value="">None</option><option>Opened</option><option>Clicked</option><option>Replied</option><option>Meeting Booked</option><option>No Response</option></select>
+        </div>
+        <div class="form-group"><label>Cooling Off?</label>
+          <select id="f-cooling"><option value="false">No</option><option value="true">Yes</option></select>
+        </div>
+        <div class="form-group full"><label>Campaign / Email Name *</label><input id="f-campaign" required placeholder="Campaign name" /></div>
+        <div class="form-group full"><label>Notes</label><textarea id="f-notes" placeholder="Additional context…"></textarea></div>
+      </div>
+      <div style="display:flex;gap:9px;margin-top:18px">
+        <button type="button" class="btn" onclick="resetForm()">Cancel</button>
+        <button type="submit" class="btn primary" id="submit-btn">Save Touchpoint</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="toast"></div>
+
 <script>
-// ══════════════════════════════════════════
-//  CONFIG — Airtable + Supabase
-// ══════════════════════════════════════════
-const AIRTABLE_TOKEN = 'patwo6DIJ3qqQknLU.da7d70212c7103d851a216fd7290ad007d151f23a16d35d324204c7c60074915';
-const AIRTABLE_BASE  = 'appbkCa4mNhGCzCb7';
-const AIRTABLE_TABLE = 'Touchpoints';
-const AIRTABLE_URL   = `https://api.airtable.com/v0/${AIRTABLE_BASE}/${encodeURIComponent(AIRTABLE_TABLE)}`;
- 
-const SUPABASE_URL   = 'https://mtlujmdpxtveawrhljxg.supabase.co';
-const SUPABASE_KEY   = 'sb_publishable_UhmlGR4ullaoH5bds4A86g_v18c9v-n';
- 
-// ══════════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════════
-let touchpoints = [];
-let airtableLoaded = false;
-let checkerData = [];
-let intelData = [];
-let intelFiltered = [];
-let intelSortCol = 'account_name';
-let intelSortDir = 1;
-let editingId = null;
- 
-// ══════════════════════════════════════════
-//  SYNC INDICATOR
-// ══════════════════════════════════════════
-function setSyncStatus(state, msg) {
-  const el = document.getElementById('sync-indicator');
-  el.className = state;
-  el.textContent = msg;
+const SB_URL='https://mtlujmdpxtveawrhljxg.supabase.co';
+const SB_KEY='sb_publishable_UhmlGR4ullaoH5bds4A86g_v18c9v-n';
+const PAGE=50;
+const HDR={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};
+
+async function sb(path,opts={}){
+  const r=await fetch(SB_URL+'/rest/v1/'+path,{headers:{...HDR,...(opts.headers||{})},method:opts.method||'GET',body:opts.body||undefined});
+  if(!r.ok) throw new Error(await r.text());
+  return r.json();
 }
- 
-// ══════════════════════════════════════════
-//  AIRTABLE — LOAD ALL TOUCHPOINTS
-// ══════════════════════════════════════════
-async function loadAirtable() {
-  setSyncStatus('syncing', '⟳ Loading…');
-  touchpoints = [];
-  let offset = null;
-  try {
-    do {
-      let url = AIRTABLE_URL + '?pageSize=100&sort[0][field]=Date&sort[0][direction]=desc';
-      if (offset) url += '&offset=' + offset;
-      const res = await fetch(url, { headers: { Authorization: 'Bearer ' + AIRTABLE_TOKEN } });
-      if (!res.ok) throw new Error('Airtable HTTP ' + res.status);
-      const data = await res.json();
-      data.records.forEach(r => {
-        touchpoints.push({
-          id: r.id,
-          sfId: r.fields['Salesforce Account ID'] || '',
-          account: r.fields['Account'] || '',
-          domain: r.fields['Account Domain'] || '',
-          country: r.fields['Country'] || '',
-          date: r.fields['Date'] || '',
-          by: r.fields['Sent By'] || '',
-          tier: r.fields['Tier'] || '',
-          channel: r.fields['Channel'] || '',
-          campaign: r.fields['Campaign'] || '',
-          cooling: r.fields['Cooling Off'] || 'No',
-          outcome: r.fields['Outcome'] || '',
-          notes: r.fields['Notes'] || ''
-        });
-      });
-      offset = data.offset || null;
-    } while (offset);
- 
-    airtableLoaded = true;
-    setSyncStatus('', `✓ ${touchpoints.length} touchpoints`);
-    renderDashboard();
-    renderTracker();
-    renderAccounts();
-  } catch (err) {
-    setSyncStatus('error', '✗ Airtable error');
-    console.error('Airtable load error:', err);
-    showToast('Could not load from Airtable: ' + err.message);
-    // Show empty state
-    document.getElementById('dashboard-tbody').innerHTML = '<tr><td colspan="9" class="loading-row" style="color:var(--red);">Could not load Airtable data. Check console for details.</td></tr>';
-  }
+
+// ---- NAV ----
+function switchTab(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='intelligence'&&!window._iL) loadIntelligence();
+  if(name==='analysis'&&!window._aL) loadAnalysis();
+  if(name==='dashboard'&&!window._dL) loadDashboard();
 }
- 
-// ══════════════════════════════════════════
-//  AIRTABLE — SAVE TOUCHPOINT
-// ══════════════════════════════════════════
-async function saveTouchpoint() {
-  const account  = document.getElementById('f-account').value.trim();
-  const date     = document.getElementById('f-date').value;
-  const by       = document.getElementById('f-by').value.trim();
-  const tier     = document.getElementById('f-tier').value;
-  const channel  = document.getElementById('f-channel').value;
-  const campaign = document.getElementById('f-campaign').value.trim();
-  if (!account || !date || !by || !tier || !channel || !campaign) {
-    showToast('Please fill in all required fields (*)'); return;
-  }
- 
-  const fields = {
-    'Salesforce Account ID': document.getElementById('f-sfid').value.trim(),
-    'Account Domain':        document.getElementById('f-domain').value.trim(),
-    'Country':               document.getElementById('f-country').value.trim(),
-    'Account':               account,
-    'Date':                  date,
-    'Sent By':               by,
-    'Tier':                  tier,
-    'Channel':               channel,
-    'Campaign':              campaign,
-    'Cooling Off':           document.getElementById('f-cooling').value,
-    'Outcome':               document.getElementById('f-outcome').value,
-    'Notes':                 document.getElementById('f-notes').value.trim()
-  };
-  // Remove empty strings
-  Object.keys(fields).forEach(k => { if (fields[k] === '') delete fields[k]; });
- 
-  const saveBtn = document.getElementById('save-btn');
-  saveBtn.disabled = true;
-  saveBtn.textContent = 'Saving…';
- 
-  try {
-    let res;
-    if (editingId) {
-      res = await fetch(AIRTABLE_URL + '/' + editingId, {
-        method: 'PATCH',
-        headers: { Authorization: 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fields })
-      });
-    } else {
-      res = await fetch(AIRTABLE_URL, {
-        method: 'POST',
-        headers: { Authorization: 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fields })
-      });
+function switchInner(prefix,name,btn){
+  ['pipeline','engagement','campaigns','geography'].forEach(n=>{
+    const el=document.getElementById(prefix+'-'+n);
+    if(el) el.style.display='none';
+  });
+  document.querySelectorAll('.inner-tab').forEach(t=>t.classList.remove('active'));
+  const el=document.getElementById(prefix+'-'+name);
+  if(el) el.style.display='block';
+  btn.classList.add('active');
+}
+
+// ---- SHARED DATA ----
+let intelData=[], engData=[];
+
+// ---- INTELLIGENCE ----
+let iFiltered=[], iPage=1;
+
+async function loadIntelligence(){
+  window._iL=true;
+  try{
+    intelData=await sb('account_product_stages?select=*&order=account_name.asc&limit=5000');
+    document.getElementById('intel-count').textContent=intelData.length.toLocaleString();
+    const prods=[...new Set(intelData.map(r=>r.product).filter(Boolean))].sort();
+    const regs=[...new Set(intelData.map(r=>r.region).filter(Boolean))].sort();
+    document.getElementById('intel-product').innerHTML='<option value="">All Products</option>'+prods.map(p=>`<option>${p}</option>`).join('');
+    document.getElementById('intel-region').innerHTML='<option value="">All Regions</option>'+regs.map(r=>`<option>${r}</option>`).join('');
+
+    // Need eng data for engagement status column
+    if(!engData.length) await loadEngData();
+    filterIntel();
+  }catch(e){ document.getElementById('intel-tbody').innerHTML=`<tr><td colspan="9" style="color:var(--red);padding:16px">${e.message}</td></tr>`; }
+}
+
+function filterIntel(){
+  const q=document.getElementById('intel-search').value.toLowerCase();
+  const st=document.getElementById('intel-stage').value;
+  const pr=document.getElementById('intel-product').value;
+  const re=document.getElementById('intel-region').value;
+  const es=document.getElementById('intel-eng-status').value;
+
+  iFiltered=intelData.filter(r=>{
+    if(q&&!JSON.stringify(r).toLowerCase().includes(q)) return false;
+    if(st&&r.stage!==st) return false;
+    if(pr&&r.product!==pr) return false;
+    if(re&&r.region!==re) return false;
+    if(es){
+      const status=getEngStatus(r.sf_account_id||r.account_name);
+      if(es==='active'&&status!=='active') return false;
+      if(es==='cooling'&&status!=='cooling') return false;
+      if(es==='not_reached'&&status!=='not_reached') return false;
     }
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error?.message || 'HTTP ' + res.status);
-    }
-    showToast(editingId ? 'Touchpoint updated in Airtable' : 'Touchpoint saved to Airtable');
-    closeModal();
-    await loadAirtable();
-  } catch (err) {
-    showToast('Save failed: ' + err.message);
-    console.error('Save error:', err);
-  } finally {
-    saveBtn.disabled = false;
-    saveBtn.textContent = 'Save Touchpoint';
-  }
+    return true;
+  });
+  iPage=1; renderIntel();
 }
- 
-async function deleteTouchpoint(id) {
-  if (!confirm('Delete this touchpoint from Airtable?')) return;
-  try {
-    const res = await fetch(AIRTABLE_URL + '/' + id, {
-      method: 'DELETE',
-      headers: { Authorization: 'Bearer ' + AIRTABLE_TOKEN }
+
+function renderIntel(){
+  const rows=iFiltered.slice((iPage-1)*PAGE, iPage*PAGE);
+  document.getElementById('intel-tbody').innerHTML=rows.length?rows.map(r=>{
+    const es=getEngStatus(r.sf_account_id||r.account_name);
+    return`<tr>
+      <td class="primary">${r.account_name||'—'}</td>
+      <td>${r.product||'—'}</td>
+      <td>${stageBadge(r.stage)}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px">${r.stage_date?r.stage_date.slice(0,10):'—'}</td>
+      <td style="font-family:'DM Mono',monospace">${r.properties||'—'}</td>
+      <td>${r.region||'—'}</td>
+      <td>${r.country||'—'}</td>
+      <td>${r.owner||'—'}</td>
+      <td>${engStatusBadge(es)}</td>
+    </tr>`;}).join(''):'<tr><td colspan="9" class="empty">No records match</td></tr>';
+  renderPg('intel',iFiltered.length,iPage,p=>{iPage=p;renderIntel();});
+}
+
+// ---- ENG STATUS HELPERS ----
+let engStatusMap={};
+
+function buildEngStatusMap(){
+  engStatusMap={};
+  engData.forEach(r=>{
+    const k=r.sf_account_id||r.account_name||'?';
+    if(!engStatusMap[k]) engStatusMap[k]={lastDate:null,cooling:false,touched:false};
+    engStatusMap[k].touched=true;
+    if(r.cooling_off) engStatusMap[k].cooling=true;
+    if(r.date&&(!engStatusMap[k].lastDate||r.date>engStatusMap[k].lastDate)) engStatusMap[k].lastDate=r.date;
+  });
+}
+
+function getEngStatus(key){
+  const m=engStatusMap[key];
+  if(!m||!m.touched) return 'not_reached';
+  if(m.cooling) return 'cooling';
+  const days=m.lastDate?(new Date()-new Date(m.lastDate))/86400000:999;
+  if(days<=14) return 'active';
+  return 'not_reached';
+}
+
+function engStatusBadge(s){
+  if(s==='active') return '<span class="badge green">Active</span>';
+  if(s==='cooling') return '<span class="badge red">Cooling Off</span>';
+  return '<span class="badge gray">Not Reached</span>';
+}
+
+// ---- LOAD ENG DATA ----
+async function loadEngData(){
+  engData=await sb('touchpoints?select=*&order=date.desc&limit=10000');
+  buildEngStatusMap();
+}
+
+// ---- ANALYSIS ----
+async function loadAnalysis(){
+  window._aL=true;
+  if(!intelData.length) await loadIntelligence();
+  if(!engData.length) await loadEngData();
+  renderPipeline();
+  renderEngagement();
+  renderCampaigns();
+  renderGeo();
+}
+
+function renderPipeline(){
+  const order=['Unreached','Unengaged','Aware','Engaged','Potential Opp.','Active Opp.'];
+  const counts={};order.forEach(s=>counts[s]=0);
+  intelData.forEach(r=>{if(counts[r.stage]!==undefined)counts[r.stage]++;});
+  const max=Math.max(...Object.values(counts),1);
+  const colors=['#4a5270','#5a6480','#4f9cf9','#06b6d4','#f59e0b','#22c55e'];
+  document.getElementById('funnel-chart').innerHTML=order.map((s,i)=>`
+    <div class="funnel-row">
+      <div class="funnel-label">${s}</div>
+      <div class="funnel-track"><div class="funnel-fill" style="width:${(counts[s]/max*100).toFixed(1)}%;background:${colors[i]}"><span>${counts[s]}</span></div></div>
+      <div class="funnel-num">${counts[s].toLocaleString()}</div>
+    </div>`).join('');
+
+  const prods={};
+  intelData.forEach(r=>{if(r.product){prods[r.product]=(prods[r.product]||0)+1;}});
+  const pm=Math.max(...Object.values(prods),1);
+  document.getElementById('product-dist').innerHTML=Object.entries(prods).sort((a,b)=>b[1]-a[1]).map(([p,n])=>`
+    <div class="mc-row"><div class="mc-label" title="${p}">${p}</div><div class="mc-track"><div class="mc-fill" style="width:${(n/pm*100).toFixed(1)}%;background:var(--accent2)"></div></div><div class="mc-val">${n}</div></div>`).join('');
+
+  const active=intelData.filter(r=>r.stage==='Active Opp.').slice(0,8);
+  const potential=intelData.filter(r=>r.stage==='Potential Opp.').slice(0,8);
+  document.getElementById('active-opps').innerHTML=active.length?active.map(r=>`
+    <div class="tl-item"><div class="tl-dot g"></div><div><div class="tl-title">${r.account_name||'—'}</div><div class="tl-meta">${r.product||'—'} · ${r.country||'—'} · ${r.stage_date?.slice(0,10)||'—'}</div></div></div>`).join(''):'<div class="empty">No active opportunities</div>';
+  document.getElementById('potential-opps').innerHTML=potential.length?potential.map(r=>`
+    <div class="tl-item"><div class="tl-dot y"></div><div><div class="tl-title">${r.account_name||'—'}</div><div class="tl-meta">${r.product||'—'} · ${r.country||'—'} · ${r.stage_date?.slice(0,10)||'—'}</div></div></div>`).join(''):'<div class="empty">No potential opportunities</div>';
+}
+
+function renderEngagement(){
+  const now=new Date();
+  const uniq=new Set(engData.map(r=>r.sf_account_id||r.account_name||'?')).size;
+  const recent=engData.filter(r=>r.date&&(now-new Date(r.date))<7*86400000).length;
+  const cooling=engData.filter(r=>r.cooling_off).length;
+  document.getElementById('an-total').textContent=engData.length.toLocaleString();
+  document.getElementById('an-uniq').textContent=uniq.toLocaleString();
+  document.getElementById('an-recent').textContent=recent.toLocaleString();
+  document.getElementById('an-cooling').textContent=cooling.toLocaleString();
+
+  const outcomes={};
+  engData.forEach(r=>{const o=r.outcome||'No Response';outcomes[o]=(outcomes[o]||0)+1;});
+  const om=Math.max(...Object.values(outcomes),1);
+  const oc={'Opened':'var(--yellow)','Clicked':'var(--green)','Replied':'var(--cyan)','Meeting Booked':'var(--accent2)','No Response':'var(--text3)'};
+  document.getElementById('outcome-chart').innerHTML=Object.entries(outcomes).sort((a,b)=>b[1]-a[1]).map(([o,c])=>`
+    <div class="mc-row"><div class="mc-label">${o}</div><div class="mc-track"><div class="mc-fill" style="width:${(c/om*100).toFixed(1)}%;background:${oc[o]||'var(--accent)'}"></div></div><div class="mc-val">${c}</div></div>`).join('');
+
+  const accts={};
+  engData.forEach(r=>{const k=r.account_name||r.sf_account_id||'?';accts[k]=(accts[k]||0)+1;});
+  const top=Object.entries(accts).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  document.getElementById('top-accounts').innerHTML=top.map(([n,c])=>`
+    <div class="account-row"><div class="acct-av">${n.charAt(0).toUpperCase()}</div><div style="flex:1;min-width:0"><div class="acct-name" title="${n}">${n}</div><div class="acct-meta">${c} sends</div></div><div class="acct-score">${c}</div></div>`).join('');
+
+  const days={};
+  for(let i=29;i>=0;i--){const d=new Date(now-i*86400000).toISOString().slice(0,10);days[d]=0;}
+  engData.forEach(r=>{if(r.date&&days[r.date.slice(0,10)]!==undefined)days[r.date.slice(0,10)]++;});
+  const dm=Math.max(...Object.values(days),1);
+  document.getElementById('daily-chart').innerHTML=Object.entries(days).map(([d,c])=>`
+    <div class="mc-row"><div class="mc-label">${d.slice(5)}</div><div class="mc-track"><div class="mc-fill" style="width:${(c/dm*100).toFixed(1)}%;background:var(--accent)"></div></div><div class="mc-val">${c}</div></div>`).join('');
+}
+
+function renderCampaigns(){
+  const camps={};
+  engData.forEach(r=>{
+    const c=r.campaign||'Unknown';
+    if(!camps[c]) camps[c]={total:0,accts:new Set(),opened:0,clicked:0,replied:0};
+    camps[c].total++;camps[c].accts.add(r.sf_account_id||r.account_name||'?');
+    if(r.outcome==='Opened')camps[c].opened++;
+    if(r.outcome==='Clicked')camps[c].clicked++;
+    if(r.outcome==='Replied')camps[c].replied++;
+  });
+  const sorted=Object.entries(camps).sort((a,b)=>b[1].total-a[1].total);
+  const vm=Math.max(...sorted.map(e=>e[1].total),1);
+  document.getElementById('camp-vol').innerHTML=sorted.slice(0,15).map(([n,d])=>`
+    <div class="mc-row"><div class="mc-label" title="${n}">${n.slice(0,35)}</div><div class="mc-track"><div class="mc-fill" style="width:${(d.total/vm*100).toFixed(1)}%;background:var(--accent)"></div></div><div class="mc-val">${d.total}</div></div>`).join('');
+
+  const rr=sorted.filter(([,d])=>d.total>=5).map(([n,d])=>[n,(d.opened+d.clicked+d.replied)/d.total*100]);
+  const rm=Math.max(...rr.map(e=>e[1]),1);
+  document.getElementById('camp-rate').innerHTML=rr.slice(0,15).map(([n,r])=>`
+    <div class="mc-row"><div class="mc-label" title="${n}">${n.slice(0,35)}</div><div class="mc-track"><div class="mc-fill" style="width:${(r/rm*100).toFixed(1)}%;background:var(--green)"></div></div><div class="mc-val">${r.toFixed(0)}%</div></div>`).join('')||'<div class="empty">Need ≥5 sends per campaign</div>';
+
+  document.getElementById('camp-tbody').innerHTML=sorted.slice(0,30).map(([n,d])=>`
+    <tr><td class="primary"><span class="campaign-pill" title="${n}">${n.slice(0,45)}</span></td>
+    <td style="font-family:'DM Mono',monospace">${d.total}</td>
+    <td style="font-family:'DM Mono',monospace">${d.accts.size}</td>
+    <td><span class="badge yellow">${d.opened}</span></td>
+    <td><span class="badge green">${d.clicked}</span></td>
+    <td><span class="badge cyan">${d.replied}</span></td>
+    <td style="font-family:'DM Mono',monospace">${((d.opened+d.clicked+d.replied)/d.total*100).toFixed(1)}%</td></tr>`).join('');
+}
+
+function renderGeo(){
+  const geo={};
+  engData.forEach(r=>{const c=r.country||'Unknown';if(!geo[c])geo[c]={n:0,accts:new Set()};geo[c].n++;geo[c].accts.add(r.sf_account_id||r.account_name||'?');});
+  const gs=Object.entries(geo).sort((a,b)=>b[1].n-a[1].n);
+  const gm=Math.max(...gs.map(e=>e[1].n),1);
+  document.getElementById('geo-country').innerHTML=gs.slice(0,20).map(([c,d])=>`
+    <div class="mc-row"><div class="mc-label">${c}</div><div class="mc-track"><div class="mc-fill" style="width:${(d.n/gm*100).toFixed(1)}%;background:var(--accent)"></div></div><div class="mc-val">${d.n}</div></div>`).join('');
+
+  const regs={};
+  intelData.forEach(r=>{const rg=r.region||'Unknown';regs[rg]=(regs[rg]||0)+1;});
+  const rs=Object.entries(regs).sort((a,b)=>b[1]-a[1]);
+  const rm=Math.max(...rs.map(e=>e[1]),1);
+  document.getElementById('geo-region').innerHTML=rs.slice(0,15).map(([r,n])=>`
+    <div class="mc-row"><div class="mc-label">${r}</div><div class="mc-track"><div class="mc-fill" style="width:${(n/rm*100).toFixed(1)}%;background:var(--accent2)"></div></div><div class="mc-val">${n}</div></div>`).join('');
+
+  const pipe={};
+  intelData.forEach(r=>{const c=r.country||'Unknown';if(!pipe[c])pipe[c]={total:0,stage:'—'};pipe[c].total++;pipe[c].stage=r.stage;});
+  const all=[...new Set([...Object.keys(pipe),...Object.keys(geo)])].sort();
+  document.getElementById('geo-tbody').innerHTML=all.slice(0,30).map(c=>{
+    const p=pipe[c]||{total:0,stage:'—'};
+    const g=geo[c]||{n:0,accts:new Set()};
+    const cov=p.total?((g.accts.size/p.total)*100).toFixed(0)+'%':'—';
+    return`<tr><td class="primary">${c}</td><td style="font-family:'DM Mono',monospace">${p.total}</td><td style="font-family:'DM Mono',monospace">${g.accts.size}</td><td><span class="badge ${parseInt(cov)>50?'green':parseInt(cov)>20?'yellow':'gray'}">${cov}</span></td><td style="font-family:'DM Mono',monospace">${g.n}</td><td>${stageBadge(p.stage)}</td></tr>`;}).join('');
+}
+
+// ---- DASHBOARD ----
+let dashData=[], dashFiltered=[], dashPage=1;
+
+async function loadDashboard(){
+  window._dL=true;
+  document.getElementById('dash-tbody').innerHTML='<tr><td colspan="9" class="loading">Loading…</td></tr>';
+  try{
+    if(!engData.length) await loadEngData();
+
+    // Build per-account map — lean, no heavy processing
+    const map={};
+    engData.forEach(r=>{
+      const k=r.sf_account_id||r.account_name||'?';
+      if(!map[k]) map[k]={name:r.account_name||k,sfid:r.sf_account_id||'—',country:r.country||'—',total:0,last:null,recent14:0,cooling:false,lastCamp:''};
+      map[k].total++;
+      if(r.cooling_off) map[k].cooling=true;
+      if(!map[k].last||r.date>map[k].last){map[k].last=r.date?.slice(0,10)||null;map[k].lastCamp=r.campaign||'';}
+      if(r.date&&(new Date()-new Date(r.date))<14*86400000) map[k].recent14++;
     });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    showToast('Deleted from Airtable');
-    await loadAirtable();
-  } catch (err) {
-    showToast('Delete failed: ' + err.message);
-  }
+
+    dashData=Object.values(map).sort((a,b)=>b.total-a.total);
+
+    const active14=dashData.filter(a=>a.recent14>0&&!a.cooling).length;
+    const cooling=dashData.filter(a=>a.cooling).length;
+    const notReached=dashData.filter(a=>!a.recent14&&!a.cooling).length;
+
+    document.getElementById('d-total').textContent=dashData.length.toLocaleString();
+    document.getElementById('d-active').textContent=active14.toLocaleString();
+    document.getElementById('d-cooling').textContent=cooling.toLocaleString();
+    document.getElementById('d-notreached').textContent=notReached.toLocaleString();
+    document.getElementById('d-sends').textContent=engData.length.toLocaleString();
+    document.getElementById('dash-count').textContent=dashData.length.toLocaleString();
+
+    filterDash();
+  }catch(e){document.getElementById('dash-tbody').innerHTML=`<tr><td colspan="9" style="color:var(--red);padding:16px">${e.message}</td></tr>`;}
 }
- 
-// ══════════════════════════════════════════
-//  NAVIGATION
-// ══════════════════════════════════════════
-function showPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  const pg = document.getElementById('page-' + name);
-  if (pg) pg.classList.add('active');
-  document.querySelectorAll('.tab-btn').forEach(b => {
-    if (name === 'intelligence' && b.classList.contains('intel-tab')) b.classList.add('active');
-    if (name === 'dashboard' && b.textContent.trim() === 'Dashboard') b.classList.add('active');
+
+function filterDash(){
+  const q=document.getElementById('dash-search').value.toLowerCase();
+  const s=document.getElementById('dash-status').value;
+  const d=parseInt(document.getElementById('dash-days').value)||0;
+  const cutoff=d?new Date(Date.now()-d*86400000):null;
+
+  dashFiltered=dashData.filter(r=>{
+    if(q&&!(r.name+r.sfid+r.country).toLowerCase().includes(q)) return false;
+    if(s==='active'&&(r.cooling||r.recent14===0)) return false;
+    if(s==='cooling'&&!r.cooling) return false;
+    if(s==='not_reached'&&(r.cooling||r.recent14>0)) return false;
+    if(cutoff&&r.last&&new Date(r.last)<cutoff) return false;
+    return true;
   });
-  document.getElementById('export-btn').style.display = name==='intelligence' ? 'inline-flex' : 'none';
-  if (name === 'intelligence') initIntelligence();
+  dashPage=1; renderDash();
 }
- 
-// ══════════════════════════════════════════
-//  HELPERS
-// ══════════════════════════════════════════
-function today() { return new Date().toISOString().split('T')[0]; }
- 
-function daysBetween(dateStr) {
-  if (!dateStr) return null;
-  const now = new Date(); now.setHours(0,0,0,0);
-  return Math.floor((now - new Date(dateStr)) / 86400000);
+
+function renderDash(){
+  const now=new Date();
+  const rows=dashFiltered.slice((dashPage-1)*PAGE, dashPage*PAGE);
+  document.getElementById('dash-tbody').innerHTML=rows.length?rows.map(r=>{
+    const days=r.last?Math.floor((now-new Date(r.last))/86400000):'—';
+    const status=r.cooling?'<span class="badge red">Cooling Off</span>':r.recent14>0?'<span class="badge green">Active</span>':'<span class="badge gray">Not Reached</span>';
+    return`<tr>
+      <td class="primary">${r.name}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)">${r.sfid.slice(0,18)}</td>
+      <td>${r.country}</td>
+      <td style="font-family:'DM Mono',monospace">${r.total}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px">${r.last||'—'}</td>
+      <td style="font-family:'DM Mono',monospace">${days}</td>
+      <td style="font-family:'DM Mono',monospace">${r.recent14}</td>
+      <td><span class="campaign-pill" title="${r.lastCamp}">${r.lastCamp.slice(0,30)||'—'}</span></td>
+      <td>${status}</td>
+    </tr>`;}).join(''):'<tr><td colspan="9" class="empty">No accounts match</td></tr>';
+  renderPg('dash',dashFiltered.length,dashPage,p=>{dashPage=p;renderDash();});
 }
- 
-function getLimit(tier) { return tier === 'Tier 3' ? 1 : 2; }
- 
-function tierBadge(t) {
-  if (t==='Tier 1') return `<span class="badge badge-tier1">Tier 1</span>`;
-  if (t==='Tier 2') return `<span class="badge badge-tier2">Tier 2</span>`;
-  return `<span class="badge badge-tier3">${t||'—'}</span>`;
-}
-function channelBadge(ch) {
-  const m={Email:'email',LinkedIn:'linkedin',Webinar:'webinar',Event:'event','Direct Mail':'direct','Paid Ad':'paid'};
-  return `<span class="badge badge-channel-${m[ch]||'email'}">${ch||'—'}</span>`;
-}
-function outcomeBadge(o) {
-  if (!o) return `<span class="badge badge-none">—</span>`;
-  const m={Opened:'opened',Clicked:'clicked',Replied:'replied','Meeting Booked':'meeting'};
-  return `<span class="badge badge-${m[o]||'none'}">${o}</span>`;
-}
-function coolingBadge(v) {
-  return v==='Yes'?`<span class="badge badge-yes">Yes</span>`:`<span class="badge badge-no">No</span>`;
-}
-function showToast(msg) {
-  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2800);
-}
- 
-// ══════════════════════════════════════════
-//  MODAL
-// ══════════════════════════════════════════
-function openModal(id) {
-  editingId = id || null;
-  document.getElementById('modal-title').textContent = editingId ? 'Edit Touchpoint' : 'Log Touchpoint';
-  ['sfid','domain','country','account','date','by','tier','channel','campaign','cooling','outcome','notes'].forEach(f => {
-    const el = document.getElementById('f-'+f); if (el) el.value='';
-  });
-  document.getElementById('f-date').value = today();
-  document.getElementById('f-cooling').value = 'No';
-  if (editingId) {
-    const t = touchpoints.find(x=>x.id===editingId);
-    if (t) {
-      document.getElementById('f-sfid').value    = t.sfId||'';
-      document.getElementById('f-domain').value  = t.domain||'';
-      document.getElementById('f-country').value = t.country||'';
-      document.getElementById('f-account').value = t.account||'';
-      document.getElementById('f-date').value    = t.date||'';
-      document.getElementById('f-by').value      = t.by||'';
-      document.getElementById('f-tier').value    = t.tier||'';
-      document.getElementById('f-channel').value = t.channel||'';
-      document.getElementById('f-campaign').value= t.campaign||'';
-      document.getElementById('f-cooling').value = t.cooling||'No';
-      document.getElementById('f-outcome').value = t.outcome||'';
-      document.getElementById('f-notes').value   = t.notes||'';
-    }
-  }
-  const dl = document.getElementById('accounts-list');
-  dl.innerHTML = [...new Set(touchpoints.map(t=>t.account).filter(Boolean))].map(n=>`<option value="${n}">`).join('');
-  document.getElementById('modal-overlay').classList.add('open');
-}
-function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); editingId=null; }
-function closeModalOutside(e) { if (e.target===document.getElementById('modal-overlay')) closeModal(); }
- 
-// ══════════════════════════════════════════
-//  DASHBOARD
-// ══════════════════════════════════════════
-function getAccountSummaries() {
-  const map = {};
-  touchpoints.forEach(t => {
-    const key = t.sfId || t.account;
-    if (!map[key]) map[key] = { name:t.account, sfId:t.sfId||'', country:t.country||'', tier:t.tier, touches:[], cooling:false };
-    map[key].touches.push(t.date);
-    if (t.cooling==='Yes') map[key].cooling=true;
-    map[key].tier    = t.tier || map[key].tier;
-    map[key].country = t.country || map[key].country;
-    map[key].sfId    = t.sfId    || map[key].sfId;
-  });
-  return Object.values(map);
-}
- 
-function renderDashboard() {
-  const summaries = getAccountSummaries();
-  const coolingAccounts = summaries.filter(s=>s.cooling);
-  const banner = document.getElementById('cooling-banner');
-  if (coolingAccounts.length>0) {
-    banner.style.display='flex';
-    document.getElementById('cooling-text').textContent = `${coolingAccounts.length} account${coolingAccounts.length>1?'s':''} currently cooling off: ${coolingAccounts.map(a=>a.name).join(', ')}`;
-  } else banner.style.display='none';
- 
-  const cutoff=new Date(); cutoff.setDate(cutoff.getDate()-14);
-  const active14=touchpoints.filter(t=>new Date(t.date)>=cutoff).length;
-  document.getElementById('stat-accounts').textContent = summaries.length;
-  document.getElementById('stat-total').textContent    = touchpoints.length;
-  document.getElementById('stat-active').textContent   = active14;
-  document.getElementById('stat-cooling').textContent  = coolingAccounts.length;
- 
-  const tbody=document.getElementById('dashboard-tbody');
-  if (summaries.length===0) {
-    tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text3);">No touchpoints yet — click Log Touchpoint to get started</td></tr>';
-    return;
-  }
-  tbody.innerHTML = summaries.map(s => {
-    const sorted=[...s.touches].sort((a,b)=>new Date(b)-new Date(a));
-    const lastTouch=sorted[0]||'';
-    const daysSince=lastTouch?daysBetween(lastTouch):null;
-    const c14=new Date(); c14.setDate(c14.getDate()-14);
-    const touches14=s.touches.filter(d=>new Date(d)>=c14).length;
-    const limit=getLimit(s.tier);
-    let statusHtml;
-    if (s.cooling) statusHtml=`<span class="status-cooling">⬤ Cooling Off</span>`;
-    else if (touches14>=limit) statusHtml=`<span class="status-limit">⬤ At Limit</span>`;
-    else statusHtml=`<span class="status-active">⬤ Active</span>`;
-    return `<tr>
-      <td class="account-name">${s.name}</td>
-      <td><span class="date-cell">${s.sfId||'—'}</span></td>
-      <td>${s.country||'—'}</td>
-      <td>${tierBadge(s.tier)}</td>
-      <td>${s.touches.length}</td>
-      <td><span class="date-cell">${lastTouch||'—'}</span></td>
-      <td>${daysSince!==null?daysSince+'d':'—'}</td>
-      <td>${touches14}/${limit}</td>
-      <td>${statusHtml}</td>
-    </tr>`;
-  }).join('');
-}
- 
-// ══════════════════════════════════════════
-//  TRACKER
-// ══════════════════════════════════════════
-function renderTracker() {
-  const search =(document.getElementById('tracker-search').value||'').toLowerCase();
-  const channel= document.getElementById('tracker-channel').value;
-  const tier   = document.getElementById('tracker-tier').value;
-  const cooling= document.getElementById('tracker-cooling').value;
- 
-  let filtered=touchpoints.filter(t=>{
-    const ms=!search||t.account.toLowerCase().includes(search)||(t.campaign||'').toLowerCase().includes(search)||(t.sfId||'').toLowerCase().includes(search);
-    return ms&&(!channel||t.channel===channel)&&(!tier||t.tier===tier)&&(!cooling||t.cooling===cooling);
-  });
- 
-  const tbody=document.getElementById('tracker-tbody');
-  const empty=document.getElementById('tracker-empty');
-  if (filtered.length===0) { tbody.innerHTML=''; empty.style.display='block'; return; }
-  empty.style.display='none';
-  tbody.innerHTML=filtered.map((t,i)=>`<tr>
-    <td class="col-num" style="color:var(--text3);font-size:12px;">${i+1}</td>
-    <td class="col-sfid"><span class="cell-truncate date-cell" title="${t.sfId||''}">${t.sfId||'—'}</span></td>
-    <td class="col-acct"><span class="cell-truncate account-name" title="${t.account}">${t.account}</span></td>
-    <td class="col-domain"><span class="cell-truncate" style="color:var(--text2);font-size:12px;" title="${t.domain||''}">${t.domain||'—'}</span></td>
-    <td class="col-ctry"><span class="cell-truncate" title="${t.country||''}">${t.country||'—'}</span></td>
-    <td class="col-date"><span class="date-cell">${t.date}</span></td>
-    <td class="col-by"><span class="cell-truncate" title="${t.by}">${t.by}</span></td>
-    <td class="col-tier">${tierBadge(t.tier)}</td>
-    <td class="col-chan">${channelBadge(t.channel)}</td>
-    <td class="col-camp"><span class="cell-truncate" title="${t.campaign}">${t.campaign}</span></td>
-    <td class="col-cool">${coolingBadge(t.cooling)}</td>
-    <td class="col-out">${outcomeBadge(t.outcome)}</td>
-    <td class="col-notes"><span class="cell-truncate notes-cell" title="${t.notes||''}">${t.notes||'—'}</span></td>
-    <td class="col-acts"><div style="display:flex;gap:4px;">
-      <button class="btn btn-sm" onclick="openModal('${t.id}')">Edit</button>
-      <button class="btn btn-sm btn-danger" onclick="deleteTouchpoint('${t.id}')">Del</button>
-    </div></td>
-  </tr>`).join('');
-}
- 
-// ══════════════════════════════════════════
-//  ACCOUNTS
-// ══════════════════════════════════════════
-function renderAccounts() {
-  const summaries=getAccountSummaries();
-  const grid=document.getElementById('accounts-grid');
-  const empty=document.getElementById('accounts-empty');
-  if (summaries.length===0) { grid.innerHTML=''; empty.style.display='block'; return; }
-  empty.style.display='none';
-  grid.innerHTML=summaries.map(s=>{
-    const c14=new Date(); c14.setDate(c14.getDate()-14);
-    const t14=s.touches.filter(d=>new Date(d)>=c14).length;
-    const limit=getLimit(s.tier);
-    const pct=Math.min(100,Math.round(t14/limit*100));
-    const sorted=[...s.touches].sort((a,b)=>new Date(b)-new Date(a));
-    const last=sorted[0]||'';
-    return `<div class="account-card ${s.cooling?'cooling':''}">
-      <div class="account-card-header"><div class="account-card-name">${s.name}</div>${tierBadge(s.tier)}</div>
-      <div style="font-size:11px;color:var(--text3);">${s.sfId||''} ${s.country?'· '+s.country:''}</div>
-      <div class="account-card-stats">
-        <div class="account-stat"><div class="account-stat-val">${s.touches.length}</div><div class="account-stat-lbl">Total touches</div></div>
-        <div class="account-stat"><div class="account-stat-val" style="${t14>=limit?'color:var(--red)':''}">${t14}</div><div class="account-stat-lbl">Last 14 days</div></div>
-        <div class="account-stat"><div class="account-stat-val">${last?daysBetween(last)+'d':'—'}</div><div class="account-stat-lbl">Days since</div></div>
-      </div>
-      <div class="progress-bar-wrap">
-        <div class="progress-bar-label"><span>14-day usage</span><span>${t14}/${limit}</span></div>
-        <div class="progress-bar"><div class="progress-bar-fill ${t14>=limit?'warning':''}" style="width:${pct}%"></div></div>
-      </div>
-      ${s.cooling?`<div style="margin-top:10px;font-size:11px;font-weight:600;color:var(--red);">⬤ COOLING OFF — Do not contact</div>`:''}
-    </div>`;
-  }).join('');
-}
- 
-// ══════════════════════════════════════════
-//  CSV
-// ══════════════════════════════════════════
-function downloadTemplate() {
-  const h=['sfId','account','domain','country','date','by','tier','channel','campaign','cooling','outcome','notes'];
-  const ex=['0015g00000XXXXX','Acme Corp','acme.com','United Kingdom','2025-01-15','Sarah Jones','Tier 1','Email','Q1 Product Launch','No','Opened','Follow up'];
-  downloadCSV([h,ex].map(r=>r.join(',')).join('\n'),'touchpoints_template.csv');
-}
-function downloadCSV(content,filename) {
-  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([content],{type:'text/csv'}));
-  a.download=filename; a.click();
-}
-function parseCSV(text) {
-  const lines=text.trim().split('\n'); if(lines.length<2) return [];
-  const headers=lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
-  return lines.slice(1).map(line=>{
-    const vals=line.split(',').map(v=>v.trim().replace(/^"|"$/g,''));
-    const obj={}; headers.forEach((h,i)=>obj[h]=vals[i]||''); return obj;
-  });
-}
- 
-async function handleCSVUpload(e) {
-  const file=e.target.files[0]; if(!file) return;
-  const reader=new FileReader();
-  reader.onload=async ev=>{
-    const rows=parseCSV(ev.target.result);
-    const valid=rows.filter(r=>r.account||r.sfId);
-    if(!valid.length){showToast('No valid rows found in CSV');return;}
-    setSyncStatus('syncing',`Uploading ${valid.length} rows…`);
-    let ok=0,fail=0;
-    for(const r of valid){
-      const fields={};
-      if(r.sfId)    fields['Salesforce Account ID']=r.sfId;
-      if(r.domain)  fields['Account Domain']=r.domain;
-      if(r.country) fields['Country']=r.country;
-      fields['Account'] =r.account||r.sfId||'';
-      fields['Date']    =r.date||today();
-      fields['Sent By'] =r.by||'';
-      fields['Tier']    =r.tier||'Tier 2';
-      fields['Channel'] =r.channel||'Email';
-      fields['Campaign']=r.campaign||'';
-      fields['Cooling Off']=r.cooling||'No';
-      if(r.outcome) fields['Outcome']=r.outcome;
-      if(r.notes)   fields['Notes']=r.notes;
-      try{
-        const res=await fetch(AIRTABLE_URL,{method:'POST',headers:{Authorization:'Bearer '+AIRTABLE_TOKEN,'Content-Type':'application/json'},body:JSON.stringify({fields})});
-        if(res.ok) ok++; else fail++;
-      }catch{fail++;}
-    }
-    showToast(`Imported ${ok} touchpoints${fail?` (${fail} failed)`:''}`);
-    await loadAirtable();
-    e.target.value='';
-  };
-  reader.readAsText(file);
-}
- 
-// ══════════════════════════════════════════
-//  CAMPAIGN CHECKER
-// ══════════════════════════════════════════
-function downloadCheckerTemplate() {
-  downloadCSV('sfId,account,domain,country\n0015g00000XXXXX,Acme Corp,acme.com,United Kingdom\n,Beta Industries,beta.io,Germany','checker_template.csv');
-}
-function handleCheckerUpload(e) {
-  const file=e.target.files[0]; if(!file) return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    const rows=parseCSV(ev.target.result);
-    checkerData=rows.map(r=>{
-      const sfId=r.sfId||'', account=r.account||'', domain=r.domain||'', country=r.country||'';
-      const matches=touchpoints.filter(t=>(sfId&&t.sfId===sfId)||(domain&&t.domain&&t.domain.toLowerCase()===domain.toLowerCase())||(account&&t.account.toLowerCase()===account.toLowerCase()));
-      let statusKey='unknown', touches14=0, lastTouch='', tier='', limit=2;
-      if(matches.length>0){
-        const c14=new Date(); c14.setDate(c14.getDate()-14);
-        touches14=matches.filter(t=>new Date(t.date)>=c14).length;
-        lastTouch=matches.map(t=>t.date).sort((a,b)=>new Date(b)-new Date(a))[0]||'';
-        tier=matches[matches.length-1].tier||'Tier 2'; limit=getLimit(tier);
-        const cool=matches.some(t=>t.cooling==='Yes');
-        statusKey=cool?'cooling':touches14>=limit?'limit':'clear';
-      }
-      let daysUntilClear='—';
-      if((statusKey==='cooling'||statusKey==='limit')&&lastTouch){
-        const cd=new Date(lastTouch); cd.setDate(cd.getDate()+14);
-        const diff=Math.ceil((cd-new Date())/86400000);
-        daysUntilClear=diff>0?diff+'d':'Ready';
-      }
-      return {sfId,account,domain,country,statusKey,touches14,lastTouch,tier,limit,daysUntilClear};
-    });
-    document.getElementById('checker-dropzone').style.display='none';
-    document.getElementById('checker-results').style.display='block';
-    renderCheckerResults();
-    e.target.value='';
-  };
-  reader.readAsText(file);
-}
-function renderCheckerResults() {
-  const search=(document.getElementById('checker-search').value||'').toLowerCase();
-  const filter=document.getElementById('checker-filter').value;
-  const filtered=checkerData.filter(r=>{
-    const ms=!search||r.account.toLowerCase().includes(search)||r.sfId.toLowerCase().includes(search)||r.domain.toLowerCase().includes(search);
-    return ms&&(!filter||r.statusKey===filter);
-  });
-  const counts={clear:0,limit:0,cooling:0,unknown:0};
-  checkerData.forEach(r=>counts[r.statusKey]++);
-  document.getElementById('checker-summary').innerHTML=`
-    <div class="stat-card success" style="flex:1;min-width:120px;padding:12px 16px;"><div class="stat-label">Clear to contact</div><div class="stat-value">${counts.clear}</div></div>
-    <div class="stat-card" style="border-color:#FDE8C8;background:#FEF5E7;flex:1;min-width:120px;padding:12px 16px;"><div class="stat-label" style="color:#92400E;">At limit</div><div class="stat-value" style="color:var(--amber);">${counts.limit}</div></div>
-    <div class="stat-card danger" style="flex:1;min-width:120px;padding:12px 16px;"><div class="stat-label">Cooling Off</div><div class="stat-value">${counts.cooling}</div></div>
-    <div class="stat-card" style="flex:1;min-width:120px;padding:12px 16px;"><div class="stat-label">Not in tracker</div><div class="stat-value">${counts.unknown}</div></div>`;
-  const sm={clear:`<span class="status-active">⬤ Clear</span>`,limit:`<span class="status-limit">⬤ At limit</span>`,cooling:`<span class="status-cooling">⬤ Cooling Off</span>`,unknown:`<span class="badge badge-none">Not tracked</span>`};
-  document.getElementById('checker-tbody').innerHTML=filtered.map(r=>`<tr>
-    <td class="account-name">${r.account||'—'}</td>
-    <td><span class="date-cell">${r.sfId||'—'}</span></td>
-    <td style="color:var(--text2);font-size:12px;">${r.domain||'—'}</td>
-    <td>${r.country||'—'}</td>
-    <td>${r.statusKey==='unknown'?'—':r.touches14}</td>
-    <td>${r.statusKey==='unknown'?'—':r.limit}</td>
-    <td><span class="date-cell">${r.lastTouch||'—'}</span></td>
-    <td>${r.daysUntilClear}</td>
-    <td>${sm[r.statusKey]}</td>
-  </tr>`).join('');
-}
-function downloadCheckerResults() {
-  const h=['account','sfId','domain','country','touches14d','limit','lastTouch','daysUntilClear','status'];
-  const rows=checkerData.map(r=>[r.account,r.sfId,r.domain,r.country,r.touches14,r.limit,r.lastTouch,r.daysUntilClear,r.statusKey]);
-  downloadCSV([h,...rows].map(r=>r.join(',')).join('\n'),'checker_results.csv');
-}
-function resetChecker() {
-  checkerData=[];
-  document.getElementById('checker-dropzone').style.display='block';
-  document.getElementById('checker-results').style.display='none';
-}
- 
-// ══════════════════════════════════════════
-//  INTELLIGENCE — Supabase
-// ══════════════════════════════════════════
-let intelLoaded = false;
- 
-async function initIntelligence() {
-  if (intelLoaded) return;
-  document.getElementById('i-loading').style.display='flex';
-  document.getElementById('i-table').style.display='none';
-  document.getElementById('i-empty').style.display='none';
- 
-  try {
-    // Load from account_product_stages joined with accounts
-    // We'll fetch account_product_stages and accounts separately then join in JS
-    const [stagesRes, accountsRes] = await Promise.all([
-      fetch(`${SUPABASE_URL}/rest/v1/account_product_stages?select=*&limit=10000`, {
-        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
-      }),
-      fetch(`${SUPABASE_URL}/rest/v1/accounts?select=sf_account_id,account_name,country,region,no_of_rooms,no_of_properties,adr,industry,hierarchy_level,account_owner&limit=10000`, {
-        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+
+// ---- LOG ----
+document.getElementById('f-date').value=new Date().toISOString().slice(0,10);
+
+async function submitTP(e){
+  e.preventDefault();
+  const btn=document.getElementById('submit-btn');
+  btn.textContent='Saving…';btn.disabled=true;
+  try{
+    await fetch(SB_URL+'/rest/v1/touchpoints',{
+      method:'POST',
+      headers:{...HDR,'Prefer':'return=minimal'},
+      body:JSON.stringify({
+        sf_account_id:document.getElementById('f-sfid').value.trim()||null,
+        account_name:document.getElementById('f-name').value.trim(),
+        account_domain:document.getElementById('f-domain').value.trim()||null,
+        country:document.getElementById('f-country').value.trim()||null,
+        date:document.getElementById('f-date').value||null,
+        sent_by:document.getElementById('f-sentby').value.trim(),
+        channel:'Email',
+        campaign:document.getElementById('f-campaign').value.trim(),
+        cooling_off:document.getElementById('f-cooling').value==='true',
+        outcome:document.getElementById('f-outcome').value||null,
+        notes:document.getElementById('f-notes').value.trim()||null
       })
-    ]);
- 
-    if (!stagesRes.ok) throw new Error('Supabase stages error: ' + stagesRes.status + ' ' + await stagesRes.text());
-    if (!accountsRes.ok) throw new Error('Supabase accounts error: ' + accountsRes.status + ' ' + await accountsRes.text());
- 
-    const stages   = await stagesRes.json();
-    const accounts = await accountsRes.json();
- 
-    // Build accounts lookup by sf_account_id
-    const acctMap = {};
-    accounts.forEach(a => { if(a.sf_account_id) acctMap[a.sf_account_id] = a; });
- 
-    // Merge stages with account details
-    intelData = stages.map(s => {
-      const acct = acctMap[s.sf_account_id] || {};
-      return {
-        sf_account_id:    s.sf_account_id || '',
-        account_name:     s.account_name || acct.account_name || '—',
-        product:          s.product || '—',
-        stage:            s.stage || 'Unreached',
-        stage_date:       s.stage_date || '',
-        region:           acct.region || s.region || '—',
-        country:          acct.country || s.country || '—',
-        no_of_rooms:      acct.no_of_rooms || '',
-        no_of_properties: acct.no_of_properties || '',
-        adr:              acct.adr || '',
-        industry:         acct.industry || '',
-        hierarchy_level:  acct.hierarchy_level || '',
-        account_owner:    acct.account_owner || s.account_owner || '—'
-      };
     });
- 
-    intelLoaded = true;
-    document.getElementById('i-loading').style.display='none';
-    document.getElementById('i-table').style.display='table';
-    populateIntelFilters();
-    iFilter();
-    renderAnalytics();
-  } catch (err) {
-    console.error('Supabase error:', err);
-    document.getElementById('i-loading').innerHTML = `<span style="color:#ef4444;">✗ Could not load from Supabase: ${err.message}</span>`;
-  }
+    showToast('✓ Touchpoint saved','success');
+    resetForm();
+    engData=[];window._dL=false;window._aL=false;
+  }catch(err){showToast('✗ '+err.message,'error');}
+  finally{btn.textContent='Save Touchpoint';btn.disabled=false;}
 }
- 
-function populateIntelFilters() {
-  const products=[...new Set(intelData.map(r=>r.product).filter(p=>p&&p!=='—'))].sort();
-  document.getElementById('i-product').innerHTML='<option value="">All Products</option>'+products.map(p=>`<option>${p}</option>`).join('');
-  const regions=[...new Set(intelData.map(r=>r.region).filter(r=>r&&r!=='—'))].sort();
-  document.getElementById('i-region').innerHTML='<option value="">All Regions</option>'+regions.map(r=>`<option>${r}</option>`).join('');
+
+function resetForm(){document.getElementById('log-form').reset();document.getElementById('f-date').value=new Date().toISOString().slice(0,10);}
+
+// ---- UTILS ----
+function stageBadge(s){
+  const m={'Unreached':'gray','Unengaged':'gray','Aware':'blue','Engaged':'cyan','Potential Opp.':'yellow','Active Opp.':'green'};
+  return`<span class="badge ${m[s]||'gray'}">${s||'—'}</span>`;
 }
- 
-function iFilter() {
-  const search=(document.getElementById('i-search').value||'').toLowerCase();
-  const product=chipState.product||'';
-  const stage=chipState.stage||'';
-  const region=chipState.region||'';
-  const minRooms=parseInt(document.getElementById('min-rooms')?.value)||0;
- 
-  intelFiltered=intelData.filter(r=>{
-    const ms=!search||r.account_name.toLowerCase().includes(search)||r.sf_account_id.toLowerCase().includes(search);
-    const mr=!minRooms||parseInt(r.no_of_rooms||0)>=minRooms;
-    return ms&&(!product||r.product===product)&&(!stage||r.stage===stage)&&(!region||r.region===region)&&mr;
-  });
- 
-  intelFiltered.sort((a,b)=>{
-    const av=a[intelSortCol]||'',bv=b[intelSortCol]||'';
-    return av<bv?-intelSortDir:av>bv?intelSortDir:0;
-  });
- 
-  document.getElementById('i-count').textContent=intelFiltered.length;
-  const hc=document.getElementById('intel-header-count');
-  if(hc) hc.textContent=`${intelFiltered.length.toLocaleString()} of ${intelData.length.toLocaleString()} records`;
-  renderIntelTable();
-  renderActiveTags();
-  // Refresh analytics if that panel is visible
-  if(document.getElementById('rpanel-analytics')?.classList.contains('active')) renderAnalytics();
+
+function renderPg(id,total,page,cb){
+  const pages=Math.ceil(total/PAGE);
+  const el=document.getElementById(id+'-pg');
+  if(!el)return;
+  el.innerHTML=`<span style="color:var(--text3);font-size:12px;font-family:'DM Mono',monospace">${total.toLocaleString()} records · pg ${page}/${pages||1}</span>`;
+  if(page>1) el.innerHTML+=`<button class="btn sm" onclick="(${cb.toString()})(${page-1})">← Prev</button>`;
+  if(page<pages) el.innerHTML+=`<button class="btn sm" onclick="(${cb.toString()})(${page+1})">Next →</button>`;
 }
- 
-function iSort(col) {
-  if(intelSortCol===col) intelSortDir*=-1; else{intelSortCol=col;intelSortDir=1;}
-  iFilter();
+
+let _sortDir={};
+function sortTbl(tid,col){
+  const k=tid+col;_sortDir[k]=!_sortDir[k];
+  const tb=document.getElementById(tid).tBodies[0];
+  Array.from(tb.rows).sort((a,b)=>{
+    const av=a.cells[col]?.textContent.trim()||'';
+    const bv=b.cells[col]?.textContent.trim()||'';
+    const n=v=>parseFloat(v.replace(/[^0-9.-]/g,''));
+    const cmp=isNaN(n(av))?av.localeCompare(bv):n(av)-n(bv);
+    return _sortDir[k]?cmp:-cmp;
+  }).forEach(r=>tb.appendChild(r));
 }
-function iReset() { resetAllFilters(); }
- 
-function renderIntelTable() {
-  const tbody=document.getElementById('i-tbody');
-  const empty=document.getElementById('i-empty');
-  if(intelFiltered.length===0){tbody.innerHTML='';empty.style.display='flex';return;}
-  empty.style.display='none';
- 
-  function stageClass(s){return 's-'+(s||'').replace(/\s+/g,'');}
- 
-  tbody.innerHTML=intelFiltered.map(r=>`<tr>
-    <td>
-      <div class="i-an">${r.account_name}</div>
-      <div class="i-ai">${r.sf_account_id||''}</div>
-    </td>
-    <td><span class="i-prod">${r.product||'—'}</span></td>
-    <td><span class="i-stg ${stageClass(r.stage)}">${r.stage}</span></td>
-    <td><span class="i-dt">${r.stage_date||'—'}</span></td>
-    <td style="color:#9ca3af;font-size:12px;">${r.no_of_rooms||'—'}</td>
-    <td style="color:#9ca3af;font-size:12px;">${r.no_of_properties||'—'}</td>
-    <td style="color:#9ca3af;font-size:12px;">${r.region||'—'}</td>
-    <td style="color:#9ca3af;font-size:12px;">${r.country||'—'}</td>
-    <td style="color:#9ca3af;font-size:12px;">${r.account_owner||'—'}</td>
-  </tr>`).join('');
+
+function exportCSV(tid,fn){
+  const t=document.getElementById(tid);if(!t)return;
+  const csv=Array.from(t.rows).map(r=>Array.from(r.cells).map(c=>'"'+c.textContent.replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download=fn+'_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
 }
- 
-// ══════════════════════════════════════════
-//  AI CHAT
-// ══════════════════════════════════════════
-// ══════════════════════════════════════════
-//  SMART FILTER PANEL
-// ══════════════════════════════════════════
-const chipState = { stage: '', product: '', region: '' };
- 
-function toggleChip(el, type, value) {
-  chipState[type] = value;
-  // Update active chip styling in that group
-  const group = document.getElementById(type + '-chips');
-  if (group) group.querySelectorAll('.qf-chip').forEach(c => {
-    c.classList.toggle('active', c === el);
-  });
-  // Sync the hidden selects iFilter uses
-  const sel = document.getElementById('i-' + type);
-  if (sel) sel.value = value;
-  iFilter();
-  renderActiveTags();
+
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='show '+(type||'');
+  setTimeout(()=>t.className='',3000);
 }
- 
-function renderActiveTags() {
-  const wrap = document.getElementById('active-filters');
-  const tags = [];
-  if (chipState.stage)   tags.push({ label: 'Stage: ' + chipState.stage,   clear: () => toggleChipByValue('stage', '') });
-  if (chipState.product) tags.push({ label: 'Product: ' + chipState.product, clear: () => toggleChipByValue('product', '') });
-  if (chipState.region)  tags.push({ label: 'Region: ' + chipState.region,  clear: () => toggleChipByValue('region', '') });
-  const search = (document.getElementById('i-search')||{}).value||'';
-  if (search) tags.push({ label: 'Search: ' + search, clear: () => { document.getElementById('i-search').value=''; iFilter(); renderActiveTags(); } });
-  const rooms = (document.getElementById('min-rooms')||{}).value||'';
-  if (rooms) tags.push({ label: 'Rooms ≥ ' + rooms, clear: () => { document.getElementById('min-rooms').value=''; iFilter(); renderActiveTags(); } });
- 
-  if (!tags.length) {
-    wrap.innerHTML = '<span class="af-empty">No filters applied</span>';
-    return;
-  }
-  wrap.innerHTML = tags.map((t,i) =>
-    `<span class="af-tag">${t.label}<button onclick="clearTag(${i})" title="Remove">✕</button></span>`
-  ).join('');
-  wrap._tags = tags;
-}
- 
-function clearTag(i) {
-  const wrap = document.getElementById('active-filters');
-  if (wrap._tags && wrap._tags[i]) wrap._tags[i].clear();
-}
- 
-function toggleChipByValue(type, value) {
-  const group = document.getElementById(type + '-chips');
-  if (group) {
-    const chip = [...group.querySelectorAll('.qf-chip')].find(c => {
-      const cv = c.getAttribute('onclick').match(/'([^']*)'[^']*$/)?.[1] || '';
-      return cv === value;
-    });
-    if (chip) toggleChip(chip, type, value);
-  }
-}
- 
-function populateIntelFilters() {
-  const products = [...new Set(intelData.map(r=>r.product).filter(p=>p&&p!=='—'))].sort();
-  const pGroup = document.getElementById('product-chips');
-  if (pGroup) {
-    pGroup.innerHTML = `<button class="qf-chip active" onclick="toggleChip(this,'product','')">All</button>` +
-      products.map(p => `<button class="qf-chip" onclick="toggleChip(this,'product','${p}')">${p}</button>`).join('');
-  }
-  const regions = [...new Set(intelData.map(r=>r.region).filter(r=>r&&r!=='—'))].sort();
-  const rGroup = document.getElementById('region-chips');
-  if (rGroup) {
-    rGroup.innerHTML = `<button class="qf-chip active" onclick="toggleChip(this,'region','')">All</button>` +
-      regions.map(r => `<button class="qf-chip" onclick="toggleChip(this,'region','${r}')">${r}</button>`).join('');
-  }
-  // Set All chips active on load
-  document.querySelectorAll('#stage-chips .qf-chip').forEach((c,i) => { if(i===0) c.classList.add('active'); });
-}
- 
-function resetAllFilters() {
-  chipState.stage=''; chipState.product=''; chipState.region='';
-  document.querySelectorAll('.qf-chips').forEach(g => {
-    g.querySelectorAll('.qf-chip').forEach((c,i) => c.classList.toggle('active', i===0));
-  });
-  if(document.getElementById('i-search')) document.getElementById('i-search').value='';
-  if(document.getElementById('min-rooms')) document.getElementById('min-rooms').value='';
-  iFilter();
-  renderActiveTags();
-}
- 
-// ══════════════════════════════════════════
-//  RIGHT PANEL SUB-TABS
-// ══════════════════════════════════════════
-function switchRPanel(name) {
-  document.querySelectorAll('.rpanel-tab').forEach((t,i)=>t.classList.toggle('active', (i===0&&name==='filters')||(i===1&&name==='analytics')));
-  document.getElementById('rpanel-filters').classList.toggle('active', name==='filters');
-  document.getElementById('rpanel-analytics').classList.toggle('active', name==='analytics');
-  if(name==='analytics') renderAnalytics();
-}
- 
-// ══════════════════════════════════════════
-//  ANALYTICS
-// ══════════════════════════════════════════
-const STAGE_ORDER = ['Unreached','Unengaged','Aware','Engaged','Potential Opportunity','Active Opportunity'];
-const STAGE_COLORS = ['#6b7280','#f59e0b','#3b82f6','#22c55e','#a855f7','#f97316'];
-const STAGE_CLS   = ['s0','s1','s2','s3','s4','s5'];
-const STAGE_SHORT = ['Unreached','Unengaged','Aware','Engaged','Potential','Active Opp.'];
- 
-let trendChart = null;
- 
-function renderAnalytics() {
-  renderFunnelCards();
-  renderProdBars();
-  renderTrendChart();
-}
- 
-function renderFunnelCards() {
-  const counts = {};
-  STAGE_ORDER.forEach(s => counts[s]=0);
-  intelData.forEach(r => { if(counts[r.stage]!==undefined) counts[r.stage]++; });
-  const total = intelData.length || 1;
-  const max = Math.max(...Object.values(counts), 1);
- 
-  document.getElementById('funnel-cards').innerHTML = STAGE_ORDER.map((s,i) => {
-    const c = counts[s];
-    const pct = Math.round(c/total*100);
-    const barW = Math.round(c/max*100);
-    const isActive = chipState.stage === s;
-    return `<div class="fc ${STAGE_CLS[i]} clickable${isActive?' fc-selected':''}" onclick="funnelClick('${s}')">
-      <div class="fc-name">${STAGE_SHORT[i]}</div>
-      <div class="fc-count">${c.toLocaleString()}</div>
-      <div class="fc-pct">${pct}% of total</div>
-      <div class="fc-bar" style="width:${barW}%"></div>
-    </div>`;
-  }).join('');
-}
- 
-function funnelClick(stage) {
-  const newStage = chipState.stage === stage ? '' : stage;
-  const chips = document.querySelectorAll('#stage-chips .qf-chip');
-  chips.forEach(c => {
-    const match = c.getAttribute('onclick').includes(`'${newStage}'`);
-    c.classList.toggle('active', newStage===''?c.textContent==='All':match);
-  });
-  chipState.stage = newStage;
-  iFilter();
-  renderFunnelCards();
-}
- 
-function renderProdBars() {
-  const products = [...new Set(intelData.map(r=>r.product).filter(p=>p&&p!=='—'))].sort();
-  const wrap = document.getElementById('prod-bars');
-  if(!products.length){wrap.innerHTML='<div style="font-size:12px;color:#4b5563;">No data</div>';return;}
- 
-  const rows = products.map(p => {
-    const recs = intelData.filter(r=>r.product===p);
-    const total = recs.length || 1;
-    const segs = STAGE_ORDER.map((s,i) => {
-      const c = recs.filter(r=>r.stage===s).length;
-      const w = Math.round(c/total*100);
-      return w>0 ? `<div class="pb-seg" style="width:${w}%;background:${STAGE_COLORS[i]};"></div>` : '';
-    }).join('');
-    return `<div class="pb-row">
-      <div class="pb-label"><span>${p}</span><span>${recs.length.toLocaleString()}</span></div>
-      <div class="pb-track">${segs}</div>
-    </div>`;
-  }).join('');
- 
-  const legend = STAGE_ORDER.map((s,i)=>
-    `<div class="pb-li"><div class="pb-dot" style="background:${STAGE_COLORS[i]}"></div>${STAGE_SHORT[i]}</div>`
-  ).join('');
- 
-  wrap.innerHTML = rows + `<div class="pb-legend">${legend}</div>`;
-}
- 
-function renderTrendChart() {
-  const canvas = document.getElementById('trend-chart');
-  if(!canvas) return;
-  const ctx = canvas.getContext('2d');
- 
-  // Build monthly buckets for last 12 months
-  const now = new Date();
-  const months = [];
-  for(let i=11;i>=0;i--){
-    const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
-    months.push({ label: d.toLocaleString('default',{month:'short'}), year:d.getFullYear(), month:d.getMonth(), counts:{} });
-    STAGE_ORDER.forEach(s => months[months.length-1].counts[s]=0);
-  }
- 
-  intelData.forEach(r => {
-    if(!r.stage_date) return;
-    const d = new Date(r.stage_date);
-    const m = months.find(mo => mo.year===d.getFullYear() && mo.month===d.getMonth());
-    if(m && m.counts[r.stage]!==undefined) m.counts[r.stage]++;
-  });
- 
-  const W = canvas.offsetWidth || 340;
-  const H = 140;
-  canvas.width = W * devicePixelRatio;
-  canvas.height = H * devicePixelRatio;
-  canvas.style.width = W+'px';
-  canvas.style.height = H+'px';
-  ctx.scale(devicePixelRatio, devicePixelRatio);
- 
-  const pad = {t:10,r:10,b:28,l:28};
-  const cw = W - pad.l - pad.r;
-  const ch = H - pad.t - pad.b;
-  const maxVal = Math.max(...months.map(m=>Math.max(...Object.values(m.counts))),1);
- 
-  ctx.clearRect(0,0,W,H);
- 
-  // Grid lines
-  ctx.strokeStyle='#1e1e30'; ctx.lineWidth=1;
-  [0,.25,.5,.75,1].forEach(f=>{
-    const y=pad.t+ch*(1-f);
-    ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(pad.l+cw,y); ctx.stroke();
-    if(f>0){
-      ctx.fillStyle='#4b5563'; ctx.font='9px DM Mono,monospace'; ctx.textAlign='right';
-      ctx.fillText(Math.round(maxVal*f), pad.l-4, y+3);
-    }
-  });
- 
-  // Lines per stage (only Aware, Engaged, Potential, Active — skip noisy early stages)
-  const DRAW_STAGES = [2,3,4,5]; // indices into STAGE_ORDER
-  DRAW_STAGES.forEach(si => {
-    const s = STAGE_ORDER[si];
-    const color = STAGE_COLORS[si];
-    ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=1.5; ctx.lineJoin='round';
-    months.forEach((m,mi)=>{
-      const x = pad.l + mi/(months.length-1)*cw;
-      const y = pad.t + ch*(1 - m.counts[s]/maxVal);
-      mi===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
-    });
-    ctx.stroke();
-    // Dots
-    months.forEach((m,mi)=>{
-      if(!m.counts[s]) return;
-      const x = pad.l + mi/(months.length-1)*cw;
-      const y = pad.t + ch*(1 - m.counts[s]/maxVal);
-      ctx.beginPath(); ctx.arc(x,y,2.5,0,Math.PI*2);
-      ctx.fillStyle=color; ctx.fill();
-    });
-  });
- 
-  // X labels
-  ctx.fillStyle='#4b5563'; ctx.font='9px DM Mono,monospace'; ctx.textAlign='center';
-  months.forEach((m,mi)=>{
-    if(mi%2===0){
-      const x = pad.l + mi/(months.length-1)*cw;
-      ctx.fillText(m.label, x, H-8);
-    }
-  });
- 
-  // Mini legend
-  ctx.font='9px DM Sans,sans-serif'; ctx.textAlign='left';
-  DRAW_STAGES.forEach((si,li)=>{
-    const x = pad.l + li*80;
-    const y = H-1;
-    if(x+70>W) return;
-    ctx.fillStyle=STAGE_COLORS[si];
-    ctx.fillRect(x,y-7,8,3);
-    ctx.fillStyle='#6b7280';
-    ctx.fillText(STAGE_SHORT[si], x+11, y);
-  });
-}
- 
-// ══════════════════════════════════════════
-//  EXPORT CSV
-// ══════════════════════════════════════════
-function exportCSV() {
-  const headers=['Account','SF Account ID','Product','Stage','Stage Date','Rooms','Properties','Region','Country','Owner'];
-  const rows = intelFiltered.map(r=>[
-    `"${(r.account_name||'').replace(/"/g,'""')}"`,
-    r.sf_account_id||'',
-    r.product||'',
-    r.stage||'',
-    r.stage_date||'',
-    r.no_of_rooms||'',
-    r.no_of_properties||'',
-    r.region||'',
-    r.country||'',
-    `"${(r.account_owner||'').replace(/"/g,'""')}"`
-  ].join(','));
-  const csv = [headers.join(','), ...rows].join('\n');
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  a.download = `account_intelligence_${new Date().toISOString().split('T')[0]}.csv`;
-  a.click();
-}
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('f-date').value = today();
-  loadAirtable();
-  showPage('intelligence');
-});
+
+// ---- INIT ----
+loadIntelligence();
 </script>
 </body>
 </html>
