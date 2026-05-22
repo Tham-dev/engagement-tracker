@@ -175,31 +175,82 @@
   .i-spin{width:20px;height:20px;border:2px solid #2d2d45;border-top-color:#4f7ef7;border-radius:50%;animation:spin .7s linear infinite}
  
   /* CHAT */
-  .chat-panel{background:#1a1a2e;display:flex;flex-direction:column;overflow:hidden}
-  .chat-head{padding:12px 14px;border-bottom:1px solid #2d2d45;display:flex;align-items:center;gap:8px}
-  .chat-ico{width:26px;height:26px;border-radius:6px;background:linear-gradient(135deg,#4f7ef7,#7c5cfc);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
-  .chat-head h3{font-size:13px;font-weight:600;color:#e2e6f0} .chat-head p{font-size:11px;color:#6b7280}
-  .chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
-  .chat-msg{display:flex;flex-direction:column;gap:2px} .chat-msg.user{align-items:flex-end} .chat-msg.assistant{align-items:flex-start}
-  .chat-bubble{max-width:92%;padding:8px 12px;border-radius:10px;font-size:12.5px;line-height:1.55}
-  .user .chat-bubble{background:#4f7ef7;color:#fff;border-bottom-right-radius:2px}
-  .assistant .chat-bubble{background:#13131f;border:1px solid #2d2d45;color:#d1d5db;border-bottom-left-radius:2px}
-  .chat-time{font-size:10px;color:#4b5563;font-family:'DM Mono',monospace}
-  .chat-sugs{display:flex;flex-direction:column;gap:5px;margin-top:4px;width:100%}
-  .sug-btn{background:none;border:1px solid #2d2d45;color:#6b7280;padding:6px 10px;border-radius:7px;font-size:11.5px;text-align:left;cursor:pointer;transition:all .15s;line-height:1.4;font-family:inherit}
-  .sug-btn:hover{border-color:#4f7ef7;color:#e2e6f0;background:rgba(79,126,247,.06)}
-  .chat-input-area{padding:10px;border-top:1px solid #2d2d45;display:flex;gap:7px}
-  .chat-ta{flex:1;background:#13131f;border:1px solid #2d2d45;color:#e2e6f0;padding:8px 10px;border-radius:7px;font-family:inherit;font-size:12.5px;resize:none;outline:none;height:64px;line-height:1.5}
-  .chat-ta:focus{border-color:#4f7ef7} .chat-ta::placeholder{color:#4b5563}
-  .chat-send-btn{background:#4f7ef7;border:none;color:#fff;width:34px;height:34px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;align-self:flex-end;transition:opacity .15s;flex-shrink:0}
-  .chat-send-btn:hover{opacity:.85} .chat-send-btn:disabled{opacity:.4;cursor:not-allowed}
-  .typing{display:flex;gap:4px;align-items:center;padding:2px 0}
-  .typing span{width:5px;height:5px;background:#6b7280;border-radius:50%;animation:tbounce 1.2s infinite}
-  .typing span:nth-child(2){animation-delay:.2s} .typing span:nth-child(3){animation-delay:.4s}
-  @keyframes tbounce{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-4px);opacity:1}}
-  .i-tbl-panel::-webkit-scrollbar,.chat-msgs::-webkit-scrollbar{width:5px}
-  .i-tbl-panel::-webkit-scrollbar-track,.chat-msgs::-webkit-scrollbar-track{background:transparent}
-  .i-tbl-panel::-webkit-scrollbar-thumb,.chat-msgs::-webkit-scrollbar-thumb{background:#2d2d45;border-radius:3px}
+  .filter-panel{background:#1a1a2e;display:flex;flex-direction:column;overflow:hidden}
+  .filter-head{padding:12px 14px;border-bottom:1px solid #2d2d45;display:flex;align-items:center;gap:8px}
+  .filter-head h3{font-size:13px;font-weight:600;color:#e2e6f0;flex:1} .filter-head p{font-size:11px;color:#6b7280}
+  .filter-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px}
+  .filter-result-count{font-size:12px;color:#6b7280;padding:6px 10px;background:#13131f;border-radius:6px;border:1px solid #2d2d45;text-align:center}
+  .filter-result-count span{color:#e2e6f0;font-weight:600;}
+  .smart-input-wrap{position:relative;}
+  .smart-input{width:100%;background:#13131f;border:1px solid #2d2d45;color:#e2e6f0;padding:10px 40px 10px 12px;border-radius:8px;font-family:inherit;font-size:13px;outline:none;box-sizing:border-box;}
+  .smart-input:focus{border-color:#4f7ef7}
+  .smart-input::placeholder{color:#4b5563}
+  .smart-go-btn{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:#4f7ef7;border:none;color:#fff;width:28px;height:28px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .smart-go-btn:hover{opacity:.85}
+  .quick-filters{display:flex;flex-direction:column;gap:6px;}
+  .qf-label{font-size:10px;color:#4b5563;text-transform:uppercase;letter-spacing:.06em;font-weight:600;}
+  .qf-chips{display:flex;flex-wrap:wrap;gap:5px;}
+  .qf-chip{background:none;border:1px solid #2d2d45;color:#6b7280;padding:4px 10px;border-radius:20px;font-size:11.5px;cursor:pointer;font-family:inherit;transition:all .15s;}
+  .qf-chip:hover{border-color:#4f7ef7;color:#e2e6f0;}
+  .qf-chip.active{border-color:#4f7ef7;background:rgba(79,126,247,.12);color:#4f7ef7;}
+  .active-filters{display:flex;flex-wrap:wrap;gap:5px;padding:8px 10px;background:#13131f;border-radius:7px;border:1px solid #2d2d45;min-height:36px;align-items:center;}
+  .af-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(79,126,247,.15);border:1px solid rgba(79,126,247,.3);color:#93b4f9;padding:3px 8px;border-radius:20px;font-size:11px;}
+  .af-tag button{background:none;border:none;color:#6b7280;cursor:pointer;font-size:12px;padding:0;line-height:1;display:flex;align-items:center;}
+  .af-tag button:hover{color:#e2e6f0}
+  .af-empty{font-size:11px;color:#4b5563;}
+  .divider{height:1px;background:#2d2d45;margin:4px 0;}
+  .filter-section-title{font-size:10px;color:#4b5563;text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:6px;}
+  .rooms-wrap{display:flex;align-items:center;gap:8px;}
+  .rooms-input{background:#13131f;border:1px solid #2d2d45;color:#e2e6f0;padding:5px 8px;border-radius:6px;font-size:12px;width:80px;outline:none;font-family:inherit;}
+  .rooms-input:focus{border-color:#4f7ef7}
+  .rooms-label{font-size:12px;color:#6b7280;}
+  .reset-all-btn{background:none;border:1px solid #2d2d45;color:#6b7280;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;width:100%;transition:all .15s;}
+  .reset-all-btn:hover{border-color:#4f7ef7;color:#4f7ef7}
+  .i-tbl-panel::-webkit-scrollbar,.filter-body::-webkit-scrollbar{width:5px}
+  .i-tbl-panel::-webkit-scrollbar-track,.filter-body::-webkit-scrollbar-track{background:transparent}
+  .i-tbl-panel::-webkit-scrollbar-thumb,.filter-body::-webkit-scrollbar-thumb{background:#2d2d45;border-radius:3px}
+ 
+  /* RIGHT PANEL TABS */
+  .rpanel { background:#1a1a2e; display:flex; flex-direction:column; overflow:hidden; }
+  .rpanel-tabs { display:flex; border-bottom:1px solid #2d2d45; flex-shrink:0; }
+  .rpanel-tab { flex:1; padding:10px; border:none; background:none; color:#6b7280; font-size:12px; font-weight:500; cursor:pointer; font-family:inherit; border-bottom:2px solid transparent; transition:all .15s; }
+  .rpanel-tab.active { color:#e2e6f0; border-bottom-color:#4f7ef7; }
+  .rpanel-tab:hover:not(.active) { color:#9ca3af; }
+  .rpanel-view { display:none; flex:1; overflow-y:auto; flex-direction:column; }
+  .rpanel-view.active { display:flex; }
+ 
+  /* ANALYTICS */
+  .analytics-body { padding:14px; display:flex; flex-direction:column; gap:14px; }
+  .an-section-title { font-size:10px; color:#4b5563; text-transform:uppercase; letter-spacing:.07em; font-weight:600; margin-bottom:8px; }
+  .funnel-cards { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+  .fc { border-radius:8px; padding:10px 11px; border:1px solid; }
+  .fc-name { font-size:10px; font-weight:600; letter-spacing:.03em; margin-bottom:5px; }
+  .fc-count { font-size:22px; font-weight:600; font-variant-numeric:tabular-nums; line-height:1; }
+  .fc-pct { font-size:10px; opacity:.65; margin-top:2px; }
+  .fc-bar { height:3px; border-radius:2px; margin-top:8px; opacity:.7; }
+  .fc.s0{background:#13131f;border-color:#2d2d45;} .fc.s0 .fc-name{color:#6b7280;} .fc.s0 .fc-count{color:#9ca3af;} .fc.s0 .fc-bar{background:#6b7280;}
+  .fc.s1{background:#1c1a10;border-color:#3a3210;} .fc.s1 .fc-name{color:#d97706;} .fc.s1 .fc-count{color:#f59e0b;} .fc.s1 .fc-bar{background:#f59e0b;}
+  .fc.s2{background:#101828;border-color:#1a3050;} .fc.s2 .fc-name{color:#3b82f6;} .fc.s2 .fc-count{color:#60a5fa;} .fc.s2 .fc-bar{background:#3b82f6;}
+  .fc.s3{background:#0f1e18;border-color:#1a3a28;} .fc.s3 .fc-name{color:#16a34a;} .fc.s3 .fc-count{color:#22c55e;} .fc.s3 .fc-bar{background:#22c55e;}
+  .fc.s4{background:#1a102e;border-color:#2e1a50;} .fc.s4 .fc-name{color:#9333ea;} .fc.s4 .fc-count{color:#a855f7;} .fc.s4 .fc-bar{background:#a855f7;}
+  .fc.s5{background:#1e1208;border-color:#3a2010;} .fc.s5 .fc-name{color:#ea580c;} .fc.s5 .fc-count{color:#f97316;} .fc.s5 .fc-bar{background:#f97316;}
+  .fc.clickable { cursor:pointer; transition:transform .1s; }
+  .fc.clickable:hover { transform:translateY(-1px); }
+  .fc.fc-selected { outline:2px solid #4f7ef7; }
+ 
+  /* PRODUCT BARS */
+  .prod-bar-wrap { display:flex; flex-direction:column; gap:8px; }
+  .pb-row { display:flex; flex-direction:column; gap:4px; }
+  .pb-label { display:flex; justify-content:space-between; font-size:11px; color:#9ca3af; }
+  .pb-track { height:7px; background:#1e1e30; border-radius:4px; overflow:hidden; display:flex; }
+  .pb-seg { height:100%; }
+  .pb-legend { display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
+  .pb-li { display:flex; align-items:center; gap:4px; font-size:10px; color:#6b7280; }
+  .pb-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+ 
+  /* CHART */
+  .chart-wrap { background:#13131f; border-radius:8px; border:1px solid #2d2d45; padding:12px; }
+  .chart-canvas { width:100%; height:140px; display:block; }
  
   @media(max-width:600px){.main{padding:16px}.form-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
@@ -219,6 +270,9 @@
   </div>
   <div class="header-actions">
     <span id="sync-indicator">Loading…</span>
+    <button class="btn" id="export-btn" onclick="exportCSV()" style="display:none;">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 13h10"/></svg>Export CSV
+    </button>
   </div>
 </header>
  
@@ -249,14 +303,8 @@
 <!-- INTELLIGENCE PAGE -->
 <div id="page-intelligence">
   <div class="intel-filters">
-    <span class="i-lbl">Filter</span>
-    <input class="i-input" id="i-search" placeholder="Search account…" oninput="iFilter()">
-    <select class="i-sel" id="i-product" onchange="iFilter()"><option value="">All Products</option></select>
-    <select class="i-sel" id="i-stage" onchange="iFilter()"><option value="">All Stages</option><option>Unreached</option><option>Unengaged</option><option>Aware</option><option>Engaged</option><option>Potential Opportunity</option><option>Active Opportunity</option></select>
-    <select class="i-sel" id="i-region" onchange="iFilter()"><option value="">All Regions</option></select>
-    <select class="i-sel" id="i-engagement" onchange="iFilter()"><option value="">All Engagement</option><option>LOW</option><option>MEDIUM</option><option>HIGH</option><option>VERY HIGH</option></select>
-    <button class="i-rst" onclick="iReset()">Reset</button>
-    <div class="i-cnt">Showing <span id="i-count">0</span> records</div>
+    <span class="i-lbl">Account Intelligence</span>
+    <div id="intel-header-count" style="margin-left:auto;font-size:12px;color:#6b7280;">Loading…</div>
   </div>
   <div class="i-tbl-panel">
     <div id="i-loading" class="i-loading-state"><div class="i-spin"></div><span>Loading from Supabase…</span></div>
@@ -276,28 +324,100 @@
     </table>
     <div id="i-empty" class="i-empty-state" style="display:none">No records match the current filters.</div>
   </div>
-  <div class="chat-panel">
-    <div class="chat-head">
-      <div class="chat-ico">✦</div>
-      <div style="flex:1"><h3>AI Analysis</h3><p>Ask anything — table filters automatically</p></div>
-      <button onclick="iReset()" style="background:none;border:1px solid #2d2d45;color:#6b7280;padding:4px 9px;border-radius:5px;font-size:11px;cursor:pointer;font-family:inherit;" title="Reset table filters">Reset filters</button>
+ 
+  <!-- RIGHT PANEL with sub-tabs -->
+  <div class="rpanel">
+    <div class="rpanel-tabs">
+      <button class="rpanel-tab active" onclick="switchRPanel('filters')">⚙ Filters</button>
+      <button class="rpanel-tab" onclick="switchRPanel('analytics')">◈ Analytics</button>
     </div>
-    <div class="chat-msgs" id="chat-msgs">
-      <div class="chat-msg assistant">
-        <div class="chat-bubble">Hi! I have access to your live account intelligence data from Supabase. Ask me anything about stages, products, regions, or engagement trends.</div>
-        <div class="chat-sugs" id="chat-sugs">
-          <button class="sug-btn" onclick="useSug(this)">Which Aware-stage RevAI accounts are clear to touch this week?</button>
-          <button class="sug-btn" onclick="useSug(this)">Show me large hotel chains (500+ rooms) in APAC that are Unengaged</button>
-          <button class="sug-btn" onclick="useSug(this)">Which UNO accounts in EMEA have never been touched?</button>
-          <button class="sug-btn" onclick="useSug(this)">Who are the top account owners with the most cooling off accounts?</button>
+ 
+    <!-- FILTERS VIEW -->
+    <div class="rpanel-view active filter-body" id="rpanel-filters">
+      <div class="filter-result-count" style="margin:14px 14px 0;">Showing <span id="i-count">0</span> records</div>
+ 
+      <div style="padding:0 14px;margin-top:12px;">
+        <div class="filter-section-title">Search</div>
+        <div class="search-wrap" style="margin:0;">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:13px;height:13px;color:#4b5563;pointer-events:none;"><circle cx="7" cy="7" r="4"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg>
+          <input class="smart-input" id="i-search" style="padding-left:30px;" placeholder="Search account name…" oninput="iFilter()">
         </div>
       </div>
+ 
+      <div class="divider" style="margin:12px 14px;"></div>
+ 
+      <div style="padding:0 14px;">
+        <div class="filter-section-title">Stage</div>
+        <div class="qf-chips" id="stage-chips">
+          <button class="qf-chip active" onclick="toggleChip(this,'stage','')">All</button>
+          <button class="qf-chip" onclick="toggleChip(this,'stage','Unreached')">Unreached</button>
+          <button class="qf-chip" onclick="toggleChip(this,'stage','Unengaged')">Unengaged</button>
+          <button class="qf-chip" onclick="toggleChip(this,'stage','Aware')">Aware</button>
+          <button class="qf-chip" onclick="toggleChip(this,'stage','Engaged')">Engaged</button>
+          <button class="qf-chip" onclick="toggleChip(this,'stage','Potential Opportunity')">Potential Opp.</button>
+          <button class="qf-chip" onclick="toggleChip(this,'stage','Active Opportunity')">Active Opp.</button>
+        </div>
+      </div>
+ 
+      <div class="divider" style="margin:12px 14px;"></div>
+ 
+      <div style="padding:0 14px;">
+        <div class="filter-section-title">Product</div>
+        <div class="qf-chips" id="product-chips">
+          <button class="qf-chip active" onclick="toggleChip(this,'product','')">All</button>
+        </div>
+      </div>
+ 
+      <div class="divider" style="margin:12px 14px;"></div>
+ 
+      <div style="padding:0 14px;">
+        <div class="filter-section-title">Region</div>
+        <div class="qf-chips" id="region-chips">
+          <button class="qf-chip active" onclick="toggleChip(this,'region','')">All</button>
+        </div>
+      </div>
+ 
+      <div class="divider" style="margin:12px 14px;"></div>
+ 
+      <div style="padding:0 14px;">
+        <div class="filter-section-title">Min. rooms</div>
+        <div class="rooms-wrap">
+          <input class="rooms-input" id="min-rooms" type="number" min="0" placeholder="e.g. 100" oninput="iFilter()">
+          <span class="rooms-label">rooms or more</span>
+        </div>
+      </div>
+ 
+      <div class="divider" style="margin:12px 14px;"></div>
+ 
+      <div style="padding:0 14px 14px;">
+        <div class="filter-section-title" style="margin-bottom:8px;">Active filters</div>
+        <div class="active-filters" id="active-filters"><span class="af-empty">No filters applied</span></div>
+        <button onclick="resetAllFilters()" class="reset-all-btn" style="margin-top:10px;">Reset all filters</button>
+      </div>
     </div>
-    <div class="chat-input-area">
-      <textarea class="chat-ta" id="chat-input" placeholder="Ask about your accounts…" onkeydown="chatKey(event)"></textarea>
-      <button class="chat-send-btn" id="chat-send" onclick="sendChat()">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-      </button>
+ 
+    <!-- ANALYTICS VIEW -->
+    <div class="rpanel-view" id="rpanel-analytics">
+      <div class="analytics-body">
+ 
+        <div>
+          <div class="an-section-title">Stage funnel — click to filter</div>
+          <div class="funnel-cards" id="funnel-cards"></div>
+        </div>
+ 
+        <div>
+          <div class="an-section-title">Stage distribution by product</div>
+          <div class="prod-bar-wrap" id="prod-bars"></div>
+        </div>
+ 
+        <div>
+          <div class="an-section-title">Stage date trend (last 12 months)</div>
+          <div class="chart-wrap">
+            <canvas class="chart-canvas" id="trend-chart"></canvas>
+          </div>
+        </div>
+ 
+      </div>
     </div>
   </div>
 </div>
@@ -349,15 +469,14 @@ const SUPABASE_KEY   = 'sb_publishable_UhmlGR4ullaoH5bds4A86g_v18c9v-n';
 // ══════════════════════════════════════════
 //  STATE
 // ══════════════════════════════════════════
-let touchpoints = [];        // from Airtable
+let touchpoints = [];
 let airtableLoaded = false;
 let checkerData = [];
 let intelData = [];
 let intelFiltered = [];
 let intelSortCol = 'account_name';
 let intelSortDir = 1;
-let chatHistory = [];
-let editingId = null;        // Airtable record id
+let editingId = null;
  
 // ══════════════════════════════════════════
 //  SYNC INDICATOR
@@ -509,6 +628,7 @@ function showPage(name) {
     if (name === 'intelligence' && b.classList.contains('intel-tab')) b.classList.add('active');
     if (name === 'dashboard' && b.textContent.trim() === 'Dashboard') b.classList.add('active');
   });
+  document.getElementById('export-btn').style.display = name==='intelligence' ? 'inline-flex' : 'none';
   if (name === 'intelligence') initIntelligence();
 }
  
@@ -907,6 +1027,7 @@ async function initIntelligence() {
     document.getElementById('i-table').style.display='table';
     populateIntelFilters();
     iFilter();
+    renderAnalytics();
   } catch (err) {
     console.error('Supabase error:', err);
     document.getElementById('i-loading').innerHTML = `<span style="color:#ef4444;">✗ Could not load from Supabase: ${err.message}</span>`;
@@ -922,14 +1043,15 @@ function populateIntelFilters() {
  
 function iFilter() {
   const search=(document.getElementById('i-search').value||'').toLowerCase();
-  const product=document.getElementById('i-product').value;
-  const stage=document.getElementById('i-stage').value;
-  const region=document.getElementById('i-region').value;
-  const engagement=document.getElementById('i-engagement').value;
+  const product=chipState.product||'';
+  const stage=chipState.stage||'';
+  const region=chipState.region||'';
+  const minRooms=parseInt(document.getElementById('min-rooms')?.value)||0;
  
   intelFiltered=intelData.filter(r=>{
     const ms=!search||r.account_name.toLowerCase().includes(search)||r.sf_account_id.toLowerCase().includes(search);
-    return ms&&(!product||r.product===product)&&(!stage||r.stage===stage)&&(!region||r.region===region);
+    const mr=!minRooms||parseInt(r.no_of_rooms||0)>=minRooms;
+    return ms&&(!product||r.product===product)&&(!stage||r.stage===stage)&&(!region||r.region===region)&&mr;
   });
  
   intelFiltered.sort((a,b)=>{
@@ -938,17 +1060,19 @@ function iFilter() {
   });
  
   document.getElementById('i-count').textContent=intelFiltered.length;
+  const hc=document.getElementById('intel-header-count');
+  if(hc) hc.textContent=`${intelFiltered.length.toLocaleString()} of ${intelData.length.toLocaleString()} records`;
   renderIntelTable();
+  renderActiveTags();
+  // Refresh analytics if that panel is visible
+  if(document.getElementById('rpanel-analytics')?.classList.contains('active')) renderAnalytics();
 }
  
 function iSort(col) {
   if(intelSortCol===col) intelSortDir*=-1; else{intelSortCol=col;intelSortDir=1;}
   iFilter();
 }
-function iReset() {
-  ['i-search','i-product','i-stage','i-region','i-engagement'].forEach(id=>{document.getElementById(id).value='';});
-  iFilter();
-}
+function iReset() { resetAllFilters(); }
  
 function renderIntelTable() {
   const tbody=document.getElementById('i-tbody');
@@ -977,143 +1101,289 @@ function renderIntelTable() {
 // ══════════════════════════════════════════
 //  AI CHAT
 // ══════════════════════════════════════════
-function chatKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}}
-function useSug(btn){document.getElementById('chat-input').value=btn.textContent;document.getElementById('chat-sugs').style.display='none';sendChat();}
+// ══════════════════════════════════════════
+//  SMART FILTER PANEL
+// ══════════════════════════════════════════
+const chipState = { stage: '', product: '', region: '' };
  
-function addMsg(role,content) {
-  const container=document.getElementById('chat-msgs');
-  const div=document.createElement('div'); div.className=`chat-msg ${role}`;
-  const bubble=document.createElement('div'); bubble.className='chat-bubble';
-  bubble.innerHTML=content.replace(/\n/g,'<br>');
-  const time=document.createElement('div'); time.className='chat-time';
-  time.textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-  div.appendChild(bubble); div.appendChild(time);
-  container.appendChild(div); container.scrollTop=container.scrollHeight;
-}
-function addTyping(){
-  const c=document.getElementById('chat-msgs');
-  const d=document.createElement('div'); d.className='chat-msg assistant'; d.id='typing-indicator';
-  d.innerHTML=`<div class="chat-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
-  c.appendChild(d); c.scrollTop=c.scrollHeight;
-}
-function removeTyping(){const t=document.getElementById('typing-indicator');if(t)t.remove();}
- 
-async function sendChat() {
-  const input=document.getElementById('chat-input');
-  const msg=input.value.trim(); if(!msg) return;
-  input.value=''; document.getElementById('chat-send').disabled=true;
-  addMsg('user',msg);
-  chatHistory.push({role:'user',content:msg});
-  addTyping();
- 
-  const ctx=buildDataContext();
-  const products=[...new Set(intelData.map(r=>r.product).filter(p=>p&&p!=='—'))].join(', ');
-  const regions=[...new Set(intelData.map(r=>r.region).filter(r=>r&&r!=='—'))].join(', ');
- 
-  try{
-    const response=await fetch('https://chat-proxy-pi.vercel.app/api/chat',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1200,
-        system:`You are an AI analyst for an Account Engagement Tracker at RateGain. You have live data from Supabase.
- 
-IMPORTANT: After your answer, you MUST always append a JSON filter block on the last line in this exact format (no extra text after it):
-FILTERS:{"stage":"","product":"","region":"","search":""}
- 
-Rules for the filter JSON:
-- Only populate fields that the user's question is filtering on
-- "stage" must be one of exactly: Unreached, Unengaged, Aware, Engaged, Potential Opportunity, Active Opportunity — or "" for all
-- "product" must match one of the available products exactly: ${products} — or "" for all
-- "region" must be one of: ${regions} — or "" for all  
-- "search" is a free-text account name search — use only if user asks about a specific account name
-- If the question is general/analytical with no specific filter, set all fields to ""
- 
-Example — "show me Aware-stage RevAI accounts in APAC":
-FILTERS:{"stage":"Aware","product":"revai","region":"APAC","search":""}
- 
-Example — "how many accounts are Unengaged?":
-FILTERS:{"stage":"Unengaged","product":"","region":"","search":""}
- 
-Example — "what is the breakdown by stage?":
-FILTERS:{"stage":"","product":"","region":"","search":""}
- 
-Be concise and data-driven. Use bullet points. Here is the current data:\n\n${ctx}`,
-        messages:chatHistory
-      })
-    });
-    const data=await response.json();
-    removeTyping();
-    if(data.content&&data.content[0]){
-      let reply=data.content[0].text;
- 
-      // Extract and apply filters
-      const filterMatch=reply.match(/FILTERS:(\{[^\n]+\})\s*$/m);
-      if(filterMatch){
-        try{
-          const filters=JSON.parse(filterMatch[1]);
-          applyFiltersFromChat(filters);
-          // Remove the FILTERS line from the displayed reply
-          reply=reply.replace(/\nFILTERS:\{[^\n]+\}\s*$/m,'').trim();
-        }catch(e){}
-      }
- 
-      chatHistory.push({role:'assistant',content:reply});
-      addMsg('assistant',reply);
-    } else {
-      addMsg('assistant','No response — check API connection.');
-    }
-  }catch(err){
-    removeTyping();
-    addMsg('assistant',`Error: ${err.message}`);
-  }
-  document.getElementById('chat-send').disabled=false;
-}
- 
-function applyFiltersFromChat(filters) {
-  // Only apply if at least one filter is set
-  const hasFilter = filters.stage||filters.product||filters.region||filters.search;
-  if(!hasFilter) return;
- 
-  if(filters.search!==undefined) document.getElementById('i-search').value=filters.search||'';
-  if(filters.product!==undefined) document.getElementById('i-product').value=filters.product||'';
-  if(filters.stage!==undefined) document.getElementById('i-stage').value=filters.stage||'';
-  if(filters.region!==undefined) document.getElementById('i-region').value=filters.region||'';
- 
-  iFilter();
- 
-  // Flash the filter bar to show user something changed
-  const filterBar=document.querySelector('.intel-filters');
-  if(filterBar){
-    filterBar.style.transition='background 0.3s';
-    filterBar.style.background='#1e2a4a';
-    setTimeout(()=>{ filterBar.style.background=''; },800);
-  }
-}
- 
-function buildDataContext() {
-  const total=intelData.length;
-  const bystage={}, byregion={}, byproduct={};
-  intelData.forEach(r=>{
-    bystage[r.stage]=(bystage[r.stage]||0)+1;
-    byregion[r.region]=(byregion[r.region]||0)+1;
-    byproduct[r.product]=(byproduct[r.product]||0)+1;
+function toggleChip(el, type, value) {
+  chipState[type] = value;
+  // Update active chip styling in that group
+  const group = document.getElementById(type + '-chips');
+  if (group) group.querySelectorAll('.qf-chip').forEach(c => {
+    c.classList.toggle('active', c === el);
   });
-  let ctx=`Total account-product records: ${total}\n`;
-  ctx+=`Stage breakdown: ${Object.entries(bystage).map(([k,v])=>`${k}: ${v}`).join(', ')}\n`;
-  ctx+=`Region breakdown: ${Object.entries(byregion).map(([k,v])=>`${k}: ${v}`).join(', ')}\n`;
-  ctx+=`Product breakdown: ${Object.entries(byproduct).map(([k,v])=>`${k}: ${v}`).join(', ')}\n\n`;
-  ctx+=`Sample records (first 100):\n`;
-  ctx+=intelData.slice(0,100).map(r=>
-    `- ${r.account_name} | ${r.product} | Stage: ${r.stage} | Region: ${r.region} | Country: ${r.country} | Rooms: ${r.no_of_rooms||'?'} | Properties: ${r.no_of_properties||'?'} | Owner: ${r.account_owner}`
-  ).join('\n');
-  return ctx;
+  // Sync the hidden selects iFilter uses
+  const sel = document.getElementById('i-' + type);
+  if (sel) sel.value = value;
+  iFilter();
+  renderActiveTags();
+}
+ 
+function renderActiveTags() {
+  const wrap = document.getElementById('active-filters');
+  const tags = [];
+  if (chipState.stage)   tags.push({ label: 'Stage: ' + chipState.stage,   clear: () => toggleChipByValue('stage', '') });
+  if (chipState.product) tags.push({ label: 'Product: ' + chipState.product, clear: () => toggleChipByValue('product', '') });
+  if (chipState.region)  tags.push({ label: 'Region: ' + chipState.region,  clear: () => toggleChipByValue('region', '') });
+  const search = (document.getElementById('i-search')||{}).value||'';
+  if (search) tags.push({ label: 'Search: ' + search, clear: () => { document.getElementById('i-search').value=''; iFilter(); renderActiveTags(); } });
+  const rooms = (document.getElementById('min-rooms')||{}).value||'';
+  if (rooms) tags.push({ label: 'Rooms ≥ ' + rooms, clear: () => { document.getElementById('min-rooms').value=''; iFilter(); renderActiveTags(); } });
+ 
+  if (!tags.length) {
+    wrap.innerHTML = '<span class="af-empty">No filters applied</span>';
+    return;
+  }
+  wrap.innerHTML = tags.map((t,i) =>
+    `<span class="af-tag">${t.label}<button onclick="clearTag(${i})" title="Remove">✕</button></span>`
+  ).join('');
+  wrap._tags = tags;
+}
+ 
+function clearTag(i) {
+  const wrap = document.getElementById('active-filters');
+  if (wrap._tags && wrap._tags[i]) wrap._tags[i].clear();
+}
+ 
+function toggleChipByValue(type, value) {
+  const group = document.getElementById(type + '-chips');
+  if (group) {
+    const chip = [...group.querySelectorAll('.qf-chip')].find(c => {
+      const cv = c.getAttribute('onclick').match(/'([^']*)'[^']*$/)?.[1] || '';
+      return cv === value;
+    });
+    if (chip) toggleChip(chip, type, value);
+  }
+}
+ 
+function populateIntelFilters() {
+  const products = [...new Set(intelData.map(r=>r.product).filter(p=>p&&p!=='—'))].sort();
+  const pGroup = document.getElementById('product-chips');
+  if (pGroup) {
+    pGroup.innerHTML = `<button class="qf-chip active" onclick="toggleChip(this,'product','')">All</button>` +
+      products.map(p => `<button class="qf-chip" onclick="toggleChip(this,'product','${p}')">${p}</button>`).join('');
+  }
+  const regions = [...new Set(intelData.map(r=>r.region).filter(r=>r&&r!=='—'))].sort();
+  const rGroup = document.getElementById('region-chips');
+  if (rGroup) {
+    rGroup.innerHTML = `<button class="qf-chip active" onclick="toggleChip(this,'region','')">All</button>` +
+      regions.map(r => `<button class="qf-chip" onclick="toggleChip(this,'region','${r}')">${r}</button>`).join('');
+  }
+  // Set All chips active on load
+  document.querySelectorAll('#stage-chips .qf-chip').forEach((c,i) => { if(i===0) c.classList.add('active'); });
+}
+ 
+function resetAllFilters() {
+  chipState.stage=''; chipState.product=''; chipState.region='';
+  document.querySelectorAll('.qf-chips').forEach(g => {
+    g.querySelectorAll('.qf-chip').forEach((c,i) => c.classList.toggle('active', i===0));
+  });
+  if(document.getElementById('i-search')) document.getElementById('i-search').value='';
+  if(document.getElementById('min-rooms')) document.getElementById('min-rooms').value='';
+  iFilter();
+  renderActiveTags();
 }
  
 // ══════════════════════════════════════════
-//  INIT
+//  RIGHT PANEL SUB-TABS
 // ══════════════════════════════════════════
+function switchRPanel(name) {
+  document.querySelectorAll('.rpanel-tab').forEach((t,i)=>t.classList.toggle('active', (i===0&&name==='filters')||(i===1&&name==='analytics')));
+  document.getElementById('rpanel-filters').classList.toggle('active', name==='filters');
+  document.getElementById('rpanel-analytics').classList.toggle('active', name==='analytics');
+  if(name==='analytics') renderAnalytics();
+}
+ 
+// ══════════════════════════════════════════
+//  ANALYTICS
+// ══════════════════════════════════════════
+const STAGE_ORDER = ['Unreached','Unengaged','Aware','Engaged','Potential Opportunity','Active Opportunity'];
+const STAGE_COLORS = ['#6b7280','#f59e0b','#3b82f6','#22c55e','#a855f7','#f97316'];
+const STAGE_CLS   = ['s0','s1','s2','s3','s4','s5'];
+const STAGE_SHORT = ['Unreached','Unengaged','Aware','Engaged','Potential','Active Opp.'];
+ 
+let trendChart = null;
+ 
+function renderAnalytics() {
+  renderFunnelCards();
+  renderProdBars();
+  renderTrendChart();
+}
+ 
+function renderFunnelCards() {
+  const counts = {};
+  STAGE_ORDER.forEach(s => counts[s]=0);
+  intelData.forEach(r => { if(counts[r.stage]!==undefined) counts[r.stage]++; });
+  const total = intelData.length || 1;
+  const max = Math.max(...Object.values(counts), 1);
+ 
+  document.getElementById('funnel-cards').innerHTML = STAGE_ORDER.map((s,i) => {
+    const c = counts[s];
+    const pct = Math.round(c/total*100);
+    const barW = Math.round(c/max*100);
+    const isActive = chipState.stage === s;
+    return `<div class="fc ${STAGE_CLS[i]} clickable${isActive?' fc-selected':''}" onclick="funnelClick('${s}')">
+      <div class="fc-name">${STAGE_SHORT[i]}</div>
+      <div class="fc-count">${c.toLocaleString()}</div>
+      <div class="fc-pct">${pct}% of total</div>
+      <div class="fc-bar" style="width:${barW}%"></div>
+    </div>`;
+  }).join('');
+}
+ 
+function funnelClick(stage) {
+  const newStage = chipState.stage === stage ? '' : stage;
+  const chips = document.querySelectorAll('#stage-chips .qf-chip');
+  chips.forEach(c => {
+    const match = c.getAttribute('onclick').includes(`'${newStage}'`);
+    c.classList.toggle('active', newStage===''?c.textContent==='All':match);
+  });
+  chipState.stage = newStage;
+  iFilter();
+  renderFunnelCards();
+}
+ 
+function renderProdBars() {
+  const products = [...new Set(intelData.map(r=>r.product).filter(p=>p&&p!=='—'))].sort();
+  const wrap = document.getElementById('prod-bars');
+  if(!products.length){wrap.innerHTML='<div style="font-size:12px;color:#4b5563;">No data</div>';return;}
+ 
+  const rows = products.map(p => {
+    const recs = intelData.filter(r=>r.product===p);
+    const total = recs.length || 1;
+    const segs = STAGE_ORDER.map((s,i) => {
+      const c = recs.filter(r=>r.stage===s).length;
+      const w = Math.round(c/total*100);
+      return w>0 ? `<div class="pb-seg" style="width:${w}%;background:${STAGE_COLORS[i]};"></div>` : '';
+    }).join('');
+    return `<div class="pb-row">
+      <div class="pb-label"><span>${p}</span><span>${recs.length.toLocaleString()}</span></div>
+      <div class="pb-track">${segs}</div>
+    </div>`;
+  }).join('');
+ 
+  const legend = STAGE_ORDER.map((s,i)=>
+    `<div class="pb-li"><div class="pb-dot" style="background:${STAGE_COLORS[i]}"></div>${STAGE_SHORT[i]}</div>`
+  ).join('');
+ 
+  wrap.innerHTML = rows + `<div class="pb-legend">${legend}</div>`;
+}
+ 
+function renderTrendChart() {
+  const canvas = document.getElementById('trend-chart');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+ 
+  // Build monthly buckets for last 12 months
+  const now = new Date();
+  const months = [];
+  for(let i=11;i>=0;i--){
+    const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+    months.push({ label: d.toLocaleString('default',{month:'short'}), year:d.getFullYear(), month:d.getMonth(), counts:{} });
+    STAGE_ORDER.forEach(s => months[months.length-1].counts[s]=0);
+  }
+ 
+  intelData.forEach(r => {
+    if(!r.stage_date) return;
+    const d = new Date(r.stage_date);
+    const m = months.find(mo => mo.year===d.getFullYear() && mo.month===d.getMonth());
+    if(m && m.counts[r.stage]!==undefined) m.counts[r.stage]++;
+  });
+ 
+  const W = canvas.offsetWidth || 340;
+  const H = 140;
+  canvas.width = W * devicePixelRatio;
+  canvas.height = H * devicePixelRatio;
+  canvas.style.width = W+'px';
+  canvas.style.height = H+'px';
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+ 
+  const pad = {t:10,r:10,b:28,l:28};
+  const cw = W - pad.l - pad.r;
+  const ch = H - pad.t - pad.b;
+  const maxVal = Math.max(...months.map(m=>Math.max(...Object.values(m.counts))),1);
+ 
+  ctx.clearRect(0,0,W,H);
+ 
+  // Grid lines
+  ctx.strokeStyle='#1e1e30'; ctx.lineWidth=1;
+  [0,.25,.5,.75,1].forEach(f=>{
+    const y=pad.t+ch*(1-f);
+    ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(pad.l+cw,y); ctx.stroke();
+    if(f>0){
+      ctx.fillStyle='#4b5563'; ctx.font='9px DM Mono,monospace'; ctx.textAlign='right';
+      ctx.fillText(Math.round(maxVal*f), pad.l-4, y+3);
+    }
+  });
+ 
+  // Lines per stage (only Aware, Engaged, Potential, Active — skip noisy early stages)
+  const DRAW_STAGES = [2,3,4,5]; // indices into STAGE_ORDER
+  DRAW_STAGES.forEach(si => {
+    const s = STAGE_ORDER[si];
+    const color = STAGE_COLORS[si];
+    ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=1.5; ctx.lineJoin='round';
+    months.forEach((m,mi)=>{
+      const x = pad.l + mi/(months.length-1)*cw;
+      const y = pad.t + ch*(1 - m.counts[s]/maxVal);
+      mi===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+    // Dots
+    months.forEach((m,mi)=>{
+      if(!m.counts[s]) return;
+      const x = pad.l + mi/(months.length-1)*cw;
+      const y = pad.t + ch*(1 - m.counts[s]/maxVal);
+      ctx.beginPath(); ctx.arc(x,y,2.5,0,Math.PI*2);
+      ctx.fillStyle=color; ctx.fill();
+    });
+  });
+ 
+  // X labels
+  ctx.fillStyle='#4b5563'; ctx.font='9px DM Mono,monospace'; ctx.textAlign='center';
+  months.forEach((m,mi)=>{
+    if(mi%2===0){
+      const x = pad.l + mi/(months.length-1)*cw;
+      ctx.fillText(m.label, x, H-8);
+    }
+  });
+ 
+  // Mini legend
+  ctx.font='9px DM Sans,sans-serif'; ctx.textAlign='left';
+  DRAW_STAGES.forEach((si,li)=>{
+    const x = pad.l + li*80;
+    const y = H-1;
+    if(x+70>W) return;
+    ctx.fillStyle=STAGE_COLORS[si];
+    ctx.fillRect(x,y-7,8,3);
+    ctx.fillStyle='#6b7280';
+    ctx.fillText(STAGE_SHORT[si], x+11, y);
+  });
+}
+ 
+// ══════════════════════════════════════════
+//  EXPORT CSV
+// ══════════════════════════════════════════
+function exportCSV() {
+  const headers=['Account','SF Account ID','Product','Stage','Stage Date','Rooms','Properties','Region','Country','Owner'];
+  const rows = intelFiltered.map(r=>[
+    `"${(r.account_name||'').replace(/"/g,'""')}"`,
+    r.sf_account_id||'',
+    r.product||'',
+    r.stage||'',
+    r.stage_date||'',
+    r.no_of_rooms||'',
+    r.no_of_properties||'',
+    r.region||'',
+    r.country||'',
+    `"${(r.account_owner||'').replace(/"/g,'""')}"`
+  ].join(','));
+  const csv = [headers.join(','), ...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = `account_intelligence_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+}
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('f-date').value = today();
   loadAirtable();
