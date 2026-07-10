@@ -1,951 +1,908 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Account Engagement Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-:root {
-  --bg:#0a0d12; --surface:#111520; --surface2:#161c2a; --surface3:#1d2538;
-  --border:#252e42; --border2:#2e3a52; --text:#e8ecf4; --text2:#8a94a8; --text3:#5a6480;
-  --accent:#4f9cf9; --accent2:#7c5cfc; --accent3:#f97316;
-  --green:#22c55e; --red:#ef4444; --yellow:#f59e0b; --cyan:#06b6d4;
-  --radius:10px; --radius-lg:16px;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;min-height:100vh;}
- 
-nav{position:sticky;top:0;z-index:100;background:rgba(10,13,18,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;height:52px;}
-.nav-brand{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:var(--accent);margin-right:28px;white-space:nowrap;}
-.nav-brand span{color:var(--text3);font-weight:400;font-size:11px;}
-.nav-tabs{display:flex;gap:2px;}
-.nav-tab{padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text3);border:none;background:transparent;transition:all 0.15s;white-space:nowrap;}
-.nav-tab:hover{color:var(--text2);background:var(--surface2);}
-.nav-tab.active{color:var(--accent);background:rgba(79,156,249,0.12);}
- 
-.page{display:none;padding:20px;max-width:1400px;margin:0 auto;}
-.page.active{display:block;}
- 
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;}
-.card-title{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text2);margin-bottom:14px;display:flex;align-items:center;gap:7px;}
-.card-title .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;}
- 
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:20px;}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;}
-.stat-label{font-size:11px;color:var(--text3);letter-spacing:0.05em;text-transform:uppercase;font-family:'DM Mono',monospace;}
-.stat-value{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--text);margin-top:2px;}
-.stat-sub{font-size:11px;color:var(--text3);margin-top:2px;}
-.stat-card.c-accent{border-color:rgba(79,156,249,0.3);background:rgba(79,156,249,0.05);}.stat-card.c-accent .stat-value{color:var(--accent);}
-.stat-card.c-green{border-color:rgba(34,197,94,0.3);background:rgba(34,197,94,0.05);}.stat-card.c-green .stat-value{color:var(--green);}
-.stat-card.c-yellow{border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.05);}.stat-card.c-yellow .stat-value{color:var(--yellow);}
-.stat-card.c-red{border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.05);}.stat-card.c-red .stat-value{color:var(--red);}
-.stat-card.c-purple{border-color:rgba(124,92,252,0.3);background:rgba(124,92,252,0.05);}.stat-card.c-purple .stat-value{color:var(--accent2);}
- 
-.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);}
-table{width:100%;border-collapse:collapse;font-size:13px;}
-thead th{background:var(--surface2);color:var(--text3);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;padding:9px 12px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none;}
-thead th:hover{color:var(--text2);}
-tbody tr{border-bottom:1px solid var(--border);transition:background 0.1s;}
-tbody tr:last-child{border-bottom:none;}
-tbody tr:hover{background:var(--surface2);}
-tbody td{padding:9px 12px;color:var(--text2);white-space:nowrap;}
-tbody td.primary{color:var(--text);font-weight:500;}
- 
-.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:20px;font-size:11px;font-weight:600;font-family:'DM Mono',monospace;}
-.badge.blue{background:rgba(79,156,249,0.15);color:var(--accent);border:1px solid rgba(79,156,249,0.25);}
-.badge.green{background:rgba(34,197,94,0.15);color:var(--green);border:1px solid rgba(34,197,94,0.25);}
-.badge.yellow{background:rgba(245,158,11,0.15);color:var(--yellow);border:1px solid rgba(245,158,11,0.25);}
-.badge.red{background:rgba(239,68,68,0.15);color:var(--red);border:1px solid rgba(239,68,68,0.25);}
-.badge.purple{background:rgba(124,92,252,0.15);color:var(--accent2);border:1px solid rgba(124,92,252,0.25);}
-.badge.cyan{background:rgba(6,182,212,0.15);color:var(--cyan);border:1px solid rgba(6,182,212,0.25);}
-.badge.gray{background:rgba(90,100,128,0.12);color:var(--text3);border:1px solid rgba(90,100,128,0.2);}
-.badge.orange{background:rgba(249,115,22,0.15);color:var(--accent3);border:1px solid rgba(249,115,22,0.25);}
- 
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
-@media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr;}}
- 
-.filter-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
-.search-input{flex:1;min-width:160px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:7px 11px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;}
-.search-input:focus{border-color:var(--accent);}
-.search-input::placeholder{color:var(--text3);}
-.num-input{width:90px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:7px 11px;color:var(--text);font-size:13px;font-family:'DM Mono',monospace;outline:none;}
-.num-input:focus{border-color:var(--accent);}
-.num-input::placeholder{color:var(--text3);}
-.filter-label{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;white-space:nowrap;}
-select.filter-select{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:7px 11px;color:var(--text2);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer;}
-select.filter-select:focus{border-color:var(--accent);}
- 
-.btn{padding:7px 14px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;gap:5px;}
-.btn:hover{border-color:var(--border2);color:var(--text);}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
-.btn.primary:hover{background:#3d8ef0;}
-.btn.sm{padding:5px 10px;font-size:12px;}
- 
-.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
-.section-title{font-family:'Syne',sans-serif;font-weight:700;font-size:17px;color:var(--text);}
-.section-sub{font-size:12px;color:var(--text3);margin-top:2px;}
- 
-.inner-tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:18px;}
-.inner-tab{padding:7px 14px;cursor:pointer;font-size:13px;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.15s;}
-.inner-tab:hover{color:var(--text2);}
-.inner-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
- 
-.funnel-container{display:flex;flex-direction:column;gap:5px;}
-.funnel-row{display:flex;align-items:center;gap:10px;padding:5px 0;}
-.funnel-label{font-size:12px;color:var(--text2);width:120px;flex-shrink:0;font-family:'DM Mono',monospace;overflow:hidden;text-overflow:ellipsis;}
-.funnel-track{flex:1;background:var(--surface3);border-radius:4px;height:18px;overflow:hidden;}
-.funnel-fill{height:100%;border-radius:4px;transition:width 0.7s cubic-bezier(0.4,0,0.2,1);display:flex;align-items:center;padding-left:7px;}
-.funnel-fill span{font-size:11px;font-weight:700;color:rgba(255,255,255,0.9);font-family:'DM Mono',monospace;}
-.funnel-num{font-family:'DM Mono',monospace;font-size:12px;color:var(--text3);width:44px;text-align:right;}
- 
-.mini-chart{display:flex;flex-direction:column;gap:7px;}
-.mc-row{display:flex;align-items:center;gap:9px;}
-.mc-label{font-size:12px;color:var(--text2);width:140px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.mc-track{flex:1;height:7px;background:var(--surface3);border-radius:4px;overflow:hidden;}
-.mc-fill{height:100%;border-radius:4px;transition:width 0.6s;}
-.mc-val{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);width:36px;text-align:right;}
- 
-/* Stacked bar for product funnel */
-.stacked-row{display:flex;align-items:center;gap:10px;padding:4px 0;}
-.stacked-label{font-size:12px;color:var(--text2);width:140px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'DM Mono',monospace;}
-.stacked-track{flex:1;height:20px;background:var(--surface3);border-radius:4px;overflow:hidden;display:flex;}
-.stacked-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:rgba(255,255,255,0.85);transition:width 0.7s;overflow:hidden;white-space:nowrap;}
-.stacked-total{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);width:40px;text-align:right;}
-.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;}
-.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);}
-.legend-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
- 
-.tl-item{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);}
-.tl-item:last-child{border-bottom:none;}
-.tl-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);margin-top:4px;flex-shrink:0;}
-.tl-dot.g{background:var(--green);}.tl-dot.y{background:var(--yellow);}
-.tl-title{font-size:13px;color:var(--text);font-weight:500;}
-.tl-meta{font-size:11px;color:var(--text3);margin-top:1px;font-family:'DM Mono',monospace;}
- 
-.account-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
-.account-row:last-child{border-bottom:none;}
-.acct-av{width:30px;height:30px;border-radius:7px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:var(--accent);flex-shrink:0;}
-.acct-name{font-size:13px;color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.acct-meta{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;}
-.acct-score{font-family:'Syne',sans-serif;font-weight:700;font-size:17px;color:var(--accent);}
- 
-.campaign-pill{display:inline-block;padding:2px 7px;border-radius:20px;font-size:11px;background:var(--surface3);color:var(--text2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle;}
-.loading{color:var(--text3);font-size:12px;padding:32px;text-align:center;font-family:'DM Mono',monospace;}
-.empty{text-align:center;padding:32px;color:var(--text3);font-size:13px;}
- 
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-@media(max-width:600px){.form-grid{grid-template-columns:1fr;}}
-.form-group{display:flex;flex-direction:column;gap:5px;}
-.form-group.full{grid-column:1/-1;}
-label{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:0.04em;text-transform:uppercase;}
-input,select,textarea{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:8px 11px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;width:100%;transition:border-color 0.15s;}
-input:focus,select:focus,textarea:focus{border-color:var(--accent);}
-input::placeholder{color:var(--text3);}
-textarea{resize:vertical;min-height:72px;}
- 
-::-webkit-scrollbar{width:5px;height:5px;}
-::-webkit-scrollbar-track{background:var(--surface);}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
- 
-#toast{position:fixed;bottom:20px;right:20px;z-index:9999;background:var(--surface3);border:1px solid var(--border2);border-radius:9px;padding:10px 18px;color:var(--text);font-size:13px;box-shadow:0 4px 20px rgba(0,0,0,0.4);transform:translateY(60px);opacity:0;transition:all 0.3s;}
-#toast.show{transform:translateY(0);opacity:1;}
-#toast.success{border-color:rgba(34,197,94,0.4);}
-#toast.error{border-color:rgba(239,68,68,0.4);}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #F7F6F2; --surface: #FFFFFF; --surface2: #F0EEE9; --border: #E2DDD6; --border2: #CCC8C0;
+    --text: #1A1916; --text2: #6B6760; --text3: #9B9892;
+    --accent: #2D5BE3; --accent-light: #EEF2FD; --accent-text: #1A3BA8;
+    --green: #1D7A4A; --green-light: #E6F5EC; --red: #C4310F; --red-light: #FDF0EC;
+    --amber: #A05D00; --amber-light: #FEF5E7; --purple: #5B3FBF; --purple-light: #F0ECFD;
+    --radius: 10px; --radius-sm: 6px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; }
+
+  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; gap: 16px; flex-wrap: wrap; }
+  .header-brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; white-space: nowrap; }
+  .brand-icon { width: 28px; height: 28px; background: var(--accent); border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .brand-icon svg { width: 16px; height: 16px; }
+  .nav-tabs { display: flex; gap: 2px; background: var(--surface2); padding: 3px; border-radius: var(--radius-sm); }
+  .tab-btn { padding: 5px 14px; border: none; background: transparent; border-radius: 4px; font-size: 13px; font-weight: 500; color: var(--text2); cursor: pointer; transition: all 0.15s; font-family: inherit; white-space: nowrap; }
+  .tab-btn.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+  .header-actions { display: flex; gap: 8px; align-items: center; }
+
+  .data-status{background:#111a14;color:#cfe8d6;font-family:'DM Mono',monospace;font-size:11.5px;padding:6px 24px;display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+  .data-status b{color:#fff}
+  .data-status.err{background:var(--red);color:#fff}
+
+  .main { padding: 24px; max-width: 1360px; margin: 0 auto; }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 22px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow); }
+  .stat-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .stat-value { font-size: 28px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .stat-card.accent { border-color: #C5D4F9; background: var(--accent-light); } .stat-card.accent .stat-value { color: var(--accent-text); }
+  .stat-card.danger { border-color: #F5CABD; background: var(--red-light); } .stat-card.danger .stat-value { color: var(--red); }
+  .stat-card.success { border-color: #B8DFC8; background: var(--green-light); } .stat-card.success .stat-value { color: var(--green); }
+  .stat-card.neutral { border-color: var(--border2); }
+
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
+  .section-title { font-size: 15px; font-weight: 600; }
+  .page-sub { font-size: 13px; color: var(--text2); margin-top: 2px; }
+
+  .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .table-toolbar { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .search-wrap { position: relative; flex: 1; min-width: 180px; }
+  .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--text3); pointer-events: none; }
+  .search-input { width: 100%; padding: 7px 12px 7px 32px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; font-family: inherit; background: var(--bg); color: var(--text); outline: none; }
+  .search-input:focus { border-color: var(--accent); }
+  .table-scroll{overflow-x:auto}
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead { background: var(--surface2); }
+  th { padding: 9px 14px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg); }
+  .account-name{font-weight:500} .date-cell{font-family:'DM Mono',monospace;font-size:12px;color:var(--text2)}
+
+  .status-active{background:var(--green-light);color:var(--green);display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500;white-space:nowrap}
+  .status-cooling{background:var(--red-light);color:var(--red);display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500;white-space:nowrap}
+  .status-notreached{background:var(--surface2);color:var(--text2);display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500;border:1px solid var(--border);white-space:nowrap}
+  .status-notfound{background:var(--amber-light);color:var(--amber);display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500;white-space:nowrap}
+  .count-pill{background:var(--red-light);color:var(--red);font-weight:600;padding:1px 8px;border-radius:100px;font-size:12px;font-family:'DM Mono',monospace;}
+  .chan-pill{display:inline-block;background:var(--accent-light);color:var(--accent-text);padding:1px 7px;border-radius:100px;font-size:11px;margin:1px 2px 1px 0;}
+  .camp-pill{display:inline-block;background:var(--surface2);color:var(--text2);padding:1px 7px;border-radius:100px;font-size:11px;margin:1px 2px 1px 0;border:1px solid var(--border);}
+  .clickable-num{color:var(--accent-text);font-weight:600;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;background:none;border:none;font-family:'DM Mono',monospace;font-size:13px;padding:0}
+  .clickable-num:hover{color:var(--accent)}
+
+  .btn { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); color:var(--text); font-size:13px; font-weight:500; font-family:inherit; cursor:pointer; transition:all 0.12s; text-decoration:none; white-space:nowrap; }
+  .btn:hover{background:var(--surface2);border-color:var(--border2)} .btn svg{width:14px;height:14px;flex-shrink:0}
+  .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)} .btn-primary:hover{background:var(--accent-text);border-color:var(--accent-text)}
+  .btn-sm{padding:4px 10px;font-size:12px}
+
+  .cooling-alert{background:var(--red-light);border:1px solid #F5CABD;border-radius:var(--radius);padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:13px} .cooling-alert svg{width:16px;height:16px;color:var(--red);flex-shrink:0}
+
+  .empty-note{text-align:center;padding:14px;color:var(--text3);font-size:12px}
+
+  .dropzone{border:2px dashed var(--border2);border-radius:var(--radius);padding:36px 24px;text-align:center;color:var(--text2);background:var(--surface);transition:border-color .15s,background .15s;cursor:pointer;}
+  .dropzone:hover,.dropzone.drag{border-color:var(--accent);background:var(--accent-light);}
+  .dropzone svg{width:32px;height:32px;margin:0 auto 10px;opacity:0.4;display:block;color:var(--text2)}
+  .dropzone .dz-title{font-size:14px;font-weight:500;margin-bottom:4px;}
+  .dropzone .dz-sub{font-size:12px;color:var(--text3);}
+
+  .loading{color:var(--text3);font-size:12px;padding:32px;text-align:center;font-family:'DM Mono',monospace;}
+  .empty-state{padding:40px 24px;text-align:center;color:var(--text2);font-size:13px;}
+
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:1000;align-items:center;justify-content:center;padding:24px}
+  .modal-overlay.open{display:flex}
+  .modal{background:var(--surface);border-radius:14px;padding:28px;width:100%;max-width:560px;box-shadow:0 20px 60px rgba(0,0,0,0.15);max-height:85vh;overflow-y:auto}
+  .modal-title{font-size:17px;font-weight:600;margin-bottom:20px}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .form-group{display:flex;flex-direction:column;gap:5px} .form-group.full{grid-column:1/-1}
+  label.form-label{font-size:12px;font-weight:500;color:var(--text2)}
+  input.form-input,select.form-input,textarea.form-input{padding:8px 11px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;color:var(--text);background:var(--surface);outline:none;transition:border-color 0.12s;width:100%;}
+  input.form-input:focus,select.form-input:focus,textarea.form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(45,91,227,0.1)}
+  textarea.form-input{resize:vertical;min-height:72px}
+  .form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
+
+  .toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;padding:10px 16px;border-radius:var(--radius-sm);font-size:13px;z-index:9999;opacity:0;transform:translateY(8px);transition:all 0.2s;pointer-events:none} .toast.show{opacity:1;transform:translateY(0)}
+
+  @media(max-width:600px){.main{padding:16px}.form-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
- 
-<nav>
-  <div class="nav-brand">◈ AET <span>v3</span></div>
+
+<header class="header">
+  <div class="header-brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1.5" fill="white"/><rect x="9" y="2" width="5" height="5" rx="1.5" fill="white" opacity="0.7"/><rect x="2" y="9" width="5" height="5" rx="1.5" fill="white" opacity="0.7"/><rect x="9" y="9" width="5" height="5" rx="1.5" fill="white" opacity="0.4"/></svg>
+    </div>
+    Account Engagement Tracker
+  </div>
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="switchTab('intelligence',this)">✦ Intelligence</button>
-    <button class="nav-tab" onclick="switchTab('analysis',this)">◈ Analysis</button>
-    <button class="nav-tab" onclick="switchTab('dashboard',this)">▦ Dashboard</button>
-    <button class="nav-tab" onclick="switchTab('log',this)">+ Log</button>
+    <button class="tab-btn active" onclick="switchTab('accounts',this)">Accounts</button>
+    <button class="tab-btn" onclick="switchTab('cooling',this)">Cooling-Off</button>
+    <button class="tab-btn" onclick="switchTab('campaigns',this)">Campaigns</button>
   </div>
-</nav>
- 
-<!-- ====================================================== -->
-<!-- INTELLIGENCE                                            -->
-<!-- ====================================================== -->
-<div id="tab-intelligence" class="page active">
+  <div class="header-actions">
+    <button class="btn" onclick="loadAll()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13.5 8a5.5 5.5 0 11-1.6-3.9M13.5 2.5v3h-3"/></svg>Refresh
+    </button>
+    <button class="btn btn-primary" onclick="openModal()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>Log Touchpoint
+    </button>
+  </div>
+</header>
+
+<div class="data-status" id="data-status">Connecting to Supabase…</div>
+
+<main class="main">
+
+<!-- ============ ACCOUNTS (tabular, one row per account) ============ -->
+<div id="page-accounts" class="page active">
   <div class="section-header">
     <div>
-      <div class="section-title">Account Intelligence</div>
-      <div class="section-sub">Product stage pipeline · <span id="intel-count">—</span> records</div>
+      <div class="section-title">Accounts Reached — Last 30 Days</div>
+      <div class="page-sub">One row per account, with the campaigns it's been part of</div>
     </div>
-    <div style="display:flex;gap:7px">
-      <button class="btn sm" onclick="exportCSV('intel-table','intelligence')">↓ CSV</button>
-      <button class="btn sm primary" onclick="loadIntelligence()">↻ Refresh</button>
-    </div>
+    <button class="btn btn-sm" onclick="downloadAccounts()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 13h10"/></svg>Download
+    </button>
   </div>
- 
-  <div class="filter-bar">
-    <input class="search-input" id="intel-search" placeholder="Search accounts, owners…" oninput="filterIntel()" />
-    <select class="filter-select" id="intel-stage" onchange="filterIntel()">
-      <option value="">All Stages</option>
-      <option>Unreached</option><option>Unengaged</option><option>Aware</option>
-      <option>Engaged</option><option>Potential Opp.</option><option>Active Opp.</option>
-    </select>
-    <select class="filter-select" id="intel-product" onchange="filterIntel()">
-      <option value="">All Products</option>
-    </select>
-    <select class="filter-select" id="intel-region" onchange="filterIntel()">
-      <option value="">All Regions</option>
-    </select>
-    <select class="filter-select" id="intel-hierarchy" onchange="filterIntel()">
-      <option value="">All Hierarchies</option>
-      <option value="L1">L1 — Global / Chain HQ</option>
-      <option value="L2">L2 — Brand / Region</option>
-      <option value="L3">L3 — Individual Hotel of a Chain</option>
-      <option value="L4">L4 — Independent</option>
-    </select>
-    <select class="filter-select" id="intel-industry" onchange="filterIntel()">
-      <option value="">All Industries</option>
-    </select>
-    <select class="filter-select" id="intel-eng-status" onchange="filterIntel()">
-      <option value="">All Engagement</option>
-      <option value="active">Active</option>
-      <option value="cooling">Cooling Off</option>
-      <option value="not_reached">Not Reached</option>
-    </select>
-    <span class="filter-label">Properties:</span>
-    <input class="num-input" id="intel-prop-min" placeholder="Min" oninput="filterIntel()" type="number" min="0" />
-    <span class="filter-label">—</span>
-    <input class="num-input" id="intel-prop-max" placeholder="Max" oninput="filterIntel()" type="number" min="0" />
+
+  <div class="stats-grid">
+    <div class="stat-card accent"><div class="stat-label">Accounts Reached (30d)</div><div class="stat-value" id="ac-total">—</div></div>
+    <div class="stat-card success"><div class="stat-label">Active (14d)</div><div class="stat-value" id="ac-active">—</div></div>
+    <div class="stat-card danger"><div class="stat-label">Cooling Off</div><div class="stat-value" id="ac-cooling">—</div></div>
+    <div class="stat-card neutral"><div class="stat-label">Dormant (14d+)</div><div class="stat-value" id="ac-notreached">—</div></div>
   </div>
- 
+
   <div class="table-wrap">
-    <table id="intel-table">
+    <div class="table-toolbar">
+      <div class="search-wrap">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="4"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg>
+        <input class="search-input" id="ac-search" type="text" placeholder="Search accounts…" oninput="renderAccountsTable()">
+      </div>
+    </div>
+    <div class="table-scroll">
+    <table>
       <thead><tr>
-        <th onclick="sortTbl('intel-table',0)">Account ↕</th>
-        <th onclick="sortTbl('intel-table',1)">Product ↕</th>
-        <th onclick="sortTbl('intel-table',2)">Stage ↕</th>
-        <th onclick="sortTbl('intel-table',3)">Stage Date ↕</th>
-        <th onclick="sortTbl('intel-table',4)">Properties ↕</th>
-        <th onclick="sortTbl('intel-table',5)">Hierarchy ↕</th>
-        <th onclick="sortTbl('intel-table',6)">Industry ↕</th>
-        <th onclick="sortTbl('intel-table',7)">Region ↕</th>
-        <th onclick="sortTbl('intel-table',8)">Country ↕</th>
-        <th onclick="sortTbl('intel-table',9)">Owner ↕</th>
-        <th onclick="sortTbl('intel-table',10)">Eng. Status ↕</th>
+        <th>Account</th>
+        <th>Country</th>
+        <th>Status</th>
+        <th>Touches (30d)</th>
+        <th>Campaigns</th>
+        <th>Contacts Reached</th>
+        <th>Last Touch</th>
       </tr></thead>
-      <tbody id="intel-tbody"><tr><td colspan="11" class="loading">Loading…</td></tr></tbody>
+      <tbody id="ac-tbody"><tr><td colspan="7" class="loading">Loading…</td></tr></tbody>
     </table>
-  </div>
-  <div id="intel-pg" style="margin-top:10px;display:flex;gap:7px;align-items:center;justify-content:flex-end"></div>
-</div>
- 
-<!-- ====================================================== -->
-<!-- ANALYSIS                                                -->
-<!-- ====================================================== -->
-<div id="tab-analysis" class="page">
-  <div class="section-header">
-    <div>
-      <div class="section-title">Analysis</div>
-      <div class="section-sub">Pipeline health · hierarchy & industry breakdown</div>
-    </div>
-    <button class="btn sm primary" onclick="loadAnalysis()">↻ Refresh</button>
-  </div>
- 
-  <!-- Analysis filters -->
-  <div class="filter-bar" style="margin-bottom:20px;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);">
-    <span class="filter-label">Filter Analysis:</span>
-    <select class="filter-select" id="an-hierarchy" onchange="applyAnalysisFilters()">
-      <option value="">All Hierarchies</option>
-      <option value="L1">L1 — Global / Chain HQ</option>
-      <option value="L2">L2 — Brand / Region</option>
-      <option value="L3">L3 — Individual Hotel of a Chain</option>
-      <option value="L4">L4 — Independent</option>
-    </select>
-    <select class="filter-select" id="an-industry" onchange="applyAnalysisFilters()">
-      <option value="">All Industries</option>
-    </select>
-    <select class="filter-select" id="an-product" onchange="applyAnalysisFilters()">
-      <option value="">All Products</option>
-    </select>
-    <select class="filter-select" id="an-region" onchange="applyAnalysisFilters()">
-      <option value="">All Regions</option>
-    </select>
-    <button class="btn sm" onclick="clearAnalysisFilters()">✕ Clear</button>
-  </div>
- 
-  <div class="inner-tabs">
-    <div class="inner-tab active" onclick="switchInner('an','pipeline',this)">Pipeline</div>
-    <div class="inner-tab" onclick="switchInner('an','product-funnel',this)">Product Funnel</div>
-    <div class="inner-tab" onclick="switchInner('an','hierarchy',this)">Hierarchy</div>
-    <div class="inner-tab" onclick="switchInner('an','industry',this)">Industry</div>
-  </div>
- 
-  <!-- PIPELINE -->
-  <div id="an-pipeline">
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-title"><span class="dot"></span>Overall Stage Funnel</div>
-        <div class="funnel-container" id="funnel-chart"><div class="loading">Loading…</div></div>
-      </div>
-      <div class="card">
-        <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>By Product — Account Count</div>
-        <div class="mini-chart" id="product-dist"><div class="loading">Loading…</div></div>
-      </div>
-    </div>
-  </div>
- 
-  <!-- PRODUCT FUNNEL (stacked) -->
-  <div id="an-product-funnel" style="display:none">
-    <div class="card">
-      <div class="card-title"><span class="dot"></span>Stage Distribution by Product</div>
-      <div class="legend" id="pf-legend"></div>
-      <div id="pf-chart"><div class="loading">Loading…</div></div>
-    </div>
-  </div>
- 
-  <!-- HIERARCHY -->
-  <div id="an-hierarchy" style="display:none">
-    <div class="grid-2" style="margin-bottom:14px">
-      <div class="card">
-        <div class="card-title"><span class="dot"></span>Pipeline by Hierarchy Level</div>
-        <div class="mini-chart" id="hier-pipeline"><div class="loading">Loading…</div></div>
-      </div>
-      <div class="card">
-        <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>Stage Funnel per Hierarchy</div>
-        <div id="hier-funnel"><div class="loading">Loading…</div></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title"><span class="dot" style="background:var(--green)"></span>Hierarchy × Stage Breakdown</div>
-      <div class="table-wrap">
-        <table><thead><tr>
-          <th>Hierarchy</th><th>Total</th><th>Unreached</th><th>Unengaged</th>
-          <th>Aware</th><th>Engaged</th><th>Potential Opp.</th><th>Active Opp.</th>
-        </tr></thead>
-        <tbody id="hier-table"><tr><td colspan="8" class="loading">Loading…</td></tr></tbody></table>
-      </div>
-    </div>
-  </div>
- 
-  <!-- INDUSTRY -->
-  <div id="an-industry" style="display:none">
-    <div class="grid-2" style="margin-bottom:14px">
-      <div class="card">
-        <div class="card-title"><span class="dot"></span>Top Industries by Account Count</div>
-        <div class="mini-chart" id="ind-count"><div class="loading">Loading…</div></div>
-      </div>
-      <div class="card">
-        <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>Industry Stage Mix</div>
-        <div class="mini-chart" id="ind-stage"><div class="loading">Loading…</div></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title"><span class="dot" style="background:var(--green)"></span>Industry × Stage Breakdown</div>
-      <div class="table-wrap">
-        <table><thead><tr>
-          <th>Industry</th><th>Total</th><th>Unreached</th><th>Unengaged</th>
-          <th>Aware</th><th>Engaged</th><th>Potential Opp.</th><th>Active Opp.</th>
-        </tr></thead>
-        <tbody id="ind-table"><tr><td colspan="8" class="loading">Loading…</td></tr></tbody></table>
-      </div>
     </div>
   </div>
 </div>
- 
-<!-- ====================================================== -->
-<!-- DASHBOARD                                               -->
-<!-- ====================================================== -->
-<div id="tab-dashboard" class="page">
+
+<!-- ============ COOLING-OFF (flat contacts table) ============ -->
+<div id="page-cooling" class="page">
+
+  <div id="cooling-banner" style="display:none" class="cooling-alert">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><line x1="8" y1="5" x2="8" y2="8"/><circle cx="8" cy="11" r="0.5" fill="currentColor"/></svg>
+    <span id="cooling-text"></span>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card accent"><div class="stat-label">Accounts Tracked</div><div class="stat-value" id="co-total">—</div></div>
+    <div class="stat-card danger"><div class="stat-label">Accounts Cooling Off</div><div class="stat-value" id="co-accounts">—</div></div>
+    <div class="stat-card danger"><div class="stat-label">Contacts Cooling Off</div><div class="stat-value" id="co-contacts">—</div></div>
+    <div class="stat-card success"><div class="stat-label">Active Accounts (14d)</div><div class="stat-value" id="co-active">—</div></div>
+  </div>
+
   <div class="section-header">
     <div>
-      <div class="section-title">Dashboard</div>
-      <div class="section-sub">Account engagement status · <span id="dash-count">—</span> accounts</div>
+      <div class="section-title">Contacts in Cooling-Off</div>
+      <div class="page-sub">Every contact/lead currently flagged as cooling off, with their account</div>
     </div>
-    <div style="display:flex;gap:7px">
-      <button class="btn sm" onclick="exportCSV('dash-table','dashboard')">↓ CSV</button>
-      <button class="btn sm primary" onclick="loadDashboard()">↻ Refresh</button>
-    </div>
+    <button class="btn btn-sm" onclick="downloadCoolingReport()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 13h10"/></svg>Download
+    </button>
   </div>
- 
-  <div class="stat-grid">
-    <div class="stat-card c-accent"><div class="stat-label">Total Accounts</div><div class="stat-value" id="d-total">—</div></div>
-    <div class="stat-card c-green"><div class="stat-label">Active (14d)</div><div class="stat-value" id="d-active">—</div></div>
-    <div class="stat-card c-red"><div class="stat-label">Cooling Off</div><div class="stat-value" id="d-cooling">—</div></div>
-    <div class="stat-card c-yellow"><div class="stat-label">Not Reached</div><div class="stat-value" id="d-notreached">—</div></div>
-    <div class="stat-card"><div class="stat-label">Total Sends</div><div class="stat-value" id="d-sends">—</div></div>
-  </div>
- 
-  <div class="filter-bar">
-    <input class="search-input" id="dash-search" placeholder="Search accounts…" oninput="filterDash()" />
-    <select class="filter-select" id="dash-status" onchange="filterDash()">
-      <option value="">All Statuses</option>
-      <option value="Active">Active</option>
-      <option value="Cooling Off">Cooling Off</option>
-      <option value="Not Reached">Not Reached</option>
-    </select>
-    <select class="filter-select" id="dash-days" onchange="filterDash()">
-      <option value="">All Time</option>
-      <option value="7">Last 7 days</option>
-      <option value="14">Last 14 days</option>
-      <option value="30">Last 30 days</option>
-    </select>
-  </div>
- 
+
   <div class="table-wrap">
-    <table id="dash-table">
+    <div class="table-toolbar">
+      <div class="search-wrap">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="4"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg>
+        <input class="search-input" id="co-search" type="text" placeholder="Search contacts, accounts…" oninput="filterCoolingOff()">
+      </div>
+    </div>
+    <div class="table-scroll">
+    <table>
       <thead><tr>
-        <th onclick="sortTbl('dash-table',0)">Account ↕</th>
-        <th onclick="sortTbl('dash-table',1)">Country ↕</th>
-        <th onclick="sortTbl('dash-table',2)">Total Sends ↕</th>
-        <th onclick="sortTbl('dash-table',3)">Sends (14d) ↕</th>
-        <th onclick="sortTbl('dash-table',4)">Last Touch ↕</th>
-        <th onclick="sortTbl('dash-table',5)">Days Since ↕</th>
-        <th onclick="sortTbl('dash-table',6)">Cooling Off Until ↕</th>
-        <th onclick="sortTbl('dash-table',7)">Last Campaign ↕</th>
-        <th onclick="sortTbl('dash-table',8)">Eng. Status ↕</th>
+        <th>Contact</th>
+        <th>Email</th>
+        <th>Account</th>
+        <th>Country</th>
+        <th>Last Touch</th>
+        <th>Cooling Off Until</th>
+        <th>Status</th>
       </tr></thead>
-      <tbody id="dash-tbody"><tr><td colspan="9" class="loading">Loading…</td></tr></tbody>
+      <tbody id="co-tbody"><tr><td colspan="7" class="loading">Loading…</td></tr></tbody>
     </table>
+    </div>
   </div>
-  <div id="dash-pg" style="margin-top:10px;display:flex;gap:7px;align-items:center;justify-content:flex-end"></div>
+
+  <div class="section-header" style="margin-top:26px">
+    <div>
+      <div class="section-title">Cross-Check a Contact List</div>
+      <div class="page-sub">Upload a list (.xlsx / .xls / .csv, with a Name or Email column) to see who's currently cooling off</div>
+    </div>
+  </div>
+
+  <input type="file" id="xl-upload" accept=".xlsx,.xls,.csv" onchange="handleExcelUpload(event)" style="display:none">
+  <div class="dropzone" id="xl-dropzone" onclick="document.getElementById('xl-upload').click()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6M12 9v6"/><path d="M21 15a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h4l2 3h8a2 2 0 012 2z"/></svg>
+    <div class="dz-title" id="xl-drop-text">Click to upload, or drag a file here</div>
+    <div class="dz-sub">.xlsx · .xls · .csv</div>
+  </div>
+
+  <div id="xl-result-wrap" style="display:none;margin-top:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+      <span class="page-sub" id="xl-summary" style="margin:0"></span>
+      <button class="btn btn-sm" onclick="downloadCrossCheck()">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 13h10"/></svg>Download Results
+      </button>
+    </div>
+    <div class="table-wrap">
+      <div class="table-scroll">
+      <table>
+        <thead><tr><th>Uploaded Name / Email</th><th>Matched Account</th><th>Matched Contact</th><th>Status</th><th>Last Touch</th></tr></thead>
+        <tbody id="xl-tbody"></tbody>
+      </table>
+      </div>
+    </div>
+  </div>
 </div>
- 
-<!-- ====================================================== -->
-<!-- LOG                                                     -->
-<!-- ====================================================== -->
-<div id="tab-log" class="page">
+
+<!-- ============ CAMPAIGNS ============ -->
+<div id="page-campaigns" class="page">
   <div class="section-header">
-    <div><div class="section-title">Log Touchpoint</div><div class="section-sub">Manually record an engagement event</div></div>
+    <div>
+      <div class="section-title">Campaigns — Last 30 Days</div>
+      <div class="page-sub">Click a number to see the accounts or contacts behind it</div>
+    </div>
+    <button class="btn btn-sm" onclick="downloadCampaigns()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 13h10"/></svg>Download
+    </button>
   </div>
-  <div class="card" style="max-width:680px">
-    <div class="card-title"><span class="dot"></span>New Touchpoint</div>
-    <form id="log-form" onsubmit="submitTP(event)">
-      <div class="form-grid">
-        <div class="form-group"><label>Salesforce Account ID</label><input id="f-sfid" placeholder="001XX000000XXXX" /></div>
-        <div class="form-group"><label>Account Name *</label><input id="f-name" required placeholder="Company name" /></div>
-        <div class="form-group"><label>Account Domain</label><input id="f-domain" placeholder="company.com" /></div>
-        <div class="form-group"><label>Country</label><input id="f-country" placeholder="e.g. India" /></div>
-        <div class="form-group"><label>Date *</label><input id="f-date" type="date" required /></div>
-        <div class="form-group"><label>Sent By *</label><input id="f-sentby" required placeholder="Name or Pardot (Auto)" /></div>
-        <div class="form-group"><label>Outcome</label>
-          <select id="f-outcome"><option value="">None</option><option>Opened</option><option>Clicked</option><option>Replied</option><option>Meeting Booked</option><option>No Response</option></select>
-        </div>
-        <div class="form-group"><label>Cooling Off?</label>
-          <select id="f-cooling"><option value="false">No</option><option value="true">Yes</option></select>
-        </div>
-        <div class="form-group full"><label>Campaign / Email Name *</label><input id="f-campaign" required placeholder="Campaign name" /></div>
-        <div class="form-group full"><label>Notes</label><textarea id="f-notes" placeholder="Additional context…"></textarea></div>
+
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <div class="search-wrap">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="4"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg>
+        <input class="search-input" id="camp-search" type="text" placeholder="Search campaigns…" oninput="renderCampaigns()">
       </div>
-      <div style="display:flex;gap:9px;margin-top:18px">
-        <button type="button" class="btn" onclick="resetForm()">Cancel</button>
-        <button type="submit" class="btn primary" id="submit-btn">Save Touchpoint</button>
-      </div>
-    </form>
+    </div>
+    <div class="table-scroll">
+    <table>
+      <thead><tr>
+        <th>Campaign</th>
+        <th>Channel</th>
+        <th>Accounts Reached</th>
+        <th>Contacts Reached</th>
+        <th>Cooling Off Now</th>
+        <th>Total Touches</th>
+        <th>First Sent</th>
+        <th>Last Sent</th>
+      </tr></thead>
+      <tbody id="camp-tbody"><tr><td colspan="8" class="loading">Loading…</td></tr></tbody>
+    </table>
+    </div>
   </div>
 </div>
- 
-<div id="toast"></div>
- 
+
+</main>
+
+<!-- LOG TOUCHPOINT MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-title">Log Touchpoint</div>
+    <div class="form-grid">
+      <div class="form-group full" style="background:var(--accent-light);border:1px solid #C5D4F9;border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:2px;">
+        <div style="font-size:11px;font-weight:600;color:var(--accent-text);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Account Identifier — use SF ID when available</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+          <div class="form-group" style="margin:0;"><label class="form-label">Salesforce Account ID</label><input id="f-sfid" class="form-input" type="text" placeholder="e.g. 0015g00000XXXXX"></div>
+          <div class="form-group" style="margin:0;"><label class="form-label">Account Domain</label><input id="f-domain" class="form-input" type="text" placeholder="e.g. acme.com"></div>
+          <div class="form-group" style="margin:0;"><label class="form-label">Country</label><input id="f-country" class="form-input" type="text" placeholder="e.g. United Kingdom"></div>
+        </div>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Account Name *</label>
+        <input id="f-account" class="form-input" type="text" placeholder="e.g. Acme Corp">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Date *</label>
+        <input id="f-date" class="form-input" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sent By *</label>
+        <input id="f-by" class="form-input" type="text" placeholder="e.g. Sarah Jones">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tier</label>
+        <select id="f-tier" class="form-input">
+          <option value="">Select tier…</option>
+          <option>Tier 1</option>
+          <option>Tier 2</option>
+          <option>Tier 3</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Channel *</label>
+        <select id="f-channel" class="form-input">
+          <option>Email</option>
+          <option>LinkedIn</option>
+          <option>Webinar</option>
+          <option>Event</option>
+          <option>Direct Mail</option>
+          <option>Paid Ad</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Campaign / Email Name *</label>
+        <input id="f-campaign" class="form-input" type="text" placeholder="e.g. Q3 Demand Booster Launch">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Outcome</label>
+        <select id="f-outcome" class="form-input">
+          <option value="">None</option>
+          <option>Opened</option>
+          <option>Clicked</option>
+          <option>Replied</option>
+          <option>Meeting Booked</option>
+          <option>No Response</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cooling Off?</label>
+        <select id="f-cooling" class="form-input">
+          <option value="false">No</option>
+          <option value="true">Yes</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Notes</label>
+        <textarea id="f-notes" class="form-input" placeholder="Additional context…"></textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="submit-btn" onclick="saveTouchpoint()">Save Touchpoint</button>
+    </div>
+  </div>
+</div>
+
+<!-- GENERIC LIST MODAL (used by Campaigns tab click-throughs) -->
+<div class="modal-overlay" id="list-modal-overlay" onclick="closeListModalOutside(event)">
+  <div class="modal">
+    <div class="modal-title" id="list-modal-title">—</div>
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table>
+          <thead id="list-modal-thead"></thead>
+          <tbody id="list-modal-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="form-actions"><button class="btn" onclick="closeListModal()">Close</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
 const SB_URL='https://mtlujmdpxtveawrhljxg.supabase.co';
 const SB_KEY='sb_publishable_UhmlGR4ullaoH5bds4A86g_v18c9v-n';
-const PAGE=50;
 const HDR={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};
- 
+const CUTOFF = new Date(Date.now() - 30*86400000).toISOString().slice(0,10);
+
 async function sb(path,opts={}){
   const r=await fetch(SB_URL+'/rest/v1/'+path,{headers:{...HDR,...(opts.headers||{})},method:opts.method||'GET',body:opts.body||undefined});
-  if(!r.ok) throw new Error(await r.text());
+  if(!r.ok) throw new Error('Supabase '+r.status+' on '+path.split('?')[0]+': '+(await r.text()));
   return r.json();
 }
- 
-// ---- HIERARCHY HELPER ----
-function hierGroup(v){
-  if(!v) return null;
-  const u=v.toUpperCase().trim();
-  if(u.startsWith('L1')) return 'L1';
-  if(u.startsWith('L2')) return 'L2';
-  if(u.startsWith('L3')) return 'L3';
-  if(u.startsWith('L4')) return 'L4';
-  return 'Other';
-}
-const HIER_LABELS={'L1':'L1 — Global/Chain HQ','L2':'L2 — Brand/Region','L3':'L3 — Hotel of a Chain','L4':'L4 — Independent'};
- 
-// Clean up messy industry duplicates
-function cleanIndustry(v){
-  if(!v) return 'Unknown';
-  const m={
-    'Airlines':'Airlines','Airline':'Airlines',
-    'Airports':'Airports','Airport':'Airports',
-    'Hotels':'Hotels','Hotel - Group':'Hotels',
-    'OTA':'Online Travel Agent','Online Travel Agent (OTA)':'Online Travel Agent','Online Travel Agent':'Online Travel Agent',
-    'RMS (Revenue Management System)':'RMS','RMS(Revenue Management System)':'RMS',
-    'Travel Agency / Tour Operator':'Travel Agency','Travel Agency':'Travel Agency','Travel Agencies & Services':'Travel Agency',
-    'Travel Management Company':'Travel Management Co.','Travel Management Companies':'Travel Management Co.',
-    'Others':'Other','Other':'Other'
-  };
-  return m[v]||v;
-}
- 
-// ---- NAV ----
+function keyOf(r){ return r.sf_account_id || r.account_name || '?'; }
+
+// ============================================================
+// NAV
+// ============================================================
 function switchTab(name,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active');
-  btn.classList.add('active');
-  if(name==='intelligence'&&!window._iL) loadIntelligence();
-  if(name==='analysis'&&!window._aL) loadAnalysis();
-  if(name==='dashboard'&&!window._dL) loadDashboard();
-}
-function switchInner(prefix,name,btn){
-  ['pipeline','product-funnel','hierarchy','industry'].forEach(n=>{
-    const el=document.getElementById(prefix+'-'+n);
-    if(el) el.style.display='none';
-  });
-  document.querySelectorAll('.inner-tab').forEach(t=>t.classList.remove('active'));
-  const el=document.getElementById(prefix+'-'+name);
-  if(el) el.style.display='block';
+  document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
   btn.classList.add('active');
 }
- 
-// ---- SHARED DATA ----
-let intelData=[], accountsData=[], engData=[], engStatusMap={};
-// accountsMap: sf_account_id -> account row
-let accountsMap={};
- 
-// ---- LOAD ACCOUNTS (for hierarchy/industry join) ----
-async function loadAccounts(){
-  if(accountsData.length) return;
-  accountsData=await sb('accounts?select=sf_account_id,industry,hierarchy_level,no_of_properties&limit=100000');
-  accountsData.forEach(a=>{
-    if(a.sf_account_id) accountsMap[a.sf_account_id]=a;
-  });
-}
- 
-// ---- INTELLIGENCE ----
-let iFiltered=[], iPage=1;
- 
-async function loadIntelligence(){
-  window._iL=true;
+
+// ============================================================
+// GLOBAL DATA
+// ============================================================
+let accStatusAll=[], accStatusMap={};
+let contactStatusAll=[];
+let tp30=[], ctp30=[];
+let coolingContactsAll=[], coolingContactsFiltered=[];
+let accountRollup=[], campaignRollup=[];
+
+async function loadAll(){
+  const bar=document.getElementById('data-status');
+  bar.classList.remove('err');
+  bar.textContent='Connecting to Supabase…';
   try{
-    await loadAccounts();
-    intelData=await sb('account_product_stages?select=*&order=account_name.asc&limit=10000');
- 
-    // Enrich with accounts data
-    intelData.forEach(r=>{
-      const a=accountsMap[r.sf_account_id]||{};
-      r._industry=cleanIndustry(a.industry);
-      r._hierarchy=hierGroup(a.hierarchy_level);
-      r._props=parseInt(a.no_of_properties)||0;
-    });
- 
-    document.getElementById('intel-count').textContent=intelData.length.toLocaleString();
- 
-    const prods=[...new Set(intelData.map(r=>r.product).filter(Boolean))].sort();
-    const regs=[...new Set(intelData.map(r=>r.region).filter(Boolean))].sort();
-    const inds=[...new Set(intelData.map(r=>r._industry).filter(v=>v&&v!=='Unknown'))].sort();
- 
-    document.getElementById('intel-product').innerHTML='<option value="">All Products</option>'+prods.map(p=>`<option>${p}</option>`).join('');
-    document.getElementById('intel-region').innerHTML='<option value="">All Regions</option>'+regs.map(r=>`<option>${r}</option>`).join('');
-    document.getElementById('intel-industry').innerHTML='<option value="">All Industries</option>'+inds.map(i=>`<option>${i}</option>`).join('');
- 
-    if(!engData.length) await loadEngData();
-    filterIntel();
-  }catch(e){ document.getElementById('intel-tbody').innerHTML=`<tr><td colspan="11" style="color:var(--red);padding:16px">${e.message}</td></tr>`; }
+    const [accView, contactView, tpRows, ctpRows] = await Promise.all([
+      sb('account_engagement_status?select=*&order=cooling_off_until.desc.nullslast&limit=10000'),
+      sb('contact_engagement_status?select=*&limit=20000'),
+      sb('touchpoints_engagement?select=*&date=gte.'+CUTOFF+'&order=date.desc&limit=10000'),
+      sb('contact_touchpoints_engagement?select=*&date=gte.'+CUTOFF+'&limit=20000')
+    ]);
+
+    accStatusAll=accView;
+    accStatusMap={};
+    accView.forEach(r=>{ accStatusMap[keyOf(r)]=r; });
+
+    contactStatusAll=contactView;
+    coolingContactsAll=contactView.filter(r=>r.engagement_status==='Cooling Off');
+
+    tp30=tpRows;
+    ctp30=ctpRows;
+
+    buildAccountRollup();
+    buildCampaignRollup();
+
+    renderAccountsTable();
+    renderCoolingTab();
+    renderCampaigns();
+
+    const now=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    bar.innerHTML='Live from Supabase · <b>'+accView.length+'</b> accounts (account_engagement_status) · '+
+      '<b>'+contactView.length+'</b> contacts tracked (contact_engagement_status) · '+
+      '<b>'+tpRows.length+'</b> touchpoints since '+CUTOFF+' (touchpoints_engagement) · '+
+      '<b>'+ctpRows.length+'</b> contact touchpoints since '+CUTOFF+' (contact_touchpoints_engagement) · refreshed '+now;
+  }catch(e){
+    bar.classList.add('err');
+    bar.textContent='⚠ Could not load from Supabase: '+e.message;
+    showToast('Supabase load failed — see status bar for details');
+    document.getElementById('ac-tbody').innerHTML='<tr><td colspan="7" style="color:var(--red);padding:16px">'+e.message+'</td></tr>';
+    document.getElementById('co-tbody').innerHTML='<tr><td colspan="7" style="color:var(--red);padding:16px">'+e.message+'</td></tr>';
+    document.getElementById('camp-tbody').innerHTML='<tr><td colspan="8" style="color:var(--red);padding:16px">'+e.message+'</td></tr>';
+  }
 }
- 
-function filterIntel(){
-  const q=document.getElementById('intel-search').value.toLowerCase();
-  const st=document.getElementById('intel-stage').value;
-  const pr=document.getElementById('intel-product').value;
-  const re=document.getElementById('intel-region').value;
-  const hl=document.getElementById('intel-hierarchy').value;
-  const ind=document.getElementById('intel-industry').value;
-  const es=document.getElementById('intel-eng-status').value;
-  const pMin=parseInt(document.getElementById('intel-prop-min').value)||0;
-  const pMax=parseInt(document.getElementById('intel-prop-max').value)||Infinity;
- 
-  iFiltered=intelData.filter(r=>{
-    if(q&&!JSON.stringify(r).toLowerCase().includes(q)) return false;
-    if(st&&r.stage!==st) return false;
-    if(pr&&r.product!==pr) return false;
-    if(re&&r.region!==re) return false;
-    if(hl&&r._hierarchy!==hl) return false;
-    if(ind&&r._industry!==ind) return false;
-    if(pMin&&r._props<pMin) return false;
-    if(pMax<Infinity&&r._props>pMax) return false;
-    if(es){
-      const status=getEngStatus(r.sf_account_id||r.account_name);
-      if(es!==status) return false;
+
+// ============================================================
+// STATUS BADGE (shared)
+// ============================================================
+function statusBadge(s){
+  if(s==='Cooling Off') return '<span class="status-cooling">⬤ Cooling Off</span>';
+  if(s==='Active') return '<span class="status-active">⬤ Active (14d)</span>';
+  if(s==='Not Reached') return '<span class="status-notreached">⬤ Dormant (14d+)</span>';
+  return '<span class="status-notfound">⬤ Not Found</span>';
+}
+
+// ============================================================
+// ACCOUNTS TAB — tabular, one row per account, last 30 days
+// ============================================================
+function buildAccountRollup(){
+  const map={};
+  tp30.forEach(t=>{
+    const ak=keyOf(t);
+    if(!map[ak]) map[ak]={ key:ak, account_name:t.account_name, country:t.country, campaigns:new Set(), touches:0, last:t.date };
+    const g=map[ak];
+    g.touches++;
+    if(t.campaign) g.campaigns.add(t.campaign);
+    if(!g.last || t.date>g.last) g.last=t.date;
+    if(t.country && !g.country) g.country=t.country;
+  });
+  const contactsByAccount={};
+  ctp30.forEach(c=>{
+    const ak=keyOf(c);
+    if(!contactsByAccount[ak]) contactsByAccount[ak]=new Set();
+    contactsByAccount[ak].add(c.contact_id||c.lead_id||c.email||(''+Math.random()));
+  });
+  accountRollup=Object.values(map).map(g=>{
+    const st=accStatusMap[g.key];
+    return {
+      key:g.key,
+      account_name:g.account_name,
+      country:g.country,
+      touches:g.touches,
+      campaignList:[...g.campaigns],
+      contactsReached: contactsByAccount[g.key]?contactsByAccount[g.key].size:0,
+      lastTouch:g.last,
+      status: st? st.engagement_status : 'Not Reached'
+    };
+  }).sort((a,b)=> (new Date(b.lastTouch)) - (new Date(a.lastTouch)));
+}
+
+function campaignChips(list){
+  if(!list.length) return '—';
+  const shown=list.slice(0,2);
+  const rest=list.length-shown.length;
+  let html=shown.map(c=>'<span class="camp-pill">'+c+'</span>').join('');
+  if(rest>0){
+    const full=list.join(', ').replace(/"/g,'&quot;');
+    html+='<span class="camp-pill" title="'+full+'">+'+rest+' more</span>';
+  }
+  return html;
+}
+
+function renderAccountsTable(){
+  const q=(document.getElementById('ac-search').value||'').toLowerCase();
+  const filtered=accountRollup.filter(a=>!q || ((a.account_name||'')+(a.country||'')).toLowerCase().includes(q));
+
+  document.getElementById('ac-total').textContent=accountRollup.length.toLocaleString();
+  document.getElementById('ac-active').textContent=accountRollup.filter(a=>a.status==='Active').length.toLocaleString();
+  document.getElementById('ac-cooling').textContent=accountRollup.filter(a=>a.status==='Cooling Off').length.toLocaleString();
+  document.getElementById('ac-notreached').textContent=accountRollup.filter(a=>a.status==='Not Reached').length.toLocaleString();
+
+  const tbody=document.getElementById('ac-tbody');
+  if(!filtered.length){ tbody.innerHTML='<tr><td colspan="7" class="empty-state">No accounts touched in the last 30 days.</td></tr>'; return; }
+
+  tbody.innerHTML=filtered.map(a=>
+    '<tr>'+
+      '<td class="account-name">'+(a.account_name||'—')+'</td>'+
+      '<td>'+(a.country||'—')+'</td>'+
+      '<td>'+statusBadge(a.status)+'</td>'+
+      '<td><span class="date-cell">'+a.touches+'</span></td>'+
+      '<td>'+campaignChips(a.campaignList)+'</td>'+
+      '<td><span class="date-cell">'+a.contactsReached+'</span></td>'+
+      '<td><span class="date-cell">'+(a.lastTouch||'—')+'</span></td>'+
+    '</tr>'
+  ).join('');
+}
+
+function downloadAccounts(){
+  if(!window.XLSX){ showToast('Excel library failed to load'); return; }
+  if(!accountRollup.length){ showToast('Nothing to export'); return; }
+  const sheet=accountRollup.map(a=>({
+    Account:a.account_name||'', Country:a.country||'', Status:a.status,
+    'Touches (30d)':a.touches, Campaigns:a.campaignList.join(', '), 'Contacts Reached':a.contactsReached, 'Last Touch':a.lastTouch||''
+  }));
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheet), 'Accounts (30d)');
+  XLSX.writeFile(wb, 'accounts_last30days_'+new Date().toISOString().slice(0,10)+'.xlsx');
+}
+
+// ============================================================
+// COOLING-OFF TAB — flat contacts table
+// ============================================================
+function renderCoolingTab(){
+  const total=accStatusAll.length;
+  const coolingAccList=accStatusAll.filter(r=>r.engagement_status==='Cooling Off');
+  const activeAcc=accStatusAll.filter(r=>r.engagement_status==='Active').length;
+
+  document.getElementById('co-total').textContent=total.toLocaleString();
+  document.getElementById('co-accounts').textContent=coolingAccList.length.toLocaleString();
+  document.getElementById('co-contacts').textContent=coolingContactsAll.length.toLocaleString();
+  document.getElementById('co-active').textContent=activeAcc.toLocaleString();
+
+  const banner=document.getElementById('cooling-banner');
+  if(coolingAccList.length>0){
+    banner.style.display='flex';
+    document.getElementById('cooling-text').textContent=
+      coolingAccList.length+' account'+(coolingAccList.length>1?'s':'')+' currently cooling off, affecting '+
+      coolingContactsAll.length+' contact'+(coolingContactsAll.length===1?'':'s')+' — see the table below for details.';
+  }else{
+    banner.style.display='none';
+  }
+
+  filterCoolingOff();
+}
+
+function filterCoolingOff(){
+  const q=document.getElementById('co-search').value.toLowerCase();
+  coolingContactsFiltered=coolingContactsAll.filter(c=>
+    !q || ((c.contact_name||'')+(c.email||'')+(c.account_name||'')).toLowerCase().includes(q)
+  );
+  renderCoolingOff();
+}
+
+function renderCoolingOff(){
+  const tbody=document.getElementById('co-tbody');
+  if(!coolingContactsFiltered.length){
+    tbody.innerHTML='<tr><td colspan="7" class="empty-state">No contacts currently in cooling-off.</td></tr>';
+    return;
+  }
+  tbody.innerHTML=coolingContactsFiltered.map(c=>{
+    const acc=accStatusMap[keyOf(c)];
+    const country=acc?acc.country:'';
+    return '<tr>'+
+      '<td class="account-name">'+(c.contact_name||'—')+'</td>'+
+      '<td><span class="date-cell">'+(c.email||'—')+'</span></td>'+
+      '<td>'+(c.account_name||'—')+'</td>'+
+      '<td>'+(country||'—')+'</td>'+
+      '<td><span class="date-cell">'+(c.last_touch_date||'—')+'</span></td>'+
+      '<td><span class="date-cell">'+(c.cooling_off_until?c.cooling_off_until.slice(0,10):'—')+'</span></td>'+
+      '<td><span class="status-cooling">⬤ Cooling Off</span></td>'+
+    '</tr>';
+  }).join('');
+}
+
+function downloadCoolingReport(){
+  if(!window.XLSX){ showToast('Excel library failed to load'); return; }
+  if(!coolingContactsFiltered.length){ showToast('Nothing to export'); return; }
+  const contactSheet=coolingContactsFiltered.map(c=>{
+    const acc=accStatusMap[keyOf(c)];
+    return {
+      Contact:c.contact_name||'', Email:c.email||'', Account:c.account_name||'', Country:acc?(acc.country||''):'',
+      'Last Touch':c.last_touch_date||'', 'Cooling Off Until':c.cooling_off_until?c.cooling_off_until.slice(0,10):''
+    };
+  });
+  const accSheet=accStatusAll.filter(r=>r.engagement_status==='Cooling Off').map(r=>({
+    Account:r.account_name||'', Country:r.country||'', 'SF Account ID':r.sf_account_id||'',
+    'Total Touches':r.total_touches||0, 'Touches (14d)':r.touches_14d||0,
+    'Last Touch':r.last_touch_date||'', 'Cooling Off Until':r.cooling_off_until?r.cooling_off_until.slice(0,10):''
+  }));
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(contactSheet), 'Contacts Cooling Off');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(accSheet.length?accSheet:[{Note:'No accounts currently flagged'}]), 'Accounts Cooling Off');
+  XLSX.writeFile(wb, 'cooling_off_report_'+new Date().toISOString().slice(0,10)+'.xlsx');
+}
+
+// ---- Excel cross-check upload ----
+let xlUploadedRows=[], xlResults=[];
+
+const dz=document.getElementById('xl-dropzone');
+if(dz){
+  ['dragenter','dragover'].forEach(evt=>dz.addEventListener(evt,e=>{e.preventDefault();dz.classList.add('drag');}));
+  ['dragleave','drop'].forEach(evt=>dz.addEventListener(evt,e=>{e.preventDefault();dz.classList.remove('drag');}));
+  dz.addEventListener('drop',e=>{
+    const file=e.dataTransfer.files[0];
+    if(file) processExcelFile(file);
+  });
+}
+function handleExcelUpload(e){
+  const file=e.target.files[0];
+  if(file) processExcelFile(file);
+}
+function processExcelFile(file){
+  document.getElementById('xl-drop-text').textContent=file.name;
+  const reader=new FileReader();
+  reader.onload=function(evt){
+    try{
+      const data=new Uint8Array(evt.target.result);
+      const wb=XLSX.read(data,{type:'array'});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const rows=XLSX.utils.sheet_to_json(ws,{defval:''});
+      xlUploadedRows=rows;
+      crossCheckContacts();
+    }catch(err){
+      showToast('Could not read file: '+err.message);
     }
-    return true;
+  };
+  reader.readAsArrayBuffer(file);
+}
+function findCol(row,candidates){
+  const keys=Object.keys(row);
+  for(const c of candidates){
+    const k=keys.find(k=>k.toLowerCase().replace(/[^a-z]/g,'').includes(c));
+    if(k) return k;
+  }
+  return null;
+}
+function crossCheckContacts(){
+  if(!xlUploadedRows.length){ showToast('No rows found in that file'); return; }
+  const byEmail={}, byName={};
+  contactStatusAll.forEach(c=>{
+    if(c.email) byEmail[c.email.toLowerCase().trim()]=c;
+    if(c.contact_name) byName[c.contact_name.toLowerCase().trim()]=c;
   });
-  iPage=1; renderIntel();
-}
- 
-function renderIntel(){
-  const rows=iFiltered.slice((iPage-1)*PAGE,iPage*PAGE);
-  document.getElementById('intel-tbody').innerHTML=rows.length?rows.map(r=>{
-    const es=getEngStatus(r.sf_account_id||r.account_name);
-    return`<tr>
-      <td class="primary">${r.account_name||'—'}</td>
-      <td>${r.product||'—'}</td>
-      <td>${stageBadge(r.stage)}</td>
-      <td style="font-family:'DM Mono',monospace;font-size:12px">${r.stage_date?r.stage_date.slice(0,10):'—'}</td>
-      <td style="font-family:'DM Mono',monospace">${r._props||'—'}</td>
-      <td>${r._hierarchy?`<span class="badge ${hierColor(r._hierarchy)}">${r._hierarchy}</span>`:'—'}</td>
-      <td style="font-size:12px;color:var(--text2)">${r._industry||'—'}</td>
-      <td>${r.region||'—'}</td>
-      <td>${r.country||'—'}</td>
-      <td style="font-size:12px">${r.owner||'—'}</td>
-      <td>${engStatusBadge(es)}</td>
-    </tr>`;}).join(''):'<tr><td colspan="11" class="empty">No records match</td></tr>';
-  renderPg('intel',iFiltered.length,iPage,p=>{iPage=p;renderIntel();});
-}
- 
-function hierColor(h){return{L1:'purple',L2:'blue',L3:'cyan',L4:'green'}[h]||'gray';}
- 
-// ---- ENG STATUS ----
-async function loadEngData(){
-  // Use the view directly for accurate status
-  const view=await sb('account_engagement_status?select=sf_account_id,account_name,engagement_status,is_cooling_off,cooling_off_until,total_touches,touches_14d,last_touch_date,days_since_last_touch&limit=10000');
-  engData=view;
-  engStatusMap={};
-  view.forEach(r=>{
-    const k=r.sf_account_id||r.account_name||'?';
-    engStatusMap[k]=r;
+  const emailCol=findCol(xlUploadedRows[0],['email']);
+  const nameCol=findCol(xlUploadedRows[0],['name','contact']);
+  xlResults=xlUploadedRows.map(row=>{
+    const emailVal=emailCol?String(row[emailCol]||'').trim():'';
+    const nameVal=nameCol?String(row[nameCol]||'').trim():'';
+    let match=null;
+    if(emailVal && byEmail[emailVal.toLowerCase()]) match=byEmail[emailVal.toLowerCase()];
+    else if(nameVal && byName[nameVal.toLowerCase()]) match=byName[nameVal.toLowerCase()];
+    return{
+      input: emailVal||nameVal||'(blank row)',
+      account: match?(match.account_name||'—'):'—',
+      contact: match?(match.contact_name||'—'):'—',
+      status: match?match.engagement_status:'Not Found',
+      lastTouch: match?(match.last_touch_date||'—'):'—'
+    };
   });
+  renderCrossCheck();
 }
- 
-function getEngStatus(key){
-  const m=engStatusMap[key];
-  if(!m) return 'not_reached';
-  return m.engagement_status==='Cooling Off'?'cooling':m.engagement_status==='Active'?'active':'not_reached';
+function renderCrossCheck(){
+  document.getElementById('xl-result-wrap').style.display='block';
+  const coolingN=xlResults.filter(r=>r.status==='Cooling Off').length;
+  document.getElementById('xl-summary').textContent=xlResults.length+' rows checked · '+coolingN+' currently cooling off';
+  document.getElementById('xl-tbody').innerHTML=xlResults.map(r=>
+    '<tr><td class="account-name">'+r.input+'</td><td>'+r.account+'</td><td>'+r.contact+'</td><td>'+statusBadge(r.status)+'</td>'+
+    '<td><span class="date-cell">'+r.lastTouch+'</span></td></tr>'
+  ).join('');
 }
-function engStatusBadge(s){
-  if(s==='active') return '<span class="badge green">Active</span>';
-  if(s==='cooling') return '<span class="badge red">Cooling Off</span>';
-  return '<span class="badge gray">Not Reached</span>';
+function downloadCrossCheck(){
+  if(!xlResults.length) return;
+  const sheet=xlResults.map(r=>({'Uploaded Name/Email':r.input,'Matched Account':r.account,'Matched Contact':r.contact,'Status':r.status,'Last Touch':r.lastTouch}));
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheet), 'Cross-Check Results');
+  XLSX.writeFile(wb, 'contact_crosscheck_'+new Date().toISOString().slice(0,10)+'.xlsx');
 }
- 
-// ---- ANALYSIS ----
-let anFiltered=[];
- 
-async function loadAnalysis(){
-  window._aL=true;
-  if(!intelData.length) await loadIntelligence();
- 
-  // Populate analysis filter dropdowns
-  const prods=[...new Set(intelData.map(r=>r.product).filter(Boolean))].sort();
-  const regs=[...new Set(intelData.map(r=>r.region).filter(Boolean))].sort();
-  const inds=[...new Set(intelData.map(r=>r._industry).filter(v=>v&&v!=='Unknown'))].sort();
-  document.getElementById('an-product').innerHTML='<option value="">All Products</option>'+prods.map(p=>`<option>${p}</option>`).join('');
-  document.getElementById('an-region').innerHTML='<option value="">All Regions</option>'+regs.map(r=>`<option>${r}</option>`).join('');
-  document.getElementById('an-industry').innerHTML='<option value="">All Industries</option>'+inds.map(i=>`<option>${i}</option>`).join('');
- 
-  applyAnalysisFilters();
-}
- 
-function applyAnalysisFilters(){
-  const hl=document.getElementById('an-hierarchy').value;
-  const ind=document.getElementById('an-industry').value;
-  const pr=document.getElementById('an-product').value;
-  const re=document.getElementById('an-region').value;
- 
-  anFiltered=intelData.filter(r=>{
-    if(hl&&r._hierarchy!==hl) return false;
-    if(ind&&r._industry!==ind) return false;
-    if(pr&&r.product!==pr) return false;
-    if(re&&r.region!==re) return false;
-    return true;
+
+// ============================================================
+// CAMPAIGNS TAB — clickable accounts / contacts counts
+// ============================================================
+function buildCampaignRollup(){
+  const map={};
+  tp30.forEach(t=>{
+    const camp=t.campaign || '(No campaign name)';
+    if(!map[camp]) map[camp]={ campaign:camp, accounts:{}, channels:new Set(), first:t.date, last:t.date, touches:0 };
+    const g=map[camp];
+    const ak=keyOf(t);
+    if(!g.accounts[ak]) g.accounts[ak]={ name:t.account_name, country:t.country };
+    if(t.channel) g.channels.add(t.channel);
+    if(!g.first || t.date<g.first) g.first=t.date;
+    if(!g.last || t.date>g.last) g.last=t.date;
+    g.touches++;
   });
- 
-  renderPipelineAnalysis();
-  renderProductFunnel();
-  renderHierarchyAnalysis();
-  renderIndustryAnalysis();
-}
- 
-function clearAnalysisFilters(){
-  ['an-hierarchy','an-industry','an-product','an-region'].forEach(id=>{
-    document.getElementById(id).value='';
+
+  const contactsByCampaign={};
+  ctp30.forEach(c=>{
+    const camp=c.campaign || '(No campaign name)';
+    if(!contactsByCampaign[camp]) contactsByCampaign[camp]={};
+    const cid=c.contact_id||c.lead_id||c.email||(''+Math.random());
+    contactsByCampaign[camp][cid]={ name:c.contact_name, email:c.email, account:c.account_name };
   });
-  applyAnalysisFilters();
-}
- 
-const STAGE_ORDER=['Unreached','Unengaged','Aware','Engaged','Potential Opp.','Active Opp.'];
-const STAGE_COLORS=['#4a5270','#5a6480','#4f9cf9','#06b6d4','#f59e0b','#22c55e'];
- 
-function stageCounts(data){
-  const c={};STAGE_ORDER.forEach(s=>c[s]=0);
-  data.forEach(r=>{if(c[r.stage]!==undefined)c[r.stage]++;});
-  return c;
-}
- 
-function renderPipelineAnalysis(){
-  const counts=stageCounts(anFiltered);
-  const max=Math.max(...Object.values(counts),1);
-  document.getElementById('funnel-chart').innerHTML=STAGE_ORDER.map((s,i)=>`
-    <div class="funnel-row">
-      <div class="funnel-label">${s}</div>
-      <div class="funnel-track"><div class="funnel-fill" style="width:${(counts[s]/max*100).toFixed(1)}%;background:${STAGE_COLORS[i]}"><span>${counts[s]}</span></div></div>
-      <div class="funnel-num">${counts[s].toLocaleString()}</div>
-    </div>`).join('');
- 
-  const prods={};
-  anFiltered.forEach(r=>{if(r.product)prods[r.product]=(prods[r.product]||0)+1;});
-  const pm=Math.max(...Object.values(prods),1);
-  document.getElementById('product-dist').innerHTML=Object.entries(prods).sort((a,b)=>b[1]-a[1]).map(([p,n])=>`
-    <div class="mc-row"><div class="mc-label" title="${p}">${p}</div><div class="mc-track"><div class="mc-fill" style="width:${(n/pm*100).toFixed(1)}%;background:var(--accent2)"></div></div><div class="mc-val">${n}</div></div>`).join('')||'<div class="empty">No data</div>';
-}
- 
-function renderProductFunnel(){
-  const prods={};
-  anFiltered.forEach(r=>{
-    if(!r.product) return;
-    if(!prods[r.product]) prods[r.product]={};
-    prods[r.product][r.stage]=(prods[r.product][r.stage]||0)+1;
-  });
- 
-  // Legend
-  document.getElementById('pf-legend').innerHTML=STAGE_ORDER.map((s,i)=>`
-    <div class="legend-item"><div class="legend-dot" style="background:${STAGE_COLORS[i]}"></div>${s}</div>`).join('');
- 
-  const sorted=Object.entries(prods).sort((a,b)=>{
-    const ta=Object.values(a[1]).reduce((x,y)=>x+y,0);
-    const tb=Object.values(b[1]).reduce((x,y)=>x+y,0);
-    return tb-ta;
-  });
- 
-  document.getElementById('pf-chart').innerHTML=sorted.map(([prod,stages])=>{
-    const total=Object.values(stages).reduce((a,b)=>a+b,0);
-    const segs=STAGE_ORDER.map((s,i)=>{
-      const n=stages[s]||0;
-      const pct=(n/total*100).toFixed(1);
-      return`<div class="stacked-seg" style="width:${pct}%;background:${STAGE_COLORS[i]}" title="${s}: ${n}">${n>0&&pct>5?n:''}</div>`;
-    }).join('');
-    return`<div class="stacked-row">
-      <div class="stacked-label" title="${prod}">${prod}</div>
-      <div class="stacked-track">${segs}</div>
-      <div class="stacked-total">${total}</div>
-    </div>`;
-  }).join('')||'<div class="empty">No data</div>';
-}
- 
-function renderHierarchyAnalysis(){
-  const hiers={};
-  anFiltered.forEach(r=>{
-    const h=r._hierarchy||'Other';
-    if(!hiers[h]) hiers[h]={total:0};
-    STAGE_ORDER.forEach(s=>{if(!hiers[h][s])hiers[h][s]=0;});
-    hiers[h].total++;
-    if(hiers[h][r.stage]!==undefined) hiers[h][r.stage]++;
-  });
- 
-  const hOrder=['L1','L2','L3','L4','Other'];
-  const hm=Math.max(...Object.values(hiers).map(h=>h.total),1);
- 
-  document.getElementById('hier-pipeline').innerHTML=hOrder.filter(h=>hiers[h]).map(h=>`
-    <div class="mc-row">
-      <div class="mc-label">${HIER_LABELS[h]||h}</div>
-      <div class="mc-track"><div class="mc-fill" style="width:${(hiers[h].total/hm*100).toFixed(1)}%;background:${hierBgColor(h)}"></div></div>
-      <div class="mc-val">${hiers[h].total}</div>
-    </div>`).join('')||'<div class="empty">No data</div>';
- 
-  // Mini funnel per hierarchy
-  document.getElementById('hier-funnel').innerHTML=hOrder.filter(h=>hiers[h]).map(h=>{
-    const hMax=Math.max(...STAGE_ORDER.map(s=>hiers[h][s]||0),1);
-    return`<div style="margin-bottom:14px">
-      <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:6px">${HIER_LABELS[h]||h}</div>
-      ${STAGE_ORDER.map((s,i)=>`
-        <div class="funnel-row" style="padding:2px 0">
-          <div class="funnel-label" style="width:80px;font-size:11px">${s}</div>
-          <div class="funnel-track" style="height:14px"><div class="funnel-fill" style="width:${((hiers[h][s]||0)/hMax*100).toFixed(1)}%;background:${STAGE_COLORS[i]}"><span style="font-size:10px">${hiers[h][s]||0}</span></div></div>
-          <div class="funnel-num" style="font-size:11px">${hiers[h][s]||0}</div>
-        </div>`).join('')}
-    </div>`;}).join('')||'<div class="empty">No data</div>';
- 
-  document.getElementById('hier-table').innerHTML=hOrder.filter(h=>hiers[h]).map(h=>`
-    <tr>
-      <td class="primary"><span class="badge ${hierColor(h)}">${HIER_LABELS[h]||h}</span></td>
-      <td style="font-family:'DM Mono',monospace">${hiers[h].total}</td>
-      ${STAGE_ORDER.map(s=>`<td style="font-family:'DM Mono',monospace">${hiers[h][s]||0}</td>`).join('')}
-    </tr>`).join('')||'<tr><td colspan="8" class="empty">No data</td></tr>';
-}
- 
-function hierBgColor(h){return{L1:'var(--accent2)',L2:'var(--accent)',L3:'var(--cyan)',L4:'var(--green)'}[h]||'var(--text3)';}
- 
-function renderIndustryAnalysis(){
-  const inds={};
-  anFiltered.forEach(r=>{
-    const ind=r._industry||'Unknown';
-    if(!inds[ind]) inds[ind]={total:0};
-    STAGE_ORDER.forEach(s=>{if(!inds[ind][s])inds[ind][s]=0;});
-    inds[ind].total++;
-    if(inds[ind][r.stage]!==undefined) inds[ind][r.stage]++;
-  });
- 
-  const sorted=Object.entries(inds).filter(([k])=>k!=='Unknown').sort((a,b)=>b[1].total-a[1].total);
-  const im=Math.max(...sorted.map(e=>e[1].total),1);
- 
-  document.getElementById('ind-count').innerHTML=sorted.slice(0,15).map(([ind,d])=>`
-    <div class="mc-row"><div class="mc-label" title="${ind}">${ind}</div><div class="mc-track"><div class="mc-fill" style="width:${(d.total/im*100).toFixed(1)}%;background:var(--accent)"></div></div><div class="mc-val">${d.total}</div></div>`).join('')||'<div class="empty">No data</div>';
- 
-  // Stage mix = % that are Engaged or above
-  document.getElementById('ind-stage').innerHTML=sorted.slice(0,15).map(([ind,d])=>{
-    const engaged=(d['Engaged']||0)+(d['Potential Opp.']||0)+(d['Active Opp.']||0);
-    const pct=d.total?((engaged/d.total)*100).toFixed(0):0;
-    return`<div class="mc-row"><div class="mc-label" title="${ind}">${ind}</div><div class="mc-track"><div class="mc-fill" style="width:${pct}%;background:var(--green)"></div></div><div class="mc-val">${pct}%</div></div>`;
-  }).join('')||'<div class="empty">No data</div>';
- 
-  document.getElementById('ind-table').innerHTML=sorted.slice(0,30).map(([ind,d])=>`
-    <tr>
-      <td class="primary">${ind}</td>
-      <td style="font-family:'DM Mono',monospace">${d.total}</td>
-      ${STAGE_ORDER.map(s=>`<td style="font-family:'DM Mono',monospace">${d[s]||0}</td>`).join('')}
-    </tr>`).join('')||'<tr><td colspan="8" class="empty">No data</td></tr>';
-}
- 
-// ---- DASHBOARD — reads from account_engagement_status view ----
-let dashData=[], dashFiltered=[], dashPage=1;
- 
-async function loadDashboard(){
-  window._dL=true;
-  document.getElementById('dash-tbody').innerHTML='<tr><td colspan="9" class="loading">Loading…</td></tr>';
-  try{
-    // Read directly from the view
-    const view=await sb('account_engagement_status?select=*&order=total_touches.desc&limit=10000');
- 
-    // Also need last campaign — join from touchpoints
-    const tp=await sb('touchpoints?select=sf_account_id,account_name,campaign,date&order=date.desc&limit=10000');
-    const lastCamp={};
-    tp.forEach(r=>{
-      const k=r.sf_account_id||r.account_name||'?';
-      if(!lastCamp[k]) lastCamp[k]=r.campaign||'';
+
+  let idCounter=0;
+  campaignRollup=Object.values(map).map(g=>{
+    const accountEntries=Object.keys(g.accounts).map(ak=>{
+      const info=g.accounts[ak];
+      const st=accStatusMap[ak];
+      return { name:info.name, country:info.country, status: st?st.engagement_status:'Not Reached' };
     });
- 
-    dashData=view.map(r=>({...r,lastCamp:lastCamp[r.sf_account_id||r.account_name||'?']||'—'}));
- 
-    const active=dashData.filter(r=>r.engagement_status==='Active').length;
-    const cooling=dashData.filter(r=>r.engagement_status==='Cooling Off').length;
-    const notReached=dashData.filter(r=>r.engagement_status==='Not Reached').length;
-    const totalSends=dashData.reduce((a,b)=>a+(b.total_touches||0),0);
- 
-    document.getElementById('d-total').textContent=dashData.length.toLocaleString();
-    document.getElementById('d-active').textContent=active.toLocaleString();
-    document.getElementById('d-cooling').textContent=cooling.toLocaleString();
-    document.getElementById('d-notreached').textContent=notReached.toLocaleString();
-    document.getElementById('d-sends').textContent=totalSends.toLocaleString();
-    document.getElementById('dash-count').textContent=dashData.length.toLocaleString();
- 
-    filterDash();
-  }catch(e){document.getElementById('dash-tbody').innerHTML=`<tr><td colspan="9" style="color:var(--red);padding:16px">${e.message}</td></tr>`;}
+    const coolingCount=accountEntries.filter(a=>a.status==='Cooling Off').length;
+    const contactEntries=Object.values(contactsByCampaign[g.campaign]||{});
+    return {
+      id: 'camp'+(idCounter++),
+      campaign:g.campaign,
+      accountsReached:accountEntries.length,
+      contactsReached:contactEntries.length,
+      channels:[...g.channels],
+      coolingOff:coolingCount,
+      touches:g.touches,
+      first:g.first, last:g.last,
+      accountEntries, contactEntries
+    };
+  }).sort((a,b)=>b.accountsReached-a.accountsReached);
 }
- 
-function filterDash(){
-  const q=document.getElementById('dash-search').value.toLowerCase();
-  const s=document.getElementById('dash-status').value;
-  const d=parseInt(document.getElementById('dash-days').value)||0;
-  const cutoff=d?new Date(Date.now()-d*86400000):null;
- 
-  dashFiltered=dashData.filter(r=>{
-    if(q&&!(r.account_name+r.country+r.sf_account_id).toLowerCase().includes(q)) return false;
-    if(s&&r.engagement_status!==s) return false;
-    if(cutoff&&r.last_touch_date&&new Date(r.last_touch_date)<cutoff) return false;
-    return true;
-  });
-  dashPage=1; renderDash();
+
+function renderCampaigns(){
+  const q=(document.getElementById('camp-search').value||'').toLowerCase();
+  const filtered=campaignRollup.filter(c=>!q || c.campaign.toLowerCase().includes(q));
+  const tbody=document.getElementById('camp-tbody');
+  if(!filtered.length){ tbody.innerHTML='<tr><td colspan="8" class="empty-state">No campaigns with activity in the last 30 days.</td></tr>'; return; }
+  tbody.innerHTML=filtered.map(c=>
+    '<tr>'+
+      '<td class="account-name">'+c.campaign+'</td>'+
+      '<td>'+(c.channels.length?c.channels.map(ch=>'<span class="chan-pill">'+ch+'</span>').join(''):'—')+'</td>'+
+      '<td><button class="clickable-num" onclick="showListModal(\''+c.id+'\',\'accounts\')">'+c.accountsReached+'</button></td>'+
+      '<td><button class="clickable-num" onclick="showListModal(\''+c.id+'\',\'contacts\')">'+c.contactsReached+'</button></td>'+
+      '<td>'+(c.coolingOff>0?'<span class="count-pill">'+c.coolingOff+'</span>':'<span class="date-cell">0</span>')+'</td>'+
+      '<td><span class="date-cell">'+c.touches+'</span></td>'+
+      '<td><span class="date-cell">'+(c.first||'—')+'</span></td>'+
+      '<td><span class="date-cell">'+(c.last||'—')+'</span></td>'+
+    '</tr>'
+  ).join('');
 }
- 
-function renderDash(){
-  const rows=dashFiltered.slice((dashPage-1)*PAGE,dashPage*PAGE);
-  document.getElementById('dash-tbody').innerHTML=rows.length?rows.map(r=>{
-    const badge=r.engagement_status==='Cooling Off'?'<span class="badge red">Cooling Off</span>':r.engagement_status==='Active'?'<span class="badge green">Active</span>':'<span class="badge gray">Not Reached</span>';
-    return`<tr>
-      <td class="primary">${r.account_name||'—'}</td>
-      <td>${r.country||'—'}</td>
-      <td style="font-family:'DM Mono',monospace">${r.total_touches||0}</td>
-      <td style="font-family:'DM Mono',monospace">${r.touches_14d||0}</td>
-      <td style="font-family:'DM Mono',monospace;font-size:12px">${r.last_touch_date||'—'}</td>
-      <td style="font-family:'DM Mono',monospace">${r.days_since_last_touch||'—'}</td>
-      <td style="font-family:'DM Mono',monospace;font-size:12px">${r.cooling_off_until?r.cooling_off_until.slice(0,10):'—'}</td>
-      <td><span class="campaign-pill" title="${r.lastCamp}">${(r.lastCamp||'—').slice(0,30)}</span></td>
-      <td>${badge}</td>
-    </tr>`;}).join(''):'<tr><td colspan="9" class="empty">No accounts match</td></tr>';
-  renderPg('dash',dashFiltered.length,dashPage,p=>{dashPage=p;renderDash();});
+
+function downloadCampaigns(){
+  if(!window.XLSX){ showToast('Excel library failed to load'); return; }
+  if(!campaignRollup.length){ showToast('Nothing to export'); return; }
+  const sheet=campaignRollup.map(c=>({
+    Campaign:c.campaign, Channels:c.channels.join(', '), 'Accounts Reached':c.accountsReached,
+    'Contacts Reached':c.contactsReached, 'Cooling Off Now':c.coolingOff, 'Total Touches':c.touches,
+    'First Sent':c.first||'', 'Last Sent':c.last||''
+  }));
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheet), 'Campaigns (30d)');
+  XLSX.writeFile(wb, 'campaigns_last30days_'+new Date().toISOString().slice(0,10)+'.xlsx');
 }
- 
-// ---- LOG ----
-document.getElementById('f-date').value=new Date().toISOString().slice(0,10);
- 
-async function submitTP(e){
-  e.preventDefault();
+
+// ---- Generic list modal (accounts / contacts drill-down from Campaigns tab) ----
+function showListModal(campId, kind){
+  const camp=campaignRollup.find(c=>c.id===campId);
+  if(!camp) return;
+  const overlay=document.getElementById('list-modal-overlay');
+  const title=document.getElementById('list-modal-title');
+  const thead=document.getElementById('list-modal-thead');
+  const tbody=document.getElementById('list-modal-tbody');
+
+  if(kind==='accounts'){
+    title.textContent=camp.campaign+' — '+camp.accountEntries.length+' account'+(camp.accountEntries.length===1?'':'s')+' reached';
+    thead.innerHTML='<tr><th>Account</th><th>Country</th><th>Status</th></tr>';
+    tbody.innerHTML=camp.accountEntries.length ? camp.accountEntries.map(a=>
+      '<tr><td class="account-name">'+(a.name||'—')+'</td><td>'+(a.country||'—')+'</td><td>'+statusBadge(a.status)+'</td></tr>'
+    ).join('') : '<tr><td class="empty-state" colspan="3">No accounts found.</td></tr>';
+  }else{
+    title.textContent=camp.campaign+' — '+camp.contactEntries.length+' contact'+(camp.contactEntries.length===1?'':'s')+' reached';
+    thead.innerHTML='<tr><th>Contact</th><th>Email</th><th>Account</th></tr>';
+    tbody.innerHTML=camp.contactEntries.length ? camp.contactEntries.map(c=>
+      '<tr><td class="account-name">'+(c.name||'—')+'</td><td><span class="date-cell">'+(c.email||'—')+'</span></td><td>'+(c.account||'—')+'</td></tr>'
+    ).join('') : '<tr><td class="empty-state" colspan="3">No contacts found.</td></tr>';
+  }
+  overlay.classList.add('open');
+}
+function closeListModal(){ document.getElementById('list-modal-overlay').classList.remove('open'); }
+function closeListModalOutside(e){ if(e.target.id==='list-modal-overlay') closeListModal(); }
+
+// ============================================================
+// LOG TOUCHPOINT MODAL
+// ============================================================
+function openModal(){
+  document.getElementById('f-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal(){
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+function closeModalOutside(e){
+  if(e.target.id==='modal-overlay') closeModal();
+}
+
+async function saveTouchpoint(){
+  const account=document.getElementById('f-account').value.trim();
+  const date=document.getElementById('f-date').value;
+  const by=document.getElementById('f-by').value.trim();
+  const channel=document.getElementById('f-channel').value;
+  const campaign=document.getElementById('f-campaign').value.trim();
+
+  if(!account || !date || !by || !channel || !campaign){
+    showToast('Please fill in all required fields (*)');
+    return;
+  }
+
   const btn=document.getElementById('submit-btn');
-  btn.textContent='Saving…';btn.disabled=true;
+  btn.textContent='Saving…'; btn.disabled=true;
   try{
-    await fetch(SB_URL+'/rest/v1/touchpoints',{
+    await fetch(SB_URL+'/rest/v1/touchpoints_engagement',{
       method:'POST',
       headers:{...HDR,'Prefer':'return=minimal'},
       body:JSON.stringify({
-        sf_account_id:document.getElementById('f-sfid').value.trim()||null,
-        account_name:document.getElementById('f-name').value.trim(),
-        account_domain:document.getElementById('f-domain').value.trim()||null,
-        country:document.getElementById('f-country').value.trim()||null,
-        date:document.getElementById('f-date').value||null,
-        sent_by:document.getElementById('f-sentby').value.trim(),
-        channel:'Email',
-        campaign:document.getElementById('f-campaign').value.trim(),
-        cooling_off:document.getElementById('f-cooling').value==='true',
-        outcome:document.getElementById('f-outcome').value||null,
-        notes:document.getElementById('f-notes').value.trim()||null
+        sf_account_id: document.getElementById('f-sfid').value.trim()||null,
+        account_name: account,
+        account_domain: document.getElementById('f-domain').value.trim()||null,
+        country: document.getElementById('f-country').value.trim()||null,
+        date: date,
+        sent_by: by,
+        tier: document.getElementById('f-tier').value||null,
+        channel: channel,
+        campaign: campaign,
+        cooling_off: document.getElementById('f-cooling').value==='true',
+        outcome: document.getElementById('f-outcome').value||null,
+        notes: document.getElementById('f-notes').value.trim()||null
       })
     });
-    showToast('Touchpoint saved','success');
-    resetForm();
-    window._dL=false;window._aL=false;
-  }catch(err){showToast('Error: '+err.message,'error');}
-  finally{btn.textContent='Save Touchpoint';btn.disabled=false;}
+    showToast('Touchpoint saved');
+    closeModal();
+    ['f-account','f-sfid','f-domain','f-country','f-by','f-tier','f-campaign','f-outcome','f-notes'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('f-cooling').value='false';
+    loadAll();
+  }catch(err){
+    showToast('Error: '+err.message);
+  }finally{
+    btn.textContent='Save Touchpoint'; btn.disabled=false;
+  }
 }
-function resetForm(){document.getElementById('log-form').reset();document.getElementById('f-date').value=new Date().toISOString().slice(0,10);}
- 
-// ---- UTILS ----
-function stageBadge(s){
-  const m={'Unreached':'gray','Unengaged':'gray','Aware':'blue','Engaged':'cyan','Potential Opp.':'yellow','Active Opp.':'green'};
-  return`<span class="badge ${m[s]||'gray'}">${s||'—'}</span>`;
-}
-function renderPg(id,total,page,cb){
-  const pages=Math.ceil(total/PAGE);
-  const el=document.getElementById(id+'-pg');
-  if(!el)return;
-  el.innerHTML=`<span style="color:var(--text3);font-size:12px;font-family:'DM Mono',monospace">${total.toLocaleString()} records · pg ${page}/${pages||1}</span>`;
-  if(page>1) el.innerHTML+=`<button class="btn sm" onclick="(${cb.toString()})(${page-1})">← Prev</button>`;
-  if(page<pages) el.innerHTML+=`<button class="btn sm" onclick="(${cb.toString()})(${page+1})">Next →</button>`;
-}
-let _sd={};
-function sortTbl(tid,col){
-  const k=tid+col;_sd[k]=!_sd[k];
-  const tb=document.getElementById(tid).tBodies[0];
-  Array.from(tb.rows).sort((a,b)=>{
-    const av=a.cells[col]?.textContent.trim()||'';
-    const bv=b.cells[col]?.textContent.trim()||'';
-    const n=v=>parseFloat(v.replace(/[^0-9.-]/g,''));
-    const cmp=isNaN(n(av))?av.localeCompare(bv):n(av)-n(bv);
-    return _sd[k]?cmp:-cmp;
-  }).forEach(r=>tb.appendChild(r));
-}
-function exportCSV(tid,fn){
-  const t=document.getElementById(tid);if(!t)return;
-  const csv=Array.from(t.rows).map(r=>Array.from(r.cells).map(c=>'"'+c.textContent.replace(/"/g,'""')+'"').join(',')).join('\n');
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  a.download=fn+'_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
-}
-function showToast(msg,type=''){
+
+// ---- TOAST ----
+function showToast(msg){
   const t=document.getElementById('toast');
-  t.textContent=msg;t.className='show '+(type||'');
-  setTimeout(()=>t.className='',3000);
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
 }
- 
+
 // ---- INIT ----
-loadIntelligence();
+document.addEventListener('DOMContentLoaded', loadAll);
 </script>
 </body>
 </html>
