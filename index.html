@@ -172,11 +172,12 @@
         <th>Country</th>
         <th>Status</th>
         <th>Touches (30d)</th>
+        <th>Touches (14d)</th>
         <th>Campaigns</th>
         <th>Contacts Reached</th>
         <th>Last Touch</th>
       </tr></thead>
-      <tbody id="ac-tbody"><tr><td colspan="7" class="loading">Loading…</td></tr></tbody>
+      <tbody id="ac-tbody"><tr><td colspan="8" class="loading">Loading…</td></tr></tbody>
     </table>
     </div>
   </div>
@@ -401,7 +402,7 @@
 <script>
 const SB_URL='https://mtlujmdpxtveawrhljxg.supabase.co';
 const SB_KEY='sb_publishable_UhmlGR4ullaoH5bds4A86g_v18c9v-n';
-const HDR={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};
+const HDR={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Accept-Profile':'replyio','Content-Profile':'replyio'};
 const CUTOFF = new Date(Date.now() - 30*86400000).toISOString().slice(0,10);
 
 async function sb(path,opts={}){
@@ -468,7 +469,7 @@ async function loadAll(){
     bar.classList.add('err');
     bar.textContent='⚠ Could not load from Supabase: '+e.message;
     showToast('Supabase load failed — see status bar for details');
-    document.getElementById('ac-tbody').innerHTML='<tr><td colspan="7" style="color:var(--red);padding:16px">'+e.message+'</td></tr>';
+    document.getElementById('ac-tbody').innerHTML='<tr><td colspan="8" style="color:var(--red);padding:16px">'+e.message+'</td></tr>';
     document.getElementById('co-tbody').innerHTML='<tr><td colspan="7" style="color:var(--red);padding:16px">'+e.message+'</td></tr>';
     document.getElementById('camp-tbody').innerHTML='<tr><td colspan="8" style="color:var(--red);padding:16px">'+e.message+'</td></tr>';
   }
@@ -511,6 +512,7 @@ function buildAccountRollup(){
       account_name:g.account_name,
       country:g.country,
       touches:g.touches,
+      touches14d: st?(st.touches_14d||0):0,
       campaignList:[...g.campaigns],
       contactsReached: contactsByAccount[g.key]?contactsByAccount[g.key].size:0,
       lastTouch:g.last,
@@ -541,7 +543,7 @@ function renderAccountsTable(){
   document.getElementById('ac-notreached').textContent=accountRollup.filter(a=>a.status==='Not Reached').length.toLocaleString();
 
   const tbody=document.getElementById('ac-tbody');
-  if(!filtered.length){ tbody.innerHTML='<tr><td colspan="7" class="empty-state">No accounts touched in the last 30 days.</td></tr>'; return; }
+  if(!filtered.length){ tbody.innerHTML='<tr><td colspan="8" class="empty-state">No accounts touched in the last 30 days.</td></tr>'; return; }
 
   tbody.innerHTML=filtered.map(a=>
     '<tr>'+
@@ -549,6 +551,7 @@ function renderAccountsTable(){
       '<td>'+(a.country||'—')+'</td>'+
       '<td>'+statusBadge(a.status)+'</td>'+
       '<td><span class="date-cell">'+a.touches+'</span></td>'+
+      '<td><span class="date-cell">'+a.touches14d+'</span></td>'+
       '<td>'+campaignChips(a.campaignList)+'</td>'+
       '<td><span class="date-cell">'+a.contactsReached+'</span></td>'+
       '<td><span class="date-cell">'+(a.lastTouch||'—')+'</span></td>'+
@@ -561,7 +564,7 @@ function downloadAccounts(){
   if(!accountRollup.length){ showToast('Nothing to export'); return; }
   const sheet=accountRollup.map(a=>({
     Account:a.account_name||'', Country:a.country||'', Status:a.status,
-    'Touches (30d)':a.touches, Campaigns:a.campaignList.join(', '), 'Contacts Reached':a.contactsReached, 'Last Touch':a.lastTouch||''
+    'Touches (30d)':a.touches, 'Touches (14d)':a.touches14d, Campaigns:a.campaignList.join(', '), 'Contacts Reached':a.contactsReached, 'Last Touch':a.lastTouch||''
   }));
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheet), 'Accounts (30d)');
