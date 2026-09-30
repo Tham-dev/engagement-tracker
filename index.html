@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Account Engagement Tracker</title>
+<title>Contact Engagement Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -14,10 +14,9 @@
     --text: #1A1916; --text2: #6B6760; --text3: #9B9892;
     --accent: #2D5BE3; --accent-light: #EEF2FD; --accent-text: #1A3BA8;
     --green: #1D7A4A; --green-light: #E6F5EC; --red: #C4310F; --red-light: #FDF0EC;
-    --amber: #A05D00; --amber-light: #FEF5E7; --purple: #5B3FBF; --purple-light: #F0ECFD;
+    --amber: #A05D00; --amber-light: #FEF5E7;
     --radius: 10px; --radius-sm: 6px;
     --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
   }
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; }
  
@@ -57,33 +56,28 @@
   .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--text3); pointer-events: none; }
   .search-input { width: 100%; padding: 7px 12px 7px 32px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; font-family: inherit; background: var(--bg); color: var(--text); outline: none; }
   .search-input:focus { border-color: var(--accent); }
+  .row-note{font-size:12px;color:var(--text3);white-space:nowrap}
   .table-scroll{overflow-x:auto}
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   thead { background: var(--surface2); }
   th { padding: 9px 14px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  th.num, td.num { text-align: right; }
   td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: var(--bg); }
-  .account-name{font-weight:500} .date-cell{font-family:'DM Mono',monospace;font-size:12px;color:var(--text2)}
+  .name-cell{font-weight:500} .mono{font-family:'DM Mono',monospace;font-size:12px;color:var(--text2)}
  
   .status-active{background:var(--green-light);color:var(--green);display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500;white-space:nowrap}
   .status-cooling{background:var(--red-light);color:var(--red);display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500;white-space:nowrap}
   .status-notreached{background:var(--surface2);color:var(--text2);display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500;border:1px solid var(--border);white-space:nowrap}
   .status-notfound{background:var(--amber-light);color:var(--amber);display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500;white-space:nowrap}
   .count-pill{background:var(--red-light);color:var(--red);font-weight:600;padding:1px 8px;border-radius:100px;font-size:12px;font-family:'DM Mono',monospace;}
-  .chan-pill{display:inline-block;background:var(--accent-light);color:var(--accent-text);padding:1px 7px;border-radius:100px;font-size:11px;margin:1px 2px 1px 0;}
-  .camp-pill{display:inline-block;background:var(--surface2);color:var(--text2);padding:1px 7px;border-radius:100px;font-size:11px;margin:1px 2px 1px 0;border:1px solid var(--border);}
   .clickable-num{color:var(--accent-text);font-weight:600;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;background:none;border:none;font-family:'DM Mono',monospace;font-size:13px;padding:0}
   .clickable-num:hover{color:var(--accent)}
  
   .btn { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); color:var(--text); font-size:13px; font-weight:500; font-family:inherit; cursor:pointer; transition:all 0.12s; text-decoration:none; white-space:nowrap; }
   .btn:hover{background:var(--surface2);border-color:var(--border2)} .btn svg{width:14px;height:14px;flex-shrink:0}
-  .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)} .btn-primary:hover{background:var(--accent-text);border-color:var(--accent-text)}
   .btn-sm{padding:4px 10px;font-size:12px}
- 
-  .cooling-alert{background:var(--red-light);border:1px solid #F5CABD;border-radius:var(--radius);padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:13px} .cooling-alert svg{width:16px;height:16px;color:var(--red);flex-shrink:0}
- 
-  .empty-note{text-align:center;padding:14px;color:var(--text3);font-size:12px}
  
   .dropzone{border:2px dashed var(--border2);border-radius:var(--radius);padding:36px 24px;text-align:center;color:var(--text2);background:var(--surface);transition:border-color .15s,background .15s;cursor:pointer;}
   .dropzone:hover,.dropzone.drag{border-color:var(--accent);background:var(--accent-light);}
@@ -96,19 +90,13 @@
  
   .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:1000;align-items:center;justify-content:center;padding:24px}
   .modal-overlay.open{display:flex}
-  .modal{background:var(--surface);border-radius:14px;padding:28px;width:100%;max-width:560px;box-shadow:0 20px 60px rgba(0,0,0,0.15);max-height:85vh;overflow-y:auto}
+  .modal{background:var(--surface);border-radius:14px;padding:28px;width:100%;max-width:720px;box-shadow:0 20px 60px rgba(0,0,0,0.15);max-height:85vh;overflow-y:auto}
   .modal-title{font-size:17px;font-weight:600;margin-bottom:20px}
-  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  .form-group{display:flex;flex-direction:column;gap:5px} .form-group.full{grid-column:1/-1}
-  label.form-label{font-size:12px;font-weight:500;color:var(--text2)}
-  input.form-input,select.form-input,textarea.form-input{padding:8px 11px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;color:var(--text);background:var(--surface);outline:none;transition:border-color 0.12s;width:100%;}
-  input.form-input:focus,select.form-input:focus,textarea.form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(45,91,227,0.1)}
-  textarea.form-input{resize:vertical;min-height:72px}
   .form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
  
   .toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;padding:10px 16px;border-radius:var(--radius-sm);font-size:13px;z-index:9999;opacity:0;transform:translateY(8px);transition:all 0.2s;pointer-events:none} .toast.show{opacity:1;transform:translateY(0)}
  
-  @media(max-width:600px){.main{padding:16px}.form-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:600px){.main{padding:16px}.stats-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -118,19 +106,15 @@
     <div class="brand-icon">
       <svg viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1.5" fill="white"/><rect x="9" y="2" width="5" height="5" rx="1.5" fill="white" opacity="0.7"/><rect x="2" y="9" width="5" height="5" rx="1.5" fill="white" opacity="0.7"/><rect x="9" y="9" width="5" height="5" rx="1.5" fill="white" opacity="0.4"/></svg>
     </div>
-    Account Engagement Tracker
+    Contact Engagement Tracker
   </div>
   <div class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab('accounts',this)">Accounts</button>
-    <button class="tab-btn" onclick="switchTab('cooling',this)">Cooling-Off</button>
+    <button class="tab-btn active" onclick="switchTab('cooling',this)">Cooling-Off</button>
     <button class="tab-btn" onclick="switchTab('campaigns',this)">Campaigns</button>
   </div>
   <div class="header-actions">
     <button class="btn" onclick="loadAll()">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13.5 8a5.5 5.5 0 11-1.6-3.9M13.5 2.5v3h-3"/></svg>Refresh
-    </button>
-    <button class="btn btn-primary" onclick="openModal()">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>Log Touchpoint
     </button>
   </div>
 </header>
@@ -139,69 +123,20 @@
  
 <main class="main">
  
-<!-- ============ ACCOUNTS (tabular, one row per account) ============ -->
-<div id="page-accounts" class="page active">
-  <div class="section-header">
-    <div>
-      <div class="section-title">Accounts Reached — Last 30 Days</div>
-      <div class="page-sub">One row per account, with the campaigns it's been part of</div>
-    </div>
-    <button class="btn btn-sm" onclick="downloadAccounts()">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 13h10"/></svg>Download
-    </button>
-  </div>
+<!-- ============ COOLING-OFF (contacts) ============ -->
+<div id="page-cooling" class="page active">
  
   <div class="stats-grid">
-    <div class="stat-card accent"><div class="stat-label">Accounts Reached (30d)</div><div class="stat-value" id="ac-total">—</div></div>
-    <div class="stat-card success"><div class="stat-label">Active (14d)</div><div class="stat-value" id="ac-active">—</div></div>
-    <div class="stat-card danger"><div class="stat-label">Cooling Off</div><div class="stat-value" id="ac-cooling">—</div></div>
-    <div class="stat-card neutral"><div class="stat-label">Dormant (14d+)</div><div class="stat-value" id="ac-notreached">—</div></div>
-  </div>
- 
-  <div class="table-wrap">
-    <div class="table-toolbar">
-      <div class="search-wrap">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="4"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg>
-        <input class="search-input" id="ac-search" type="text" placeholder="Search accounts…" oninput="renderAccountsTable()">
-      </div>
-    </div>
-    <div class="table-scroll">
-    <table>
-      <thead><tr>
-        <th>Account</th>
-        <th>Country</th>
-        <th>Status</th>
-        <th>Touches (30d)</th>
-        <th>Touches (14d)</th>
-        <th>Campaigns</th>
-        <th>Contacts Reached</th>
-        <th>Last Touch</th>
-      </tr></thead>
-      <tbody id="ac-tbody"><tr><td colspan="8" class="loading">Loading…</td></tr></tbody>
-    </table>
-    </div>
-  </div>
-</div>
- 
-<!-- ============ COOLING-OFF (flat contacts table) ============ -->
-<div id="page-cooling" class="page">
- 
-  <div id="cooling-banner" style="display:none" class="cooling-alert">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><line x1="8" y1="5" x2="8" y2="8"/><circle cx="8" cy="11" r="0.5" fill="currentColor"/></svg>
-    <span id="cooling-text"></span>
-  </div>
- 
-  <div class="stats-grid">
-    <div class="stat-card accent"><div class="stat-label">Accounts Tracked</div><div class="stat-value" id="co-total">—</div></div>
-    <div class="stat-card danger"><div class="stat-label">Accounts Cooling Off</div><div class="stat-value" id="co-accounts">—</div></div>
     <div class="stat-card danger"><div class="stat-label">Contacts Cooling Off</div><div class="stat-value" id="co-contacts">—</div></div>
-    <div class="stat-card success"><div class="stat-label">Active Accounts (14d)</div><div class="stat-value" id="co-active">—</div></div>
+    <div class="stat-card success"><div class="stat-label">Contacts Emailed (14d)</div><div class="stat-value" id="co-emailed14">—</div></div>
+    <div class="stat-card accent"><div class="stat-label">Contacts Reached (30d)</div><div class="stat-value" id="co-reached30">—</div></div>
+    <div class="stat-card neutral"><div class="stat-label">Emails Sent (30d)</div><div class="stat-value" id="co-sends30">—</div></div>
   </div>
  
   <div class="section-header">
     <div>
       <div class="section-title">Contacts in Cooling-Off</div>
-      <div class="page-sub">Every contact/lead currently flagged as cooling off, with their account</div>
+      <div class="page-sub">Contacts/leads with 3+ emails in the last 14 days, most-emailed first</div>
     </div>
     <button class="btn btn-sm" onclick="downloadCoolingReport()">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 13h10"/></svg>Download
@@ -212,22 +147,24 @@
     <div class="table-toolbar">
       <div class="search-wrap">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="4"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg>
-        <input class="search-input" id="co-search" type="text" placeholder="Search contacts, accounts…" oninput="filterCoolingOff()">
+        <input class="search-input" id="co-search" type="text" placeholder="Search contacts, emails, companies…" oninput="filterCoolingOff()">
       </div>
+      <span class="row-note" id="co-rownote"></span>
     </div>
     <div class="table-scroll">
     <table>
       <thead><tr>
         <th>Contact</th>
         <th>Email</th>
-        <th>Emails (14d)</th>
-        <th>Account</th>
+        <th>Company</th>
         <th>Country</th>
-        <th>Last Touch</th>
+        <th class="num">Emails (14d)</th>
+        <th class="num">Emails (30d)</th>
+        <th>Last Email</th>
         <th>Cooling Off Until</th>
         <th>Status</th>
       </tr></thead>
-      <tbody id="co-tbody"><tr><td colspan="8" class="loading">Loading…</td></tr></tbody>
+      <tbody id="co-tbody"><tr><td colspan="9" class="loading">Loading…</td></tr></tbody>
     </table>
     </div>
   </div>
@@ -256,7 +193,7 @@
     <div class="table-wrap">
       <div class="table-scroll">
       <table>
-        <thead><tr><th>Uploaded Name / Email</th><th>Matched Account</th><th>Matched Contact</th><th>Status</th><th>Last Touch</th></tr></thead>
+        <thead><tr><th>Uploaded Name / Email</th><th>Matched Contact</th><th>Company</th><th>Status</th><th class="num">Emails (14d)</th><th>Last Email</th></tr></thead>
         <tbody id="xl-tbody"></tbody>
       </table>
       </div>
@@ -264,12 +201,12 @@
   </div>
 </div>
  
-<!-- ============ CAMPAIGNS ============ -->
+<!-- ============ CAMPAIGNS (loaded on first open) ============ -->
 <div id="page-campaigns" class="page">
   <div class="section-header">
     <div>
-      <div class="section-title">Campaigns — Last 30 Days</div>
-      <div class="page-sub">Click a number to see the accounts or contacts behind it</div>
+      <div class="section-title">Emails — Last 30 Days</div>
+      <div class="page-sub">One row per email. Click a number to see the contacts behind it.</div>
     </div>
     <button class="btn btn-sm" onclick="downloadCampaigns()">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 13h10"/></svg>Download
@@ -280,22 +217,20 @@
     <div class="table-toolbar">
       <div class="search-wrap">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="4"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg>
-        <input class="search-input" id="camp-search" type="text" placeholder="Search campaigns…" oninput="renderCampaigns()">
+        <input class="search-input" id="camp-search" type="text" placeholder="Search emails…" oninput="renderCampaigns()">
       </div>
     </div>
     <div class="table-scroll">
     <table>
       <thead><tr>
-        <th>Campaign</th>
-        <th>Channel</th>
-        <th>Accounts Reached</th>
-        <th>Contacts Reached</th>
-        <th>Cooling Off Now</th>
-        <th>Total Touches</th>
+        <th>Email Name</th>
+        <th class="num">Contacts Reached</th>
+        <th class="num">Cooling Off Now</th>
+        <th class="num">Total Sends</th>
         <th>First Sent</th>
         <th>Last Sent</th>
       </tr></thead>
-      <tbody id="camp-tbody"><tr><td colspan="8" class="loading">Loading…</td></tr></tbody>
+      <tbody id="camp-tbody"><tr><td colspan="6" class="loading">Open this tab to load…</td></tr></tbody>
     </table>
     </div>
   </div>
@@ -303,86 +238,7 @@
  
 </main>
  
-<!-- LOG TOUCHPOINT MODAL -->
-<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
-  <div class="modal">
-    <div class="modal-title">Log Touchpoint</div>
-    <div class="form-grid">
-      <div class="form-group full" style="background:var(--accent-light);border:1px solid #C5D4F9;border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:2px;">
-        <div style="font-size:11px;font-weight:600;color:var(--accent-text);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Account Identifier — use SF ID when available</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
-          <div class="form-group" style="margin:0;"><label class="form-label">Salesforce Account ID</label><input id="f-sfid" class="form-input" type="text" placeholder="e.g. 0015g00000XXXXX"></div>
-          <div class="form-group" style="margin:0;"><label class="form-label">Account Domain</label><input id="f-domain" class="form-input" type="text" placeholder="e.g. acme.com"></div>
-          <div class="form-group" style="margin:0;"><label class="form-label">Country</label><input id="f-country" class="form-input" type="text" placeholder="e.g. United Kingdom"></div>
-        </div>
-      </div>
-      <div class="form-group full">
-        <label class="form-label">Account Name *</label>
-        <input id="f-account" class="form-input" type="text" placeholder="e.g. Acme Corp">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Date *</label>
-        <input id="f-date" class="form-input" type="date">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Sent By *</label>
-        <input id="f-by" class="form-input" type="text" placeholder="e.g. Sarah Jones">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Tier</label>
-        <select id="f-tier" class="form-input">
-          <option value="">Select tier…</option>
-          <option>Tier 1</option>
-          <option>Tier 2</option>
-          <option>Tier 3</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Channel *</label>
-        <select id="f-channel" class="form-input">
-          <option>Email</option>
-          <option>LinkedIn</option>
-          <option>Webinar</option>
-          <option>Event</option>
-          <option>Direct Mail</option>
-          <option>Paid Ad</option>
-        </select>
-      </div>
-      <div class="form-group full">
-        <label class="form-label">Campaign / Email Name *</label>
-        <input id="f-campaign" class="form-input" type="text" placeholder="e.g. Q3 Demand Booster Launch">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Outcome</label>
-        <select id="f-outcome" class="form-input">
-          <option value="">None</option>
-          <option>Opened</option>
-          <option>Clicked</option>
-          <option>Replied</option>
-          <option>Meeting Booked</option>
-          <option>No Response</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Cooling Off?</label>
-        <select id="f-cooling" class="form-input">
-          <option value="false">No</option>
-          <option value="true">Yes</option>
-        </select>
-      </div>
-      <div class="form-group full">
-        <label class="form-label">Notes</label>
-        <textarea id="f-notes" class="form-input" placeholder="Additional context…"></textarea>
-      </div>
-    </div>
-    <div class="form-actions">
-      <button class="btn" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary" id="submit-btn" onclick="saveTouchpoint()">Save Touchpoint</button>
-    </div>
-  </div>
-</div>
- 
-<!-- GENERIC LIST MODAL (used by Campaigns tab click-throughs) -->
+<!-- LIST MODAL (Campaigns drill-down) -->
 <div class="modal-overlay" id="list-modal-overlay" onclick="closeListModalOutside(event)">
   <div class="modal">
     <div class="modal-title" id="list-modal-title">—</div>
@@ -404,14 +260,16 @@
 const SB_URL='https://mtlujmdpxtveawrhljxg.supabase.co';
 const SB_KEY='sb_publishable_UhmlGR4ullaoH5bds4A86g_v18c9v-n';
 const HDR={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Accept-Profile':'replyio','Content-Profile':'replyio'};
-const CUTOFF = new Date(Date.now() - 30*86400000).toISOString().slice(0,10);
+const dayStr = d => new Date(Date.now() - d*86400000).toISOString().slice(0,10);
+const CUTOFF = dayStr(30);   // 30-day window
+const CUTOFF14 = dayStr(14); // 14-day window (same as the cooling-off rule)
+const MAX_ROWS_SHOWN = 1000; // table shows the top rows; search and Download cover everything
  
 async function sb(path,opts={}){
   const r=await fetch(SB_URL+'/rest/v1/'+path,{headers:{...HDR,...(opts.headers||{})},method:opts.method||'GET',body:opts.body||undefined});
   if(!r.ok) throw new Error('Supabase '+r.status+' on '+path.split('?')[0]+': '+(await r.text()));
   return r.json();
 }
- 
 // Fetch every row by paging through results (Supabase caps rows per request)
 async function sbAll(path, pageSize=5000){
   let out=[], off=0;
@@ -423,73 +281,85 @@ async function sbAll(path, pageSize=5000){
   }
   return out;
 }
-function keyOf(r){ return r.sf_account_id || r.account_name || '?'; }
+const personKey = r => r.contact_id || r.lead_id || (r.email||'').toLowerCase() || '?';
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
  
 // ============================================================
 // NAV
 // ============================================================
+let activeTab='cooling';
 function switchTab(name,btn){
+  activeTab=name;
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   btn.classList.add('active');
+  if(name==='campaigns' && !campaignsLoaded) loadCampaigns();
 }
  
 // ============================================================
-// GLOBAL DATA
+// DATA
 // ============================================================
-let accStatusAll=[], accStatusMap={};
-let contactStatusAll=[];
-let tp30=[], ctp30=[];
 let coolingContactsAll=[], coolingContactsFiltered=[];
-let accountRollup=[], campaignRollup=[];
+let coolingKeys=new Set();
+let sendsByPerson={};        // personKey -> {n30, country}
+let campaignRollup=[], campaignsLoaded=false, campaignsLoading=false;
+let allContactStatus=null;   // loaded only when a cross-check file is uploaded
  
 async function loadAll(){
   const bar=document.getElementById('data-status');
   bar.classList.remove('err');
-  bar.textContent='Connecting to Supabase…';
+  bar.textContent='Loading from Supabase…';
   try{
-    const [accView, contactView, tpRows, ctpRows] = await Promise.all([
-      sbAll('account_engagement_status?select=*&order=cooling_off_until.desc.nullslast,sf_account_id.asc.nullsfirst,account_name.asc'),
-      sbAll('contact_engagement_status?select=*&order=contact_id.asc.nullsfirst,lead_id.asc.nullsfirst,account_name.asc'),
-      sbAll('touchpoints_engagement?select=*&date=gte.'+CUTOFF+'&order=date.desc,id.asc'),
-      sbAll('contact_touchpoints_engagement?select=*&date=gte.'+CUTOFF+'&order=date.desc,id.asc')
+    const [cool, sends] = await Promise.all([
+      sbAll('contact_engagement_status?select=contact_id,lead_id,contact_name,email,account_name,touches_14d,last_touch_date,cooling_off_until'+
+            '&engagement_status=eq.Cooling%20Off&order=contact_id.asc.nullsfirst,lead_id.asc.nullsfirst,account_name.asc'),
+      sbAll('contact_touchpoints_engagement?select=contact_id,lead_id,country,date&date=gte.'+CUTOFF+'&order=date.desc,id.asc', 20000)
     ]);
  
-    accStatusAll=accView;
-    accStatusMap={};
-    accView.forEach(r=>{ accStatusMap[keyOf(r)]=r; });
+    // per-person 30-day send counts (+ latest country); rows arrive newest first
+    sendsByPerson={};
+    const reached14=new Set();
+    sends.forEach(s=>{
+      const k=personKey(s);
+      if(!sendsByPerson[k]) sendsByPerson[k]={ n30:0, country:s.country||'' };
+      const p=sendsByPerson[k];
+      p.n30++;
+      if(!p.country && s.country) p.country=s.country;
+      if(s.date>=CUTOFF14) reached14.add(k);
+    });
  
-    contactStatusAll=contactView;
-    coolingContactsAll=contactView.filter(r=>r.engagement_status==='Cooling Off');
+    coolingContactsAll=cool.map(c=>{
+      const k=personKey(c), p=sendsByPerson[k]||{};
+      return { ...c, key:k, emails14:c.touches_14d||0, emails30:p.n30||0, country:p.country||'' };
+    }).sort((a,b)=> (b.emails14-a.emails14) || (b.emails30-a.emails30) ||
+                    String(b.last_touch_date||'').localeCompare(String(a.last_touch_date||'')));
+    coolingKeys=new Set(coolingContactsAll.map(c=>c.key));
  
-    tp30=tpRows;
-    ctp30=ctpRows;
+    document.getElementById('co-contacts').textContent=coolingContactsAll.length.toLocaleString();
+    document.getElementById('co-emailed14').textContent=reached14.size.toLocaleString();
+    document.getElementById('co-reached30').textContent=Object.keys(sendsByPerson).length.toLocaleString();
+    document.getElementById('co-sends30').textContent=sends.length.toLocaleString();
+    filterCoolingOff();
  
-    buildAccountRollup();
-    buildCampaignRollup();
- 
-    renderAccountsTable();
-    renderCoolingTab();
-    renderCampaigns();
+    // refresh the campaigns tab too if it has been opened
+    campaignsLoaded=false; campaignRollup=[];
+    if(activeTab==='campaigns') loadCampaigns();
+    else document.getElementById('camp-tbody').innerHTML='<tr><td colspan="6" class="loading">Open this tab to load…</td></tr>';
  
     const now=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
-    bar.innerHTML='Live from Supabase · <b>'+accView.length+'</b> accounts (account_engagement_status) · '+
-      '<b>'+contactView.length+'</b> contacts tracked (contact_engagement_status) · '+
-      '<b>'+tpRows.length+'</b> touchpoints since '+CUTOFF+' (touchpoints_engagement) · '+
-      '<b>'+ctpRows.length+'</b> contact touchpoints since '+CUTOFF+' (contact_touchpoints_engagement) · refreshed '+now;
+    bar.innerHTML='Live from Supabase · <b>'+coolingContactsAll.length.toLocaleString()+'</b> contacts cooling off · '+
+      '<b>'+sends.length.toLocaleString()+'</b> emails sent since '+CUTOFF+' · refreshed '+now;
   }catch(e){
     bar.classList.add('err');
     bar.textContent='⚠ Could not load from Supabase: '+e.message;
     showToast('Supabase load failed — see status bar for details');
-    document.getElementById('ac-tbody').innerHTML='<tr><td colspan="8" style="color:var(--red);padding:16px">'+e.message+'</td></tr>';
-    document.getElementById('co-tbody').innerHTML='<tr><td colspan="8" style="color:var(--red);padding:16px">'+e.message+'</td></tr>';
-    document.getElementById('camp-tbody').innerHTML='<tr><td colspan="8" style="color:var(--red);padding:16px">'+e.message+'</td></tr>';
+    document.getElementById('co-tbody').innerHTML='<tr><td colspan="9" style="color:var(--red);padding:16px">'+esc(e.message)+'</td></tr>';
   }
 }
  
 // ============================================================
-// STATUS BADGE (shared)
+// STATUS BADGE
 // ============================================================
 function statusBadge(s){
   if(s==='Cooling Off') return '<span class="status-cooling">⬤ Cooling Off</span>';
@@ -499,174 +369,60 @@ function statusBadge(s){
 }
  
 // ============================================================
-// ACCOUNTS TAB — tabular, one row per account, last 30 days
+// COOLING-OFF TABLE
 // ============================================================
-function buildAccountRollup(){
-  const map={};
-  tp30.forEach(t=>{
-    const ak=keyOf(t);
-    if(!map[ak]) map[ak]={ key:ak, account_name:t.account_name, country:t.country, campaigns:new Set(), touches:0, last:t.date };
-    const g=map[ak];
-    g.touches++;
-    if(t.campaign) g.campaigns.add(t.campaign);
-    if(!g.last || t.date>g.last) g.last=t.date;
-    if(t.country && !g.country) g.country=t.country;
-  });
-  const contactsByAccount={};
-  ctp30.forEach(c=>{
-    const ak=keyOf(c);
-    if(!contactsByAccount[ak]) contactsByAccount[ak]=new Set();
-    contactsByAccount[ak].add(c.contact_id||c.lead_id||c.email||(''+Math.random()));
-  });
-  accountRollup=Object.values(map).map(g=>{
-    const st=accStatusMap[g.key];
-    return {
-      key:g.key,
-      account_name:g.account_name,
-      country:g.country,
-      touches:g.touches,
-      touches14d: st?(st.touches_14d||0):0,
-      campaignList:[...g.campaigns],
-      contactsReached: contactsByAccount[g.key]?contactsByAccount[g.key].size:0,
-      lastTouch:g.last,
-      status: st? st.engagement_status : 'Not Reached'
-    };
-  }).sort((a,b)=> (new Date(b.lastTouch)) - (new Date(a.lastTouch)));
-}
- 
-function campaignChips(list){
-  if(!list.length) return '—';
-  const shown=list.slice(0,2);
-  const rest=list.length-shown.length;
-  let html=shown.map(c=>'<span class="camp-pill">'+c+'</span>').join('');
-  if(rest>0){
-    const full=list.join(', ').replace(/"/g,'&quot;');
-    html+='<span class="camp-pill" title="'+full+'">+'+rest+' more</span>';
-  }
-  return html;
-}
- 
-function renderAccountsTable(){
-  const q=(document.getElementById('ac-search').value||'').toLowerCase();
-  const filtered=accountRollup.filter(a=>!q || ((a.account_name||'')+(a.country||'')).toLowerCase().includes(q));
- 
-  document.getElementById('ac-total').textContent=accountRollup.length.toLocaleString();
-  document.getElementById('ac-active').textContent=accountRollup.filter(a=>a.status==='Active').length.toLocaleString();
-  document.getElementById('ac-cooling').textContent=accountRollup.filter(a=>a.status==='Cooling Off').length.toLocaleString();
-  document.getElementById('ac-notreached').textContent=accountRollup.filter(a=>a.status==='Not Reached').length.toLocaleString();
- 
-  const tbody=document.getElementById('ac-tbody');
-  if(!filtered.length){ tbody.innerHTML='<tr><td colspan="8" class="empty-state">No accounts touched in the last 30 days.</td></tr>'; return; }
- 
-  tbody.innerHTML=filtered.map(a=>
-    '<tr>'+
-      '<td class="account-name">'+(a.account_name||'—')+'</td>'+
-      '<td>'+(a.country||'—')+'</td>'+
-      '<td>'+statusBadge(a.status)+'</td>'+
-      '<td><span class="date-cell">'+a.touches+'</span></td>'+
-      '<td><span class="date-cell">'+a.touches14d+'</span></td>'+
-      '<td>'+campaignChips(a.campaignList)+'</td>'+
-      '<td><span class="date-cell">'+a.contactsReached+'</span></td>'+
-      '<td><span class="date-cell">'+(a.lastTouch||'—')+'</span></td>'+
-    '</tr>'
-  ).join('');
-}
- 
-function downloadAccounts(){
-  if(!window.XLSX){ showToast('Excel library failed to load'); return; }
-  if(!accountRollup.length){ showToast('Nothing to export'); return; }
-  const sheet=accountRollup.map(a=>({
-    Account:a.account_name||'', Country:a.country||'', Status:a.status,
-    'Touches (30d)':a.touches, 'Touches (14d)':a.touches14d, Campaigns:a.campaignList.join(', '), 'Contacts Reached':a.contactsReached, 'Last Touch':a.lastTouch||''
-  }));
-  const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheet), 'Accounts (30d)');
-  XLSX.writeFile(wb, 'accounts_last30days_'+new Date().toISOString().slice(0,10)+'.xlsx');
-}
- 
-// ============================================================
-// COOLING-OFF TAB — flat contacts table
-// ============================================================
-function renderCoolingTab(){
-  const total=accStatusAll.length;
-  const coolingAccList=accStatusAll.filter(r=>r.engagement_status==='Cooling Off');
-  const activeAcc=accStatusAll.filter(r=>r.engagement_status==='Active').length;
- 
-  document.getElementById('co-total').textContent=total.toLocaleString();
-  document.getElementById('co-accounts').textContent=coolingAccList.length.toLocaleString();
-  document.getElementById('co-contacts').textContent=coolingContactsAll.length.toLocaleString();
-  document.getElementById('co-active').textContent=activeAcc.toLocaleString();
- 
-  const banner=document.getElementById('cooling-banner');
-  if(coolingAccList.length>0){
-    banner.style.display='flex';
-    document.getElementById('cooling-text').textContent=
-      coolingAccList.length+' account'+(coolingAccList.length>1?'s':'')+' currently cooling off, affecting '+
-      coolingContactsAll.length+' contact'+(coolingContactsAll.length===1?'':'s')+' — see the table below for details.';
-  }else{
-    banner.style.display='none';
-  }
- 
-  filterCoolingOff();
-}
- 
 function filterCoolingOff(){
-  const q=document.getElementById('co-search').value.toLowerCase();
+  const q=document.getElementById('co-search').value.toLowerCase().trim();
   coolingContactsFiltered=coolingContactsAll.filter(c=>
-    !q || ((c.contact_name||'')+(c.email||'')+(c.account_name||'')).toLowerCase().includes(q)
-  );
-  // Most-emailed first (emails received in the last 14 days), then most recent touch
-  coolingContactsFiltered.sort((a,b)=>
-    ((b.touches_14d||0)-(a.touches_14d||0)) ||
-    String(b.last_touch_date||'').localeCompare(String(a.last_touch_date||''))
+    !q || ((c.contact_name||'')+' '+(c.email||'')+' '+(c.account_name||'')+' '+(c.country||'')).toLowerCase().includes(q)
   );
   renderCoolingOff();
 }
  
 function renderCoolingOff(){
   const tbody=document.getElementById('co-tbody');
+  const note=document.getElementById('co-rownote');
   if(!coolingContactsFiltered.length){
-    tbody.innerHTML='<tr><td colspan="8" class="empty-state">No contacts currently in cooling-off.</td></tr>';
+    tbody.innerHTML='<tr><td colspan="9" class="empty-state">No contacts currently in cooling-off.</td></tr>';
+    note.textContent='';
     return;
   }
-  tbody.innerHTML=coolingContactsFiltered.map(c=>{
-    const acc=accStatusMap[keyOf(c)];
-    const country=acc?acc.country:'';
-    return '<tr>'+
-      '<td class="account-name">'+(c.contact_name||'—')+'</td>'+
-      '<td><span class="date-cell">'+(c.email||'—')+'</span></td>'+
-      '<td><span class="count-pill">'+(c.touches_14d||0)+'</span></td>'+
-      '<td>'+(c.account_name||'—')+'</td>'+
-      '<td>'+(country||'—')+'</td>'+
-      '<td><span class="date-cell">'+(c.last_touch_date||'—')+'</span></td>'+
-      '<td><span class="date-cell">'+(c.cooling_off_until?c.cooling_off_until.slice(0,10):'—')+'</span></td>'+
+  const shown=coolingContactsFiltered.slice(0, MAX_ROWS_SHOWN);
+  note.textContent = coolingContactsFiltered.length>MAX_ROWS_SHOWN
+    ? 'Showing top '+MAX_ROWS_SHOWN.toLocaleString()+' of '+coolingContactsFiltered.length.toLocaleString()+' — search or Download for the rest'
+    : coolingContactsFiltered.length.toLocaleString()+' contacts';
+  tbody.innerHTML=shown.map(c=>
+    '<tr>'+
+      '<td class="name-cell">'+esc(c.contact_name||'—')+'</td>'+
+      '<td><span class="mono">'+esc(c.email||'—')+'</span></td>'+
+      '<td>'+esc(c.account_name||'—')+'</td>'+
+      '<td>'+esc(c.country||'—')+'</td>'+
+      '<td class="num"><span class="count-pill">'+c.emails14+'</span></td>'+
+      '<td class="num"><span class="mono">'+c.emails30+'</span></td>'+
+      '<td><span class="mono">'+esc(c.last_touch_date||'—')+'</span></td>'+
+      '<td><span class="mono">'+(c.cooling_off_until?esc(c.cooling_off_until.slice(0,10)):'—')+'</span></td>'+
       '<td><span class="status-cooling">⬤ Cooling Off</span></td>'+
-    '</tr>';
-  }).join('');
+    '</tr>'
+  ).join('');
 }
  
 function downloadCoolingReport(){
   if(!window.XLSX){ showToast('Excel library failed to load'); return; }
   if(!coolingContactsFiltered.length){ showToast('Nothing to export'); return; }
-  const contactSheet=coolingContactsFiltered.map(c=>{
-    const acc=accStatusMap[keyOf(c)];
-    return {
-      Contact:c.contact_name||'', Email:c.email||'', 'Emails (14d)':c.touches_14d||0, Account:c.account_name||'', Country:acc?(acc.country||''):'',
-      'Last Touch':c.last_touch_date||'', 'Cooling Off Until':c.cooling_off_until?c.cooling_off_until.slice(0,10):''
-    };
-  });
-  const accSheet=accStatusAll.filter(r=>r.engagement_status==='Cooling Off').map(r=>({
-    Account:r.account_name||'', Country:r.country||'', 'SF Account ID':r.sf_account_id||'',
-    'Total Touches':r.total_touches||0, 'Touches (14d)':r.touches_14d||0,
-    'Last Touch':r.last_touch_date||'', 'Cooling Off Until':r.cooling_off_until?r.cooling_off_until.slice(0,10):''
+  const sheet=coolingContactsFiltered.map(c=>({
+    Contact:c.contact_name||'', Email:c.email||'', Company:c.account_name||'', Country:c.country||'',
+    'Emails (14d)':c.emails14, 'Emails (30d)':c.emails30,
+    'Last Email':c.last_touch_date||'', 'Cooling Off Until':c.cooling_off_until?c.cooling_off_until.slice(0,10):'',
+    'Salesforce ID':c.contact_id||c.lead_id||'', Type:c.contact_id?'Contact':'Lead'
   }));
   const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(contactSheet), 'Contacts Cooling Off');
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(accSheet.length?accSheet:[{Note:'No accounts currently flagged'}]), 'Accounts Cooling Off');
-  XLSX.writeFile(wb, 'cooling_off_report_'+new Date().toISOString().slice(0,10)+'.xlsx');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheet), 'Contacts Cooling Off');
+  XLSX.writeFile(wb, 'cooling_off_contacts_'+new Date().toISOString().slice(0,10)+'.xlsx');
 }
  
-// ---- Excel cross-check upload ----
+// ============================================================
+// EXCEL CROSS-CHECK
+// ============================================================
 let xlUploadedRows=[], xlResults=[];
  
 const dz=document.getElementById('xl-dropzone');
@@ -690,8 +446,7 @@ function processExcelFile(file){
       const data=new Uint8Array(evt.target.result);
       const wb=XLSX.read(data,{type:'array'});
       const ws=wb.Sheets[wb.SheetNames[0]];
-      const rows=XLSX.utils.sheet_to_json(ws,{defval:''});
-      xlUploadedRows=rows;
+      xlUploadedRows=XLSX.utils.sheet_to_json(ws,{defval:''});
       crossCheckContacts();
     }catch(err){
       showToast('Could not read file: '+err.message);
@@ -707,10 +462,18 @@ function findCol(row,candidates){
   }
   return null;
 }
-function crossCheckContacts(){
+async function crossCheckContacts(){
   if(!xlUploadedRows.length){ showToast('No rows found in that file'); return; }
+  if(!allContactStatus){
+    document.getElementById('xl-summary').textContent='Loading contact statuses…';
+    document.getElementById('xl-result-wrap').style.display='block';
+    try{
+      allContactStatus=await sbAll('contact_engagement_status?select=contact_id,lead_id,contact_name,email,account_name,engagement_status,touches_14d,last_touch_date'+
+        '&order=contact_id.asc.nullsfirst,lead_id.asc.nullsfirst,account_name.asc', 10000);
+    }catch(e){ showToast('Could not load contacts: '+e.message); return; }
+  }
   const byEmail={}, byName={};
-  contactStatusAll.forEach(c=>{
+  allContactStatus.forEach(c=>{
     if(c.email) byEmail[c.email.toLowerCase().trim()]=c;
     if(c.contact_name) byName[c.contact_name.toLowerCase().trim()]=c;
   });
@@ -724,9 +487,10 @@ function crossCheckContacts(){
     else if(nameVal && byName[nameVal.toLowerCase()]) match=byName[nameVal.toLowerCase()];
     return{
       input: emailVal||nameVal||'(blank row)',
-      account: match?(match.account_name||'—'):'—',
       contact: match?(match.contact_name||'—'):'—',
+      company: match?(match.account_name||'—'):'—',
       status: match?match.engagement_status:'Not Found',
+      emails14: match?(match.touches_14d||0):0,
       lastTouch: match?(match.last_touch_date||'—'):'—'
     };
   });
@@ -737,183 +501,105 @@ function renderCrossCheck(){
   const coolingN=xlResults.filter(r=>r.status==='Cooling Off').length;
   document.getElementById('xl-summary').textContent=xlResults.length+' rows checked · '+coolingN+' currently cooling off';
   document.getElementById('xl-tbody').innerHTML=xlResults.map(r=>
-    '<tr><td class="account-name">'+r.input+'</td><td>'+r.account+'</td><td>'+r.contact+'</td><td>'+statusBadge(r.status)+'</td>'+
-    '<td><span class="date-cell">'+r.lastTouch+'</span></td></tr>'
+    '<tr><td class="name-cell">'+esc(r.input)+'</td><td>'+esc(r.contact)+'</td><td>'+esc(r.company)+'</td><td>'+statusBadge(r.status)+'</td>'+
+    '<td class="num"><span class="mono">'+r.emails14+'</span></td><td><span class="mono">'+esc(r.lastTouch)+'</span></td></tr>'
   ).join('');
 }
 function downloadCrossCheck(){
   if(!xlResults.length) return;
-  const sheet=xlResults.map(r=>({'Uploaded Name/Email':r.input,'Matched Account':r.account,'Matched Contact':r.contact,'Status':r.status,'Last Touch':r.lastTouch}));
+  const sheet=xlResults.map(r=>({'Uploaded Name/Email':r.input,'Matched Contact':r.contact,'Company':r.company,'Status':r.status,'Emails (14d)':r.emails14,'Last Email':r.lastTouch}));
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheet), 'Cross-Check Results');
   XLSX.writeFile(wb, 'contact_crosscheck_'+new Date().toISOString().slice(0,10)+'.xlsx');
 }
  
 // ============================================================
-// CAMPAIGNS TAB — clickable accounts / contacts counts
+// CAMPAIGNS (emails) — loaded the first time the tab is opened
 // ============================================================
-function buildCampaignRollup(){
-  const map={};
-  tp30.forEach(t=>{
-    const camp=t.campaign || '(No campaign name)';
-    if(!map[camp]) map[camp]={ campaign:camp, accounts:{}, channels:new Set(), first:t.date, last:t.date, touches:0 };
-    const g=map[camp];
-    const ak=keyOf(t);
-    if(!g.accounts[ak]) g.accounts[ak]={ name:t.account_name, country:t.country };
-    if(t.channel) g.channels.add(t.channel);
-    if(!g.first || t.date<g.first) g.first=t.date;
-    if(!g.last || t.date>g.last) g.last=t.date;
-    g.touches++;
-  });
- 
-  const contactsByCampaign={};
-  ctp30.forEach(c=>{
-    const camp=c.campaign || '(No campaign name)';
-    if(!contactsByCampaign[camp]) contactsByCampaign[camp]={};
-    const cid=c.contact_id||c.lead_id||c.email||(''+Math.random());
-    contactsByCampaign[camp][cid]={ name:c.contact_name, email:c.email, account:c.account_name };
-  });
- 
-  let idCounter=0;
-  campaignRollup=Object.values(map).map(g=>{
-    const accountEntries=Object.keys(g.accounts).map(ak=>{
-      const info=g.accounts[ak];
-      const st=accStatusMap[ak];
-      return { name:info.name, country:info.country, status: st?st.engagement_status:'Not Reached' };
+async function loadCampaigns(){
+  if(campaignsLoading) return;
+  campaignsLoading=true;
+  const tbody=document.getElementById('camp-tbody');
+  tbody.innerHTML='<tr><td colspan="6" class="loading">Loading emails from the last 30 days…</td></tr>';
+  try{
+    const rows=await sbAll('contact_touchpoints_engagement?select=contact_id,lead_id,contact_name,email,account_name,campaign,date'+
+      '&date=gte.'+CUTOFF+'&order=date.desc,id.asc', 20000);
+    const map={};
+    rows.forEach(r=>{
+      const camp=r.campaign || '(No email name)';
+      if(!map[camp]) map[camp]={ campaign:camp, contacts:{}, first:r.date, last:r.date, sends:0 };
+      const g=map[camp];
+      const k=personKey(r);
+      if(!g.contacts[k]) g.contacts[k]={ key:k, name:r.contact_name, email:r.email, company:r.account_name };
+      if(r.date<g.first) g.first=r.date;
+      if(r.date>g.last) g.last=r.date;
+      g.sends++;
     });
-    const coolingCount=accountEntries.filter(a=>a.status==='Cooling Off').length;
-    const contactEntries=Object.values(contactsByCampaign[g.campaign]||{});
-    return {
-      id: 'camp'+(idCounter++),
-      campaign:g.campaign,
-      accountsReached:accountEntries.length,
-      contactsReached:contactEntries.length,
-      channels:[...g.channels],
-      coolingOff:coolingCount,
-      touches:g.touches,
-      first:g.first, last:g.last,
-      accountEntries, contactEntries
-    };
-  }).sort((a,b)=>b.accountsReached-a.accountsReached);
+    let id=0;
+    campaignRollup=Object.values(map).map(g=>{
+      const contactEntries=Object.values(g.contacts);
+      return {
+        id:'camp'+(id++), campaign:g.campaign,
+        contactsReached:contactEntries.length,
+        coolingOff:contactEntries.filter(c=>coolingKeys.has(c.key)).length,
+        sends:g.sends, first:g.first, last:g.last, contactEntries
+      };
+    }).sort((a,b)=> String(b.last).localeCompare(String(a.last)) || (b.contactsReached-a.contactsReached));
+    campaignsLoaded=true;
+    renderCampaigns();
+  }catch(e){
+    tbody.innerHTML='<tr><td colspan="6" style="color:var(--red);padding:16px">'+esc(e.message)+'</td></tr>';
+  }finally{
+    campaignsLoading=false;
+  }
 }
  
 function renderCampaigns(){
+  if(!campaignsLoaded) return;
   const q=(document.getElementById('camp-search').value||'').toLowerCase();
   const filtered=campaignRollup.filter(c=>!q || c.campaign.toLowerCase().includes(q));
   const tbody=document.getElementById('camp-tbody');
-  if(!filtered.length){ tbody.innerHTML='<tr><td colspan="8" class="empty-state">No campaigns with activity in the last 30 days.</td></tr>'; return; }
+  if(!filtered.length){ tbody.innerHTML='<tr><td colspan="6" class="empty-state">No emails sent in the last 30 days.</td></tr>'; return; }
   tbody.innerHTML=filtered.map(c=>
     '<tr>'+
-      '<td class="account-name">'+c.campaign+'</td>'+
-      '<td>'+(c.channels.length?c.channels.map(ch=>'<span class="chan-pill">'+ch+'</span>').join(''):'—')+'</td>'+
-      '<td><button class="clickable-num" onclick="showListModal(\''+c.id+'\',\'accounts\')">'+c.accountsReached+'</button></td>'+
-      '<td><button class="clickable-num" onclick="showListModal(\''+c.id+'\',\'contacts\')">'+c.contactsReached+'</button></td>'+
-      '<td>'+(c.coolingOff>0?'<span class="count-pill">'+c.coolingOff+'</span>':'<span class="date-cell">0</span>')+'</td>'+
-      '<td><span class="date-cell">'+c.touches+'</span></td>'+
-      '<td><span class="date-cell">'+(c.first||'—')+'</span></td>'+
-      '<td><span class="date-cell">'+(c.last||'—')+'</span></td>'+
+      '<td class="name-cell">'+esc(c.campaign)+'</td>'+
+      '<td class="num"><button class="clickable-num" onclick="showListModal(\''+c.id+'\',false)">'+c.contactsReached.toLocaleString()+'</button></td>'+
+      '<td class="num">'+(c.coolingOff>0?'<button class="clickable-num" style="color:var(--red)" onclick="showListModal(\''+c.id+'\',true)">'+c.coolingOff.toLocaleString()+'</button>':'<span class="mono">0</span>')+'</td>'+
+      '<td class="num"><span class="mono">'+c.sends.toLocaleString()+'</span></td>'+
+      '<td><span class="mono">'+esc(c.first||'—')+'</span></td>'+
+      '<td><span class="mono">'+esc(c.last||'—')+'</span></td>'+
     '</tr>'
   ).join('');
 }
  
 function downloadCampaigns(){
   if(!window.XLSX){ showToast('Excel library failed to load'); return; }
-  if(!campaignRollup.length){ showToast('Nothing to export'); return; }
+  if(!campaignRollup.length){ showToast('Open the tab to load emails first'); return; }
   const sheet=campaignRollup.map(c=>({
-    Campaign:c.campaign, Channels:c.channels.join(', '), 'Accounts Reached':c.accountsReached,
-    'Contacts Reached':c.contactsReached, 'Cooling Off Now':c.coolingOff, 'Total Touches':c.touches,
-    'First Sent':c.first||'', 'Last Sent':c.last||''
+    'Email Name':c.campaign, 'Contacts Reached':c.contactsReached, 'Cooling Off Now':c.coolingOff,
+    'Total Sends':c.sends, 'First Sent':c.first||'', 'Last Sent':c.last||''
   }));
   const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheet), 'Campaigns (30d)');
-  XLSX.writeFile(wb, 'campaigns_last30days_'+new Date().toISOString().slice(0,10)+'.xlsx');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheet), 'Emails (30d)');
+  XLSX.writeFile(wb, 'emails_last30days_'+new Date().toISOString().slice(0,10)+'.xlsx');
 }
  
-// ---- Generic list modal (accounts / contacts drill-down from Campaigns tab) ----
-function showListModal(campId, kind){
+// ---- Drill-down modal: contacts reached by an email ----
+function showListModal(campId, coolingOnly){
   const camp=campaignRollup.find(c=>c.id===campId);
   if(!camp) return;
-  const overlay=document.getElementById('list-modal-overlay');
-  const title=document.getElementById('list-modal-title');
-  const thead=document.getElementById('list-modal-thead');
-  const tbody=document.getElementById('list-modal-tbody');
- 
-  if(kind==='accounts'){
-    title.textContent=camp.campaign+' — '+camp.accountEntries.length+' account'+(camp.accountEntries.length===1?'':'s')+' reached';
-    thead.innerHTML='<tr><th>Account</th><th>Country</th><th>Status</th></tr>';
-    tbody.innerHTML=camp.accountEntries.length ? camp.accountEntries.map(a=>
-      '<tr><td class="account-name">'+(a.name||'—')+'</td><td>'+(a.country||'—')+'</td><td>'+statusBadge(a.status)+'</td></tr>'
-    ).join('') : '<tr><td class="empty-state" colspan="3">No accounts found.</td></tr>';
-  }else{
-    title.textContent=camp.campaign+' — '+camp.contactEntries.length+' contact'+(camp.contactEntries.length===1?'':'s')+' reached';
-    thead.innerHTML='<tr><th>Contact</th><th>Email</th><th>Account</th></tr>';
-    tbody.innerHTML=camp.contactEntries.length ? camp.contactEntries.map(c=>
-      '<tr><td class="account-name">'+(c.name||'—')+'</td><td><span class="date-cell">'+(c.email||'—')+'</span></td><td>'+(c.account||'—')+'</td></tr>'
-    ).join('') : '<tr><td class="empty-state" colspan="3">No contacts found.</td></tr>';
-  }
-  overlay.classList.add('open');
+  const list=camp.contactEntries.filter(c=>!coolingOnly || coolingKeys.has(c.key));
+  document.getElementById('list-modal-title').textContent=
+    camp.campaign+' — '+list.length.toLocaleString()+' contact'+(list.length===1?'':'s')+(coolingOnly?' cooling off':' reached');
+  document.getElementById('list-modal-thead').innerHTML='<tr><th>Contact</th><th>Email</th><th>Company</th><th>Status</th></tr>';
+  document.getElementById('list-modal-tbody').innerHTML=list.length ? list.slice(0,2000).map(c=>
+    '<tr><td class="name-cell">'+esc(c.name||'—')+'</td><td><span class="mono">'+esc(c.email||'—')+'</span></td><td>'+esc(c.company||'—')+'</td>'+
+    '<td>'+(coolingKeys.has(c.key)?'<span class="status-cooling">⬤ Cooling Off</span>':'<span class="status-active">⬤ Not cooling off</span>')+'</td></tr>'
+  ).join('') : '<tr><td class="empty-state" colspan="4">No contacts found.</td></tr>';
+  document.getElementById('list-modal-overlay').classList.add('open');
 }
 function closeListModal(){ document.getElementById('list-modal-overlay').classList.remove('open'); }
 function closeListModalOutside(e){ if(e.target.id==='list-modal-overlay') closeListModal(); }
- 
-// ============================================================
-// LOG TOUCHPOINT MODAL
-// ============================================================
-function openModal(){
-  document.getElementById('f-date').value=new Date().toISOString().slice(0,10);
-  document.getElementById('modal-overlay').classList.add('open');
-}
-function closeModal(){
-  document.getElementById('modal-overlay').classList.remove('open');
-}
-function closeModalOutside(e){
-  if(e.target.id==='modal-overlay') closeModal();
-}
- 
-async function saveTouchpoint(){
-  const account=document.getElementById('f-account').value.trim();
-  const date=document.getElementById('f-date').value;
-  const by=document.getElementById('f-by').value.trim();
-  const channel=document.getElementById('f-channel').value;
-  const campaign=document.getElementById('f-campaign').value.trim();
- 
-  if(!account || !date || !by || !channel || !campaign){
-    showToast('Please fill in all required fields (*)');
-    return;
-  }
- 
-  const btn=document.getElementById('submit-btn');
-  btn.textContent='Saving…'; btn.disabled=true;
-  try{
-    await fetch(SB_URL+'/rest/v1/touchpoints_engagement',{
-      method:'POST',
-      headers:{...HDR,'Prefer':'return=minimal'},
-      body:JSON.stringify({
-        sf_account_id: document.getElementById('f-sfid').value.trim()||null,
-        account_name: account,
-        account_domain: document.getElementById('f-domain').value.trim()||null,
-        country: document.getElementById('f-country').value.trim()||null,
-        date: date,
-        sent_by: by,
-        tier: document.getElementById('f-tier').value||null,
-        channel: channel,
-        campaign: campaign,
-        cooling_off: document.getElementById('f-cooling').value==='true',
-        outcome: document.getElementById('f-outcome').value||null,
-        notes: document.getElementById('f-notes').value.trim()||null
-      })
-    });
-    showToast('Touchpoint saved');
-    closeModal();
-    ['f-account','f-sfid','f-domain','f-country','f-by','f-tier','f-campaign','f-outcome','f-notes'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('f-cooling').value='false';
-    loadAll();
-  }catch(err){
-    showToast('Error: '+err.message);
-  }finally{
-    btn.textContent='Save Touchpoint'; btn.disabled=false;
-  }
-}
  
 // ---- TOAST ----
 function showToast(msg){
