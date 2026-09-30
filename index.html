@@ -220,13 +220,14 @@
       <thead><tr>
         <th>Contact</th>
         <th>Email</th>
+        <th>Emails (14d)</th>
         <th>Account</th>
         <th>Country</th>
         <th>Last Touch</th>
         <th>Cooling Off Until</th>
         <th>Status</th>
       </tr></thead>
-      <tbody id="co-tbody"><tr><td colspan="7" class="loading">Loading…</td></tr></tbody>
+      <tbody id="co-tbody"><tr><td colspan="8" class="loading">Loading…</td></tr></tbody>
     </table>
     </div>
   </div>
@@ -482,7 +483,7 @@ async function loadAll(){
     bar.textContent='⚠ Could not load from Supabase: '+e.message;
     showToast('Supabase load failed — see status bar for details');
     document.getElementById('ac-tbody').innerHTML='<tr><td colspan="8" style="color:var(--red);padding:16px">'+e.message+'</td></tr>';
-    document.getElementById('co-tbody').innerHTML='<tr><td colspan="7" style="color:var(--red);padding:16px">'+e.message+'</td></tr>';
+    document.getElementById('co-tbody').innerHTML='<tr><td colspan="8" style="color:var(--red);padding:16px">'+e.message+'</td></tr>';
     document.getElementById('camp-tbody').innerHTML='<tr><td colspan="8" style="color:var(--red);padding:16px">'+e.message+'</td></tr>';
   }
 }
@@ -614,13 +615,18 @@ function filterCoolingOff(){
   coolingContactsFiltered=coolingContactsAll.filter(c=>
     !q || ((c.contact_name||'')+(c.email||'')+(c.account_name||'')).toLowerCase().includes(q)
   );
+  // Most-emailed first (emails received in the last 14 days), then most recent touch
+  coolingContactsFiltered.sort((a,b)=>
+    ((b.touches_14d||0)-(a.touches_14d||0)) ||
+    String(b.last_touch_date||'').localeCompare(String(a.last_touch_date||''))
+  );
   renderCoolingOff();
 }
  
 function renderCoolingOff(){
   const tbody=document.getElementById('co-tbody');
   if(!coolingContactsFiltered.length){
-    tbody.innerHTML='<tr><td colspan="7" class="empty-state">No contacts currently in cooling-off.</td></tr>';
+    tbody.innerHTML='<tr><td colspan="8" class="empty-state">No contacts currently in cooling-off.</td></tr>';
     return;
   }
   tbody.innerHTML=coolingContactsFiltered.map(c=>{
@@ -629,6 +635,7 @@ function renderCoolingOff(){
     return '<tr>'+
       '<td class="account-name">'+(c.contact_name||'—')+'</td>'+
       '<td><span class="date-cell">'+(c.email||'—')+'</span></td>'+
+      '<td><span class="count-pill">'+(c.touches_14d||0)+'</span></td>'+
       '<td>'+(c.account_name||'—')+'</td>'+
       '<td>'+(country||'—')+'</td>'+
       '<td><span class="date-cell">'+(c.last_touch_date||'—')+'</span></td>'+
@@ -644,7 +651,7 @@ function downloadCoolingReport(){
   const contactSheet=coolingContactsFiltered.map(c=>{
     const acc=accStatusMap[keyOf(c)];
     return {
-      Contact:c.contact_name||'', Email:c.email||'', Account:c.account_name||'', Country:acc?(acc.country||''):'',
+      Contact:c.contact_name||'', Email:c.email||'', 'Emails (14d)':c.touches_14d||0, Account:c.account_name||'', Country:acc?(acc.country||''):'',
       'Last Touch':c.last_touch_date||'', 'Cooling Off Until':c.cooling_off_until?c.cooling_off_until.slice(0,10):''
     };
   });
@@ -921,4 +928,3 @@ document.addEventListener('DOMContentLoaded', loadAll);
 </script>
 </body>
 </html>
- 
