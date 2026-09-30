@@ -410,6 +410,18 @@ async function sb(path,opts={}){
   if(!r.ok) throw new Error('Supabase '+r.status+' on '+path.split('?')[0]+': '+(await r.text()));
   return r.json();
 }
+
+// Fetch every row by paging through results (Supabase caps rows per request)
+async function sbAll(path, pageSize=5000){
+  let out=[], off=0;
+  while(true){
+    const rows = await sb(path+'&limit='+pageSize+'&offset='+off);
+    out = out.concat(rows);
+    if(rows.length < pageSize) break;
+    off += pageSize;
+  }
+  return out;
+}
 function keyOf(r){ return r.sf_account_id || r.account_name || '?'; }
 
 // ============================================================
@@ -437,10 +449,10 @@ async function loadAll(){
   bar.textContent='Connecting to Supabase…';
   try{
     const [accView, contactView, tpRows, ctpRows] = await Promise.all([
-      sb('account_engagement_status?select=*&order=cooling_off_until.desc.nullslast&limit=10000'),
-      sb('contact_engagement_status?select=*&limit=20000'),
-      sb('touchpoints_engagement?select=*&date=gte.'+CUTOFF+'&order=date.desc&limit=10000'),
-      sb('contact_touchpoints_engagement?select=*&date=gte.'+CUTOFF+'&limit=20000')
+      sbAll('account_engagement_status?select=*&order=cooling_off_until.desc.nullslast,sf_account_id.asc.nullsfirst,account_name.asc'),
+      sbAll('contact_engagement_status?select=*&order=contact_id.asc.nullsfirst,lead_id.asc.nullsfirst,account_name.asc'),
+      sbAll('touchpoints_engagement?select=*&date=gte.'+CUTOFF+'&order=date.desc,id.asc'),
+      sbAll('contact_touchpoints_engagement?select=*&date=gte.'+CUTOFF+'&order=date.desc,id.asc')
     ]);
 
     accStatusAll=accView;
