@@ -20,7 +20,7 @@
     --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
   }
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; }
-
+ 
   .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; gap: 16px; flex-wrap: wrap; }
   .header-brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; white-space: nowrap; }
   .brand-icon { width: 28px; height: 28px; background: var(--accent); border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -29,15 +29,15 @@
   .tab-btn { padding: 5px 14px; border: none; background: transparent; border-radius: 4px; font-size: 13px; font-weight: 500; color: var(--text2); cursor: pointer; transition: all 0.15s; font-family: inherit; white-space: nowrap; }
   .tab-btn.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
   .header-actions { display: flex; gap: 8px; align-items: center; }
-
+ 
   .data-status{background:#111a14;color:#cfe8d6;font-family:'DM Mono',monospace;font-size:11.5px;padding:6px 24px;display:flex;gap:18px;flex-wrap:wrap;align-items:center}
   .data-status b{color:#fff}
   .data-status.err{background:var(--red);color:#fff}
-
+ 
   .main { padding: 24px; max-width: 1360px; margin: 0 auto; }
   .page { display: none; }
   .page.active { display: block; }
-
+ 
   .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 22px; }
   .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow); }
   .stat-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
@@ -46,11 +46,11 @@
   .stat-card.danger { border-color: #F5CABD; background: var(--red-light); } .stat-card.danger .stat-value { color: var(--red); }
   .stat-card.success { border-color: #B8DFC8; background: var(--green-light); } .stat-card.success .stat-value { color: var(--green); }
   .stat-card.neutral { border-color: var(--border2); }
-
+ 
   .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
   .section-title { font-size: 15px; font-weight: 600; }
   .page-sub { font-size: 13px; color: var(--text2); margin-top: 2px; }
-
+ 
   .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
   .table-toolbar { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
   .search-wrap { position: relative; flex: 1; min-width: 180px; }
@@ -65,7 +65,7 @@
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: var(--bg); }
   .account-name{font-weight:500} .date-cell{font-family:'DM Mono',monospace;font-size:12px;color:var(--text2)}
-
+ 
   .status-active{background:var(--green-light);color:var(--green);display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500;white-space:nowrap}
   .status-cooling{background:var(--red-light);color:var(--red);display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500;white-space:nowrap}
   .status-notreached{background:var(--surface2);color:var(--text2);display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:500;border:1px solid var(--border);white-space:nowrap}
@@ -75,25 +75,25 @@
   .camp-pill{display:inline-block;background:var(--surface2);color:var(--text2);padding:1px 7px;border-radius:100px;font-size:11px;margin:1px 2px 1px 0;border:1px solid var(--border);}
   .clickable-num{color:var(--accent-text);font-weight:600;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;background:none;border:none;font-family:'DM Mono',monospace;font-size:13px;padding:0}
   .clickable-num:hover{color:var(--accent)}
-
+ 
   .btn { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); color:var(--text); font-size:13px; font-weight:500; font-family:inherit; cursor:pointer; transition:all 0.12s; text-decoration:none; white-space:nowrap; }
   .btn:hover{background:var(--surface2);border-color:var(--border2)} .btn svg{width:14px;height:14px;flex-shrink:0}
   .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)} .btn-primary:hover{background:var(--accent-text);border-color:var(--accent-text)}
   .btn-sm{padding:4px 10px;font-size:12px}
-
+ 
   .cooling-alert{background:var(--red-light);border:1px solid #F5CABD;border-radius:var(--radius);padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:13px} .cooling-alert svg{width:16px;height:16px;color:var(--red);flex-shrink:0}
-
+ 
   .empty-note{text-align:center;padding:14px;color:var(--text3);font-size:12px}
-
+ 
   .dropzone{border:2px dashed var(--border2);border-radius:var(--radius);padding:36px 24px;text-align:center;color:var(--text2);background:var(--surface);transition:border-color .15s,background .15s;cursor:pointer;}
   .dropzone:hover,.dropzone.drag{border-color:var(--accent);background:var(--accent-light);}
   .dropzone svg{width:32px;height:32px;margin:0 auto 10px;opacity:0.4;display:block;color:var(--text2)}
   .dropzone .dz-title{font-size:14px;font-weight:500;margin-bottom:4px;}
   .dropzone .dz-sub{font-size:12px;color:var(--text3);}
-
+ 
   .loading{color:var(--text3);font-size:12px;padding:32px;text-align:center;font-family:'DM Mono',monospace;}
   .empty-state{padding:40px 24px;text-align:center;color:var(--text2);font-size:13px;}
-
+ 
   .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:1000;align-items:center;justify-content:center;padding:24px}
   .modal-overlay.open{display:flex}
   .modal{background:var(--surface);border-radius:14px;padding:28px;width:100%;max-width:560px;box-shadow:0 20px 60px rgba(0,0,0,0.15);max-height:85vh;overflow-y:auto}
@@ -105,14 +105,14 @@
   input.form-input:focus,select.form-input:focus,textarea.form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(45,91,227,0.1)}
   textarea.form-input{resize:vertical;min-height:72px}
   .form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
-
+ 
   .toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;padding:10px 16px;border-radius:var(--radius-sm);font-size:13px;z-index:9999;opacity:0;transform:translateY(8px);transition:all 0.2s;pointer-events:none} .toast.show{opacity:1;transform:translateY(0)}
-
+ 
   @media(max-width:600px){.main{padding:16px}.form-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
-
+ 
 <header class="header">
   <div class="header-brand">
     <div class="brand-icon">
@@ -134,11 +134,11 @@
     </button>
   </div>
 </header>
-
+ 
 <div class="data-status" id="data-status">Connecting to Supabase…</div>
-
+ 
 <main class="main">
-
+ 
 <!-- ============ ACCOUNTS (tabular, one row per account) ============ -->
 <div id="page-accounts" class="page active">
   <div class="section-header">
@@ -150,14 +150,14 @@
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 13h10"/></svg>Download
     </button>
   </div>
-
+ 
   <div class="stats-grid">
     <div class="stat-card accent"><div class="stat-label">Accounts Reached (30d)</div><div class="stat-value" id="ac-total">—</div></div>
     <div class="stat-card success"><div class="stat-label">Active (14d)</div><div class="stat-value" id="ac-active">—</div></div>
     <div class="stat-card danger"><div class="stat-label">Cooling Off</div><div class="stat-value" id="ac-cooling">—</div></div>
     <div class="stat-card neutral"><div class="stat-label">Dormant (14d+)</div><div class="stat-value" id="ac-notreached">—</div></div>
   </div>
-
+ 
   <div class="table-wrap">
     <div class="table-toolbar">
       <div class="search-wrap">
@@ -182,22 +182,22 @@
     </div>
   </div>
 </div>
-
+ 
 <!-- ============ COOLING-OFF (flat contacts table) ============ -->
 <div id="page-cooling" class="page">
-
+ 
   <div id="cooling-banner" style="display:none" class="cooling-alert">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><line x1="8" y1="5" x2="8" y2="8"/><circle cx="8" cy="11" r="0.5" fill="currentColor"/></svg>
     <span id="cooling-text"></span>
   </div>
-
+ 
   <div class="stats-grid">
     <div class="stat-card accent"><div class="stat-label">Accounts Tracked</div><div class="stat-value" id="co-total">—</div></div>
     <div class="stat-card danger"><div class="stat-label">Accounts Cooling Off</div><div class="stat-value" id="co-accounts">—</div></div>
     <div class="stat-card danger"><div class="stat-label">Contacts Cooling Off</div><div class="stat-value" id="co-contacts">—</div></div>
     <div class="stat-card success"><div class="stat-label">Active Accounts (14d)</div><div class="stat-value" id="co-active">—</div></div>
   </div>
-
+ 
   <div class="section-header">
     <div>
       <div class="section-title">Contacts in Cooling-Off</div>
@@ -207,7 +207,7 @@
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 13h10"/></svg>Download
     </button>
   </div>
-
+ 
   <div class="table-wrap">
     <div class="table-toolbar">
       <div class="search-wrap">
@@ -230,21 +230,21 @@
     </table>
     </div>
   </div>
-
+ 
   <div class="section-header" style="margin-top:26px">
     <div>
       <div class="section-title">Cross-Check a Contact List</div>
       <div class="page-sub">Upload a list (.xlsx / .xls / .csv, with a Name or Email column) to see who's currently cooling off</div>
     </div>
   </div>
-
+ 
   <input type="file" id="xl-upload" accept=".xlsx,.xls,.csv" onchange="handleExcelUpload(event)" style="display:none">
   <div class="dropzone" id="xl-dropzone" onclick="document.getElementById('xl-upload').click()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6M12 9v6"/><path d="M21 15a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h4l2 3h8a2 2 0 012 2z"/></svg>
     <div class="dz-title" id="xl-drop-text">Click to upload, or drag a file here</div>
     <div class="dz-sub">.xlsx · .xls · .csv</div>
   </div>
-
+ 
   <div id="xl-result-wrap" style="display:none;margin-top:16px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
       <span class="page-sub" id="xl-summary" style="margin:0"></span>
@@ -262,7 +262,7 @@
     </div>
   </div>
 </div>
-
+ 
 <!-- ============ CAMPAIGNS ============ -->
 <div id="page-campaigns" class="page">
   <div class="section-header">
@@ -274,7 +274,7 @@
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 13h10"/></svg>Download
     </button>
   </div>
-
+ 
   <div class="table-wrap">
     <div class="table-toolbar">
       <div class="search-wrap">
@@ -299,9 +299,9 @@
     </div>
   </div>
 </div>
-
+ 
 </main>
-
+ 
 <!-- LOG TOUCHPOINT MODAL -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
   <div class="modal">
@@ -380,7 +380,7 @@
     </div>
   </div>
 </div>
-
+ 
 <!-- GENERIC LIST MODAL (used by Campaigns tab click-throughs) -->
 <div class="modal-overlay" id="list-modal-overlay" onclick="closeListModalOutside(event)">
   <div class="modal">
@@ -396,21 +396,21 @@
     <div class="form-actions"><button class="btn" onclick="closeListModal()">Close</button></div>
   </div>
 </div>
-
+ 
 <div class="toast" id="toast"></div>
-
+ 
 <script>
 const SB_URL='https://mtlujmdpxtveawrhljxg.supabase.co';
 const SB_KEY='sb_publishable_UhmlGR4ullaoH5bds4A86g_v18c9v-n';
 const HDR={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Accept-Profile':'replyio','Content-Profile':'replyio'};
 const CUTOFF = new Date(Date.now() - 30*86400000).toISOString().slice(0,10);
-
+ 
 async function sb(path,opts={}){
   const r=await fetch(SB_URL+'/rest/v1/'+path,{headers:{...HDR,...(opts.headers||{})},method:opts.method||'GET',body:opts.body||undefined});
   if(!r.ok) throw new Error('Supabase '+r.status+' on '+path.split('?')[0]+': '+(await r.text()));
   return r.json();
 }
-
+ 
 // Fetch every row by paging through results (Supabase caps rows per request)
 async function sbAll(path, pageSize=5000){
   let out=[], off=0;
@@ -423,7 +423,7 @@ async function sbAll(path, pageSize=5000){
   return out;
 }
 function keyOf(r){ return r.sf_account_id || r.account_name || '?'; }
-
+ 
 // ============================================================
 // NAV
 // ============================================================
@@ -433,7 +433,7 @@ function switchTab(name,btn){
   document.getElementById('page-'+name).classList.add('active');
   btn.classList.add('active');
 }
-
+ 
 // ============================================================
 // GLOBAL DATA
 // ============================================================
@@ -442,7 +442,7 @@ let contactStatusAll=[];
 let tp30=[], ctp30=[];
 let coolingContactsAll=[], coolingContactsFiltered=[];
 let accountRollup=[], campaignRollup=[];
-
+ 
 async function loadAll(){
   const bar=document.getElementById('data-status');
   bar.classList.remove('err');
@@ -454,24 +454,24 @@ async function loadAll(){
       sbAll('touchpoints_engagement?select=*&date=gte.'+CUTOFF+'&order=date.desc,id.asc'),
       sbAll('contact_touchpoints_engagement?select=*&date=gte.'+CUTOFF+'&order=date.desc,id.asc')
     ]);
-
+ 
     accStatusAll=accView;
     accStatusMap={};
     accView.forEach(r=>{ accStatusMap[keyOf(r)]=r; });
-
+ 
     contactStatusAll=contactView;
     coolingContactsAll=contactView.filter(r=>r.engagement_status==='Cooling Off');
-
+ 
     tp30=tpRows;
     ctp30=ctpRows;
-
+ 
     buildAccountRollup();
     buildCampaignRollup();
-
+ 
     renderAccountsTable();
     renderCoolingTab();
     renderCampaigns();
-
+ 
     const now=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
     bar.innerHTML='Live from Supabase · <b>'+accView.length+'</b> accounts (account_engagement_status) · '+
       '<b>'+contactView.length+'</b> contacts tracked (contact_engagement_status) · '+
@@ -486,7 +486,7 @@ async function loadAll(){
     document.getElementById('camp-tbody').innerHTML='<tr><td colspan="8" style="color:var(--red);padding:16px">'+e.message+'</td></tr>';
   }
 }
-
+ 
 // ============================================================
 // STATUS BADGE (shared)
 // ============================================================
@@ -496,7 +496,7 @@ function statusBadge(s){
   if(s==='Not Reached') return '<span class="status-notreached">⬤ Dormant (14d+)</span>';
   return '<span class="status-notfound">⬤ Not Found</span>';
 }
-
+ 
 // ============================================================
 // ACCOUNTS TAB — tabular, one row per account, last 30 days
 // ============================================================
@@ -532,7 +532,7 @@ function buildAccountRollup(){
     };
   }).sort((a,b)=> (new Date(b.lastTouch)) - (new Date(a.lastTouch)));
 }
-
+ 
 function campaignChips(list){
   if(!list.length) return '—';
   const shown=list.slice(0,2);
@@ -544,19 +544,19 @@ function campaignChips(list){
   }
   return html;
 }
-
+ 
 function renderAccountsTable(){
   const q=(document.getElementById('ac-search').value||'').toLowerCase();
   const filtered=accountRollup.filter(a=>!q || ((a.account_name||'')+(a.country||'')).toLowerCase().includes(q));
-
+ 
   document.getElementById('ac-total').textContent=accountRollup.length.toLocaleString();
   document.getElementById('ac-active').textContent=accountRollup.filter(a=>a.status==='Active').length.toLocaleString();
   document.getElementById('ac-cooling').textContent=accountRollup.filter(a=>a.status==='Cooling Off').length.toLocaleString();
   document.getElementById('ac-notreached').textContent=accountRollup.filter(a=>a.status==='Not Reached').length.toLocaleString();
-
+ 
   const tbody=document.getElementById('ac-tbody');
   if(!filtered.length){ tbody.innerHTML='<tr><td colspan="8" class="empty-state">No accounts touched in the last 30 days.</td></tr>'; return; }
-
+ 
   tbody.innerHTML=filtered.map(a=>
     '<tr>'+
       '<td class="account-name">'+(a.account_name||'—')+'</td>'+
@@ -570,7 +570,7 @@ function renderAccountsTable(){
     '</tr>'
   ).join('');
 }
-
+ 
 function downloadAccounts(){
   if(!window.XLSX){ showToast('Excel library failed to load'); return; }
   if(!accountRollup.length){ showToast('Nothing to export'); return; }
@@ -582,7 +582,7 @@ function downloadAccounts(){
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheet), 'Accounts (30d)');
   XLSX.writeFile(wb, 'accounts_last30days_'+new Date().toISOString().slice(0,10)+'.xlsx');
 }
-
+ 
 // ============================================================
 // COOLING-OFF TAB — flat contacts table
 // ============================================================
@@ -590,12 +590,12 @@ function renderCoolingTab(){
   const total=accStatusAll.length;
   const coolingAccList=accStatusAll.filter(r=>r.engagement_status==='Cooling Off');
   const activeAcc=accStatusAll.filter(r=>r.engagement_status==='Active').length;
-
+ 
   document.getElementById('co-total').textContent=total.toLocaleString();
   document.getElementById('co-accounts').textContent=coolingAccList.length.toLocaleString();
   document.getElementById('co-contacts').textContent=coolingContactsAll.length.toLocaleString();
   document.getElementById('co-active').textContent=activeAcc.toLocaleString();
-
+ 
   const banner=document.getElementById('cooling-banner');
   if(coolingAccList.length>0){
     banner.style.display='flex';
@@ -605,10 +605,10 @@ function renderCoolingTab(){
   }else{
     banner.style.display='none';
   }
-
+ 
   filterCoolingOff();
 }
-
+ 
 function filterCoolingOff(){
   const q=document.getElementById('co-search').value.toLowerCase();
   coolingContactsFiltered=coolingContactsAll.filter(c=>
@@ -616,7 +616,7 @@ function filterCoolingOff(){
   );
   renderCoolingOff();
 }
-
+ 
 function renderCoolingOff(){
   const tbody=document.getElementById('co-tbody');
   if(!coolingContactsFiltered.length){
@@ -637,7 +637,7 @@ function renderCoolingOff(){
     '</tr>';
   }).join('');
 }
-
+ 
 function downloadCoolingReport(){
   if(!window.XLSX){ showToast('Excel library failed to load'); return; }
   if(!coolingContactsFiltered.length){ showToast('Nothing to export'); return; }
@@ -658,10 +658,10 @@ function downloadCoolingReport(){
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(accSheet.length?accSheet:[{Note:'No accounts currently flagged'}]), 'Accounts Cooling Off');
   XLSX.writeFile(wb, 'cooling_off_report_'+new Date().toISOString().slice(0,10)+'.xlsx');
 }
-
+ 
 // ---- Excel cross-check upload ----
 let xlUploadedRows=[], xlResults=[];
-
+ 
 const dz=document.getElementById('xl-dropzone');
 if(dz){
   ['dragenter','dragover'].forEach(evt=>dz.addEventListener(evt,e=>{e.preventDefault();dz.classList.add('drag');}));
@@ -741,7 +741,7 @@ function downloadCrossCheck(){
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheet), 'Cross-Check Results');
   XLSX.writeFile(wb, 'contact_crosscheck_'+new Date().toISOString().slice(0,10)+'.xlsx');
 }
-
+ 
 // ============================================================
 // CAMPAIGNS TAB — clickable accounts / contacts counts
 // ============================================================
@@ -758,7 +758,7 @@ function buildCampaignRollup(){
     if(!g.last || t.date>g.last) g.last=t.date;
     g.touches++;
   });
-
+ 
   const contactsByCampaign={};
   ctp30.forEach(c=>{
     const camp=c.campaign || '(No campaign name)';
@@ -766,7 +766,7 @@ function buildCampaignRollup(){
     const cid=c.contact_id||c.lead_id||c.email||(''+Math.random());
     contactsByCampaign[camp][cid]={ name:c.contact_name, email:c.email, account:c.account_name };
   });
-
+ 
   let idCounter=0;
   campaignRollup=Object.values(map).map(g=>{
     const accountEntries=Object.keys(g.accounts).map(ak=>{
@@ -789,7 +789,7 @@ function buildCampaignRollup(){
     };
   }).sort((a,b)=>b.accountsReached-a.accountsReached);
 }
-
+ 
 function renderCampaigns(){
   const q=(document.getElementById('camp-search').value||'').toLowerCase();
   const filtered=campaignRollup.filter(c=>!q || c.campaign.toLowerCase().includes(q));
@@ -808,7 +808,7 @@ function renderCampaigns(){
     '</tr>'
   ).join('');
 }
-
+ 
 function downloadCampaigns(){
   if(!window.XLSX){ showToast('Excel library failed to load'); return; }
   if(!campaignRollup.length){ showToast('Nothing to export'); return; }
@@ -821,7 +821,7 @@ function downloadCampaigns(){
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheet), 'Campaigns (30d)');
   XLSX.writeFile(wb, 'campaigns_last30days_'+new Date().toISOString().slice(0,10)+'.xlsx');
 }
-
+ 
 // ---- Generic list modal (accounts / contacts drill-down from Campaigns tab) ----
 function showListModal(campId, kind){
   const camp=campaignRollup.find(c=>c.id===campId);
@@ -830,7 +830,7 @@ function showListModal(campId, kind){
   const title=document.getElementById('list-modal-title');
   const thead=document.getElementById('list-modal-thead');
   const tbody=document.getElementById('list-modal-tbody');
-
+ 
   if(kind==='accounts'){
     title.textContent=camp.campaign+' — '+camp.accountEntries.length+' account'+(camp.accountEntries.length===1?'':'s')+' reached';
     thead.innerHTML='<tr><th>Account</th><th>Country</th><th>Status</th></tr>';
@@ -848,7 +848,7 @@ function showListModal(campId, kind){
 }
 function closeListModal(){ document.getElementById('list-modal-overlay').classList.remove('open'); }
 function closeListModalOutside(e){ if(e.target.id==='list-modal-overlay') closeListModal(); }
-
+ 
 // ============================================================
 // LOG TOUCHPOINT MODAL
 // ============================================================
@@ -862,19 +862,19 @@ function closeModal(){
 function closeModalOutside(e){
   if(e.target.id==='modal-overlay') closeModal();
 }
-
+ 
 async function saveTouchpoint(){
   const account=document.getElementById('f-account').value.trim();
   const date=document.getElementById('f-date').value;
   const by=document.getElementById('f-by').value.trim();
   const channel=document.getElementById('f-channel').value;
   const campaign=document.getElementById('f-campaign').value.trim();
-
+ 
   if(!account || !date || !by || !channel || !campaign){
     showToast('Please fill in all required fields (*)');
     return;
   }
-
+ 
   const btn=document.getElementById('submit-btn');
   btn.textContent='Saving…'; btn.disabled=true;
   try{
@@ -907,7 +907,7 @@ async function saveTouchpoint(){
     btn.textContent='Save Touchpoint'; btn.disabled=false;
   }
 }
-
+ 
 // ---- TOAST ----
 function showToast(msg){
   const t=document.getElementById('toast');
@@ -915,9 +915,10 @@ function showToast(msg){
   t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),3000);
 }
-
+ 
 // ---- INIT ----
 document.addEventListener('DOMContentLoaded', loadAll);
 </script>
 </body>
 </html>
+ 
